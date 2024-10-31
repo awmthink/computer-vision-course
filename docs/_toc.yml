@@ -1,5 +1,5 @@
-format: jb-book
-root: unit0/welcome/welcome
+- format: jb-book
+- root: unit0/welcome/welcome
 
 - title: Unit 0 - Welcome
   sections:
