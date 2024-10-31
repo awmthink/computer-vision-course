@@ -3,7 +3,6 @@ root: unit0/welcome/welcome
 parts:
 - caption: Unit 0 - Welcome
   chapters:
-  - file: unit0/welcome/welcome
   - file: unit0/welcome/TableOfContents
 - caption: Unit 1 - Fundamentals
   chapters:
