@@ -1,11 +1,12 @@
 # 以往SOTA模型概述
-### 总体趋势：
+
+## 总体趋势：
 
 深度学习的成功，特别是基于大规模数据集（如ImageNet）训练的CNN，在图像识别领域带来了革命性变化。这一趋势在视频处理领域得以延续。然而，与静态图像相比，视频数据引入了时间维度。这一简单的变化带来了新的挑战，而基于静态图像训练的CNN并未设计用于解决这些问题。
 
-# 视频处理领域的以往SOTA模型
+## 视频处理领域的以往SOTA模型
 
-## 双流网络 (2014):
+### 双流网络 (2014):
 
 <div class="flex justify-center">
     <img src="https://huggingface.co/datasets/hf-vision/course-assets/resolve/main/previous sota models/SOTA Models Two-Stream architecture for video classification.png" alt="用于视频分类的双流架构">
@@ -19,7 +20,7 @@
 - **时间流 (Temporal Stream)：** 一个2D CNN或其他网络，处理多帧序列（光流）以捕获运动信息。
 - **融合 (Fusion)：** 将两个流的输出结合，以便在动作识别等任务中利用外观和运动线索。
 
-## 3D ResNets (2017):
+### 3D ResNets (2017):
 
 <div class="flex justify-center">
     <img src="https://huggingface.co/datasets/hf-vision/course-assets/resolve/main/previous sota models/SOTA Models Residual block. Shortcut connections bypass a signal from the top of the block to the tail. Signals are summed at the tail..png" alt="残差块。快捷连接绕过信号从块顶端到尾部，并在尾部汇总信号。">
@@ -39,7 +40,7 @@
 | C3D w/ BN               | 56.1           | 79.5        | 67.8       | -           | -           | -          |
 | RGB-I3D w/o ImageNet    | -              | -           | 68.4       | 88.0        | **78.2**    |
 
-## (2+1)D ResNets (2017):
+### (2+1)D ResNets (2017):
 
 <div class="flex justify-center">
     <img src="https://huggingface.co/datasets/hf-vision/course-assets/resolve/main/previous sota models/SOTA Models 3D vs (2+1)D convolution..png" alt="3D vs (2+1)D卷积。">
@@ -71,9 +72,10 @@
 | R(2+1)D-Flow-32frame            | 46.4   | 68.4    | 88.7    |
 | R(2+1)D-Two-Stream-32frame      | -      | **73.3**    | **91.9**    |
 
-# 当前研究
+## 当前研究
 
 目前，研究人员正探索更深层的3D CNN架构。另一种前景良好的方法是将3D CNN与注意力机制等其他技术结合。此外，开发更大规模的视频数据集也成为热点，如[Kinetics](https://github.com/google-deepmind/kinetics-i3d)。
+
 Kinetics数据集是一个大规模高质量视频数据集，常用于人类动作识别研究。该数据集包含数十万视频片段，涵盖广泛的日常人类活动。
 
 <Tip>
@@ -81,6 +83,6 @@ Kinetics数据集是一个大规模高质量视频数据集，常用于人类动
 
 </Tip>
 
-# 结论
+## 结论
 
 视频分析模型的发展令人瞩目。这些模型受到其他SOTA模型的深刻影响。例如，双流网络的灵感来源于ConvNets，而(2+1)D ResNets则借鉴了3D ResNets。随着研究的推进，预计未来会有更先进的架构和技术涌现。
