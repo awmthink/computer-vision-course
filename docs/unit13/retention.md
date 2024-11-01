@@ -1,4 +1,4 @@
-# 视觉中的保留
+# 视觉中的 Retention
 
 ## 什么是保留网络
 保留网络（RetNet）是为大语言模型提出的一种基础架构，该架构在论文 [Retentive Network: A Successor to Transformer for Large Language Models](https://arxiv.org/abs/2307.08621) 中被首次提出。RetNet 的设计旨在解决大规模语言建模中的关键问题：训练的并行性、低成本推理和优异的性能。
