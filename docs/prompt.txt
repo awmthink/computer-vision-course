@@ -3,19 +3,20 @@
 1. 保持专业与高水平，使翻译后的讲义保持流畅，避免直译，避免明显的翻译痕迹
 2. 保留专业的术语与缩写，比如 Transformer, CNN, LLM 等
 3. 原样保留 markdown, html 等格式化的标签
+4. 将行内公式 `\\(...\\)` 转换为 `$...$`
 4. 当翻译表格或列表时，请保持逐条翻译，避免省略
 5. 你的回复应该直接以翻译的内容开始和结束，没有任何额外的内容
 
 以下是原文：
 
 
+Please translate a lecture note on computer vision and deep learning into Chinese.
 
-Please translate a lecture note on computer vision and deep learning courses into Chinese.
-
-1. Maintain a professional and high-level tone, ensuring the translation is smooth and avoids literal translation or obvious translation traces.
+1. Maintain a professional and high-quality tone, ensuring the translated lecture note is smooth and free of direct translation traces.
 2. Retain professional terms and abbreviations, such as Transformer, CNN, LLM, etc.
-3. Keep formatting tags like markdown and HTML intact.
-4. When translating tables or lists, translate item by item without omission.
-5. Your response should begin and end directly with the translated content, without any additional text.
+3. Keep markdown, HTML, and other formatting tags as they are.
+4. Convert inline formulas `\\(...\\)` to `$...$`.
+5. When translating tables or lists, translate each item individually without omitting any content.
+6. Your response should begin and end directly with the translated content, with no additional commentary.
 
 Below is the original content:
