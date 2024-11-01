@@ -10,28 +10,31 @@
 
 .. toctree::
    :caption: Unit 0 - Welcome
+   :hidden:
    :maxdepth: 2
 
-   unit0/welcome/welcome
-   unit0/welcome/TableOfContents
+   Welcome to the Community Computer Vision Course <unit0/welcome/welcome.md>
+   Table of Contents for Notebooks <unit0/welcome/TableOfContents.md>
 
 .. toctree::
    :caption: Unit 1 - Fundamentals
+   :hidden:
    :maxdepth: 2
 
-   unit1/chapter1/motivation
-   unit1/image_and_imaging/image
-   unit1/image_and_imaging/imaging
-   unit1/image_and_imaging/extension-image
-   unit1/chapter1/definition
-   unit1/chapter1/applications
-   unit1/image_and_imaging/examples-preprocess
-   unit1/feature-extraction/feature_description
-   unit1/feature-extraction/feature-matching
-   unit1/feature-extraction/real-world-applications
+   Vision <unit1/chapter1/motivation>
+   Image <unit1/image_and_imaging/image>
+   Imaging <unit1/image_and_imaging/imaging>
+   Imaging in Real-life <unit1/image_and_imaging/extension-image>
+   What Is Computer Vision <unit1/chapter1/definition>
+   Applications of Computer Vision <unit1/chapter1/applications>
+   Pre-processing for Computer Vision Tasks <unit1/image_and_imaging/examples-preprocess>
+   Feature Description <unit1/feature-extraction/feature_description>
+   Feature Matching <unit1/feature-extraction/feature-matching>
+   Real-world Applications of Feature Extraction in Computer Vision <unit1/feature-extraction/real-world-applications>s
 
 .. toctree::
    :caption: Unit 2 - Convolutional Neural Networks
+   :hidden:
    :maxdepth: 2
 
    unit2/cnns/introduction
