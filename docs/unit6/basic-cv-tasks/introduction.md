@@ -1,11 +1,11 @@
-# Introduction
+# 介绍
 
-So far you have learned a lot about different Neural Network architectures for Computer Vision, from CNNs to Transformers, Multimodal architectures and Generative AI.
-This unit is meant to give you a better overview of basic Computer Vision tasks, such as _Image Classification_, _Object Detection_ and _Image Segmentation_.
+到目前为止，你已经学习了许多关于计算机视觉的不同神经网络架构，从CNN到Transformers、多模态架构以及生成式AI。
+本单元旨在为你提供对基本计算机视觉任务的更全面的概述，例如 _图像分类_、_目标检测_ 和 _图像分割_。
 
-The goal is to get a better understanding of what exactly these tasks are about and which subcategories exist (e.g., Semantic or Instance Segmentation).
-We will also highlight popular datasets for these tasks and how they are evaluated. And, of course, we will talk about some of the most popular models that are used for the respective tasks.
+我们的目标是让你更好地理解这些任务的具体内容及其子类别（例如语义分割或实例分割）。
+我们还将重点介绍用于这些任务的流行数据集以及如何对其进行评估。当然，我们还会讨论一些用于这些任务的最受欢迎的模型。
 
-## Contributions Welcome
+## 欢迎贡献
 
-You will notice that this unit so far is a bit short on content. If you want to change that, you are happily invited to join our efforts and have a look at the [Contribution Guidelines](../../../CONTRIBUTING.md).
+你会注意到，目前本单元的内容较少。如果你希望进行改进，我们热烈欢迎你加入我们的工作，并查看[贡献指南](../../../CONTRIBUTING.md)。

@@ -1,44 +1,43 @@
-# Video Processing Basics
-With the rise of transformers, vision transformers have become essential tools for various computer vision tasks. Vision transformers are great at computer vision tasks involving both images and videos.
+# 视频处理基础
 
-However, understanding how these models handle images and videos differently is crucial for optimal performance and accurate results.
+随着Transformer的兴起，视觉Transformer已成为各种计算机视觉任务中的重要工具。视觉Transformer在处理图像和视频的计算机视觉任务中表现优异。
 
-## Understanding Image Processing for Vision Transformers
-When it comes to image data, vision transformers typically process individual still images by splitting them into non-overlapping patches and then transforming these patches individually.
-Suppose we have a 224x224 image, split the image into 16x16 patches where each patch consists of 14x14 pixels. This patch-based processing not only reduces computation but it also allows the model to capture local features in the image effectively.
-Each patch is then fed through a series of self-attention layers and feed-forward neural networks to extract semantic information. Thanks to this hierarchical processing technique, vision transformers are able to capture both high-level and low-level features in the image.
-Since vision transformers process patches individually and transformers by default don't have any mechanism to track position of inputs, the spatial context of the image can be lost.
-To address this, vision transformers often include positional encodings that capture the relative position of each patch within the image. By incorporating positional information, the model can better understand the spatial relationships between different patches and enhance its ability to recognize objects and patterns.
+然而，理解这些模型如何在图像和视频上不同地处理数据，对于实现最佳性能和准确结果至关重要。
 
-*Note:* CNNs are designed to learn spatial features, while vision transformers are designed to learn both spatial and contextual features.
+## 理解视觉Transformer的图像处理
+对于图像数据，视觉Transformer通常将单独的静止图像划分为不重叠的小块，然后分别对这些小块进行处理。
+假设我们有一个224x224的图像，将其划分为16x16的小块，每个小块由14x14像素组成。这种基于小块的处理不仅减少了计算量，还使模型能够有效地捕捉图像中的局部特征。
+每个小块然后通过一系列自注意力层和前馈神经网络，提取语义信息。得益于这种分层处理技术，视觉Transformer能够在图像中捕捉到高层次和低层次的特征。
+由于视觉Transformer是独立处理每个小块，并且Transformer默认没有任何机制来跟踪输入的位置，图像的空间上下文可能会丢失。
+为了解决这个问题，视觉Transformer通常会引入位置编码，以捕捉图像中每个小块的相对位置。通过加入位置信息，模型可以更好地理解不同小块之间的空间关系，从而增强其识别物体和模式的能力。
 
-
-## Key Differences Between Image and Video Processing
-Videos are essentially a sequence of frames, and processing them requires techniques to capture and incorporate motion information. In image processing, the transformer ignores the temporal (time) relations between frames, i.e., it only focuses on a frame's spatial (space) information.
-
-Temporal relations are the main factors for developing a strong understanding of content in a video, thus we require a separate algorithm for videos. One of the main differences between image and video processing is the inclusion of an additional axis, time to the input. 
-There are two main approaches for extracting tokens from a video or embedding a video clip.
+*注意：* CNNs设计用于学习空间特征，而视觉Transformer设计用于学习空间和上下文特征。
 
 
-### Uniform Frame Sampling
+## 图像和视频处理的主要差异
+视频本质上是一个帧序列，处理视频需要捕捉和结合运动信息的技术。在图像处理中，Transformer忽略了帧之间的时间关系，即它只关注帧的空间信息。
 
-It is a straightforward method of tokenizing the input video in which we uniformly sample \\(n_t\\) frames from the input video clip, embed each 2D frame independently using the same method as used in image processing, and concatenate all these tokens together.
-
-If \\(n_h*n_w\\) non-overlapping image patches are extracted from each frame, then a total of \\(n_t*n_h*n_w'\\) tokens will be forwarded through the transformer encoder. Uniform frame sampling is a tokenization scheme in which we sample frames from the video clip and perform simple ViT tokenization.
-
-
-### Tubelet Embedding
-
-This method extends the vision transformer's image embedding to 3D and corresponds to a 3D convolution. It is an alternative method in which non-overlapping, spatiotemporal "tubes" from input volume are extracted and linearly projected.
+时间关系是深入理解视频内容的关键因素，因此视频处理需要单独的算法。图像和视频处理的主要区别之一在于输入中时间轴的加入。
+从视频中提取标记或嵌入视频片段有两种主要方法。
 
 
-First, we extract tubes from the video. These tubes contain patches of the frame and the temporal information as well. The tubes are then flattened to build video tokens. Intuitively, this method fuses spatiotemporal information during tokenization, in contrast to "uniform frame sampling", where temporal information from different frames is fused by the transformer.
+### 均匀帧采样
+
+这是一种简单的视频输入标记化方法，在这种方法中，我们从输入视频片段中均匀地采样$n_t$帧，独立地对每个2D帧进行嵌入，方法与图像处理相同，然后将所有这些标记连接在一起。
+
+如果从每帧中提取$n_h*n_w$个不重叠的图像小块，那么总共有$n_t*n_h*n_w'$个标记将通过Transformer编码器。均匀帧采样是一种标记化方案，我们从视频片段中采样帧，并进行简单的ViT标记化。
 
 
-## Importance of Temporal Information in Video Processing
-The inclusion of temporal information in video processing is crucial for several computer vision tasks. One such task is action recognition, which aims to classify the action in a video. Temporal information is also essential for tasks like video captioning, where the goal is to generate a textual description of the content in a video.
+### Tubelet嵌入
 
-By considering the temporal relationships between frames, vision transformers can generate more contextually relevant captions. For example, if a person is shown running in one frame and then jumping in the next, the model can generate a caption that reflects this sequence of action. Furthermore, temporal processing is important for tasks like video object detection and tracking. 
+此方法将视觉Transformer的图像嵌入扩展到3D，对应于一种3D卷积。这是一种替代方法，从输入体积中提取不重叠的时空“管块”并进行线性投影。
 
-In conclusion, the presence of temporal information and the particular difficulties posed by video data, such as higher memory and storage needs, are the main processing distinctions between video and image. The choice between image and video processing depends on the specific computer vision task and the characteristics of the data.
+首先，从视频中提取管块。这些管块包含帧的小块以及时间信息。然后将这些管块展平以构建视频标记。直观地，这种方法在标记化过程中融合了时空信息，而“均匀帧采样”中不同帧的时间信息是由Transformer来融合的。
 
+
+## 时间信息在视频处理中的重要性
+在视频处理过程中包含时间信息对多个计算机视觉任务至关重要。其中一个任务是动作识别，其目标是分类视频中的动作。时间信息对于诸如视频字幕生成任务也是必不可少的，目标是生成视频内容的文本描述。
+
+通过考虑帧之间的时间关系，视觉Transformer可以生成更具上下文相关性的字幕。例如，如果一个人在一个帧中正在跑步，接下来在另一帧中跳跃，模型可以生成反映这一动作序列的字幕。此外，时间处理对于视频目标检测和跟踪等任务也很重要。
+
+综上所述，时间信息的存在以及视频数据所带来的特定难题，例如更高的内存和存储需求，是视频和图像处理的主要区别。图像和视频处理的选择取决于具体的计算机视觉任务及数据的特点。

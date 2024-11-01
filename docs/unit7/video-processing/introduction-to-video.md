@@ -1,38 +1,37 @@
-# Introduction
+# 简介
 
-Welcome to the Video and Video Processing unit. Maybe you have realized that in our course content so far, we have mainly focused on standard, static 2D images.
-Of course, the real world of Computer Vision has a lot more to offer. Videos are definitely one of the most used mediums in our world due to applications like Social Media, broadcasts, or surveillance cameras.
+欢迎来到视频与视频处理单元。或许你已经意识到，在我们目前的课程内容中，我们主要关注的是标准的、静态的二维图像。
+当然，计算机视觉的真实世界中还有更多内容可供探索。由于社交媒体、广播或监控摄像头等应用，视频绝对是我们生活中最常使用的媒介之一。
 
-Given their importance in our society and research, we also want to talk about them here in our course. In this introduction chapter, you will learn some very basic theory behind videos before going on to have a closer look at video processing.
+鉴于视频在社会和研究中的重要性，我们也希望在本课程中讨论它们。在这一介绍章节中，您将学习一些关于视频的基本理论，然后深入了解视频处理的内容。
 
-Let's go! 🤓
+让我们开始吧！🤓
 
-## What is a Video?
+## 什么是视频？
 
-An image is a binary, two-dimensional (2D) representation of visual data. A video is a multimedia format that sequentially displays these frames or images.
+图像是视觉数据的二进制、二维（2D）表示。视频是一种多媒体格式，按顺序显示这些帧或图像。
 
-Technically speaking, the frames are separate pictures. As a result, storing and playing these frames sequentially at a conventional speed results in the creation of a video, thus giving the illusion of motion (just like a flipbook).
-It is a popular and widely used medium for communicating information, entertainment, and conversation. Videos and photos are obtained via image-acquisition equipment such as video cameras, smartphones, and so on.
+从技术上讲，帧是独立的图片。因此，以常规速度按顺序存储和播放这些帧会产生视频，从而给人以运动的错觉（就像翻书动画一样）。
+它是一种常见且广泛使用的媒介，用于传递信息、娱乐和交流。视频和照片通过视频摄像机、智能手机等图像获取设备获取。
 
+### 视频的要素
 
-### Aspects of a Video
+- **分辨率：**  
+视频的分辨率是指每帧的像素数，也可以称为视频中每帧的大小。分辨率不一定是标准尺寸，但有一些常见的视频尺寸。常见的视频分辨率包括HD（1280x720像素）、Full HD（1920x1080像素）、Ultra HD或4K（3840x2160像素）等。
+当视频分辨率为1920x1080像素时，这意味着视频宽度为1920像素，高度为1080像素。
+分辨率越高，视频的细节越丰富，但也需要更多的存储空间和处理能力。
 
-- **Resolution:**
-The resolution of a video refers to the number of pixels in each frame or we can also refer to it as the size of each frame in the video. It doesn't need to be a standard size, but there are common sizes for video. Common video resolutions include HD (1280x720 pixels), Full HD (1920x1080 pixels), Ultra HD or 4K (3840x2160 pixels), and so on.
-When a video is said to have a resolution of 1920x1080 pixels, it essentially means the video has a width of 1920 pixels and a height of 1080 pixels.
-Higher resolution videos have more detail but also require more storage space and processing power.
+- **帧率：**  
+视频由多张独立的帧或图片组成。为了给人一种运动的印象，这些帧以快速的速度依次显示。
+每秒显示的帧数称为“帧率”。常见的帧率包括24、30和60帧每秒（fps）或赫兹（通用频率单位）。更高的帧率会带来更流畅的运动效果。
 
-- **Frame Rate:**
-A video is composed of multiple separate frames, or images. In order to give the impression of motion, these frames are displayed quickly one after the other.
- The number of frames displayed per second is called the "frame rate." Common frame rates include 24, 30, and 60 frames per second (fps) or hertz (general unit for frequency). Higher frame rates result in smoother motion.
+- **比特率：**  
+描述音频和视频所需的数据量称为比特率。更高的比特率可以获得更好的质量，但也需要更多的存储和带宽来进行流传输。
 
-- **Bitrate:**
-The quantity of data needed to describe audio and video is called bitrate. Better quality is achieved at higher bitrates, but streaming requires more storage and bandwidth.
+视频的比特率通常以每秒兆字节（mbps）或每秒千字节（kbps）表示。
 
-Bitrates for videos are commonly expressed in megabytes per second (mbps) or kilobytes per second (kbps).
+- **编解码器：**  
+编解码器（codec），即“压缩-解压缩器”的缩写，是用于压缩和解压缩数字媒体的软硬件组件，以减小媒体文件的大小，从而便于存储和传输，同时保持可接受的质量水平。
+编解码器分为两种主要类型：“无损编解码器”和“有损编解码器”。无损编解码器设计用于在无质量损失的情况下压缩数据，而有损编解码器则通过移除一些数据来压缩，从而造成一定的质量损失。
 
-- **Codecs:**
-Codecs, short for “compressor-decompressor” are software or hardware components that compress and decompress digital media to reduce the size of media files, making them more manageable for storage and transmission while maintaining an acceptable level of quality.
-There are two main types of codecs; "lossless codecs" and "lossy codecs". Lossless codecs are designed to compress data without any loss of quality, while lossy codecs are more designed to compress by removing some of the data resulting in a loss of quality.
-
-In summary, a video is a dynamic multimedia format that combines a series of individual frames, audio, and often additional metadata. It is used in a wide range of applications and can be tailored for different purposes, whether for entertainment, education, communication, or analysis.
+综上所述，视频是一种动态的多媒体格式，结合了一系列独立的帧、音频以及通常包含的附加元数据。它广泛应用于各类场景，并可根据不同用途进行定制，不论是用于娱乐、教育、沟通还是分析。

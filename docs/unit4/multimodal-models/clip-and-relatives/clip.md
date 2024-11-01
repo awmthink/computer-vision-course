@@ -1,34 +1,35 @@
-# Contrastive Language-Image Pre-training (CLIP)
+# 对比语言-图像预训练 (CLIP)
 
-## Introduction
+## 简介
 
-CLIP is a neural network adept at grasping visual concepts through natural language supervision. It operates by concurrently training a text encoder and an image encoder, focusing on a pretraining task that involves matching captions with corresponding images. This architecture allows CLIP to adapt to a variety of visual classification benchmarks seamlessly. It does so by simply receiving the names of the visual categories to be recognized, demonstrating "zero-shot" learning capabilities akin to those observed in GPT-2 and GPT-3 models.
+CLIP 是一种能够通过自然语言监督掌握视觉概念的神经网络。它通过同时训练一个文本编码器和一个图像编码器，专注于一个预训练任务，即匹配图像和对应的字幕。这种架构使 CLIP 能够无缝适应各种视觉分类基准测试。它仅需接收待识别的视觉类别名称，就能展现出类似 GPT-2 和 GPT-3 模型的“零样本”学习能力。
 
-## Contrastive pre-training
+## 对比预训练
 
-Given a batch of image-text pairs, CLIP computes the dense cosine similarity matrix between all possible (image, text) candidates within this batch. The core idea is to maximize the similarity between the correct pairs (shown in blue in the figure below) and minimize the similarity for incorrect pairs (shown in grey in the image). To do it, they optimize a symmetric cross-entropy loss over these similarity scores. 
+给定一批图像-文本对，CLIP 会计算所有可能的（图像，文本）候选对之间的稠密余弦相似度矩阵。核心思想是最大化正确配对（下图中用蓝色显示）的相似度，并最小化错误配对（图中用灰色显示）的相似度。为此，他们对这些相似度分数优化了一个对称交叉熵损失。
 
-![CLIP contrastive pre-training](https://images.openai.com/blob/fbc4f633-9ad4-4dc2-bd94-0b6f1feee22f/overview-a.svg)
-_Image taken from OpenAI_
+![CLIP 对比预训练](https://images.openai.com/blob/fbc4f633-9ad4-4dc2-bd94-0b6f1feee22f/overview-a.svg)
+_图片来源：OpenAI_
 
-Explaining in simple terms, we want to make the similarity between the image and its corresponding caption as high as we can, while the similarity between the image and the other captions should be small. We apply this logic to the caption too, so we want to maximize the similarity of the caption with its corresponding image, and minimize between all other images.
+简单来说，我们希望图像与其对应字幕的相似度尽可能高，而图像与其他字幕的相似度尽可能低。我们也对字幕应用此逻辑，即希望字幕与其对应图像的相似度最大化，同时与其他图像的相似度最小化。
 
-## Text Encoder and Image Encoder
+## 文本编码器和图像编码器
 
-CLIP's design features independent encoders for images and text, allowing flexibility in their choice. Users can switch the standard image encoder, like a Vision Transformer, for alternatives like ResNet, or opt for different text encoders, enhancing adaptability and experimentation. Of course, if you switch one of the encoders, you will need to train your model again, as your embedding distribution will be different.
+CLIP 的设计包含独立的图像和文本编码器，允许用户在选择上有一定的灵活性。用户可以将标准图像编码器（如 Vision Transformer）替换为 ResNet 等其他选项，或选择不同的文本编码器，以增强适应性和实验性。当然，如果更换编码器，则需要重新训练模型，因为嵌入分布将会不同。
 
-## Use cases
-CLIP, can be leveraged for a variety of applications. Here are some notable use cases:
+## 应用场景
 
-- Zero-shot image classification;
-- Similarity search;
-- Diffusion models conditioning.
+CLIP 可用于多种应用场景。以下是一些值得注意的应用场景：
 
-## Usage
+- 零样本图像分类；
+- 相似性搜索；
+- 扩散模型条件。
 
-For practical applications, one typically uses an image, and pre-defined classes as input. The provided Python example demonstrates how to use the transformers library for running CLIP. In this example, we want to zero-shot classify the image below between `dog` or `cat`.
+## 用法
 
-![A photo of cats](http://images.cocodataset.org/val2017/000000039769.jpg)
+在实际应用中，通常使用图像和预定义的类别作为输入。下面的 Python 示例展示了如何使用 transformers 库来运行 CLIP。在此示例中，我们想在 `dog` 和 `cat` 之间进行图像的零样本分类。
+
+![猫的照片](http://images.cocodataset.org/val2017/000000039769.jpg)
 
 ```python
 from PIL import Image
@@ -54,20 +55,20 @@ logits_per_image = outputs.logits_per_image
 probs = logits_per_image.softmax(dim=1)
 ```
 
-After executing this code, we got the following probabilities:
-- "a photo of a cat": 99.49%
-- "a photo of a dog": 0.51%
+运行上述代码后，得到以下概率：
 
-## Limitations
+- “a photo of a cat”：99.49%
+- “a photo of a dog”：0.51%
 
-Despite CLIP's proficiency in zero-shot classification, it is unlikely to outperform a specialized, fine-tuned model. Moreover, its generalization capabilities are somewhat limited, particularly in scenarios involving data or examples not encountered during training.
-The paper also shows that CLIP's effectiveness and biases are impacted by the choice of categories, as demonstrated in tests using the Fairface dataset. Notable disparities were found in gender and racial classifications, with gender accuracy over 96% and racial accuracy around 93%.
+## 局限性
 
-## Conclusion
+尽管 CLIP 在零样本分类方面表现出色，但它不太可能超越专门调优的模型。此外，其泛化能力在未遇到过的数据或实例的情况下存在一定限制。论文还指出，CLIP 的有效性和偏差受类别选择的影响，在使用 Fairface 数据集的测试中，发现性别和种族分类存在显著差异，性别准确率超过 96%，种族准确率约为 93%。
 
-In conclusion, the CLIP model from OpenAI has revolutionized the multimodal field. What sets CLIP apart is its proficiency in zero-shot learning, allowing it to classify images into categories it wasn't explicitly trained on. This remarkable ability to generalize comes from its innovative training method, where it learns to match images with text captions.
+## 结论
 
-## References
+总之，来自 OpenAI 的 CLIP 模型在多模态领域引发了革命。CLIP 的与众不同之处在于其零样本学习的能力，使其能够将图像分类到未明确训练过的类别中。这种非凡的泛化能力源于其创新的训练方法，即学习将图像与文本字幕进行匹配。
 
-- [CLIP paper](https://arxiv.org/abs/2103.00020)
-- [CLIP by Lilian Weng](https://lilianweng.github.io/posts/2021-05-31-contrastive/#clip)
+## 参考文献
+
+- [CLIP 论文](https://arxiv.org/abs/2103.00020)
+- [Lilian Weng 的 CLIP 介绍](https://lilianweng.github.io/posts/2021-05-31-contrastive/#clip)

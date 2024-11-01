@@ -1,6 +1,6 @@
-======================
+===================================
 欢迎来到社区计算机视觉课程
-======================
+===================================
 
 亲爱的学习者，
 
@@ -60,3 +60,110 @@
    Vision Transformers for Image Segmentation <unit3/vision-transformers/vision-transformers-for-image-segmentation>
    OneFormer <unit3/vision-transformers/oneformer>
    Knowledge Distillation with Vision Transformers <unit3/vision-transformers/knowledge-distillation>
+
+.. toctree::
+   :caption: Unit 4 - Multimodal Models
+   :maxdepth: 1
+
+   Exploring Multimodal Text and Vision Models - Uniting Senses in AI <unit4/multimodal-models/pre-intro>
+   A Multimodal World <unit4/multimodal-models/a_multimodal_world>
+   Introduction to Vision Language Models <unit4/multimodal-models/vlm-intro>
+   Multimodal Tasks and Models <unit4/multimodal-models/tasks-models-part1>
+   CLIP and Relatives <unit4/multimodal-models/clip-and-relatives/Introduction>
+   Losses <unit4/multimodal-models/clip-and-relatives/losses>
+   Contrastive Language-Image Pre-training (CLIP) <unit4/multimodal-models/clip-and-relatives/clip>
+   Multimodal Text Generation (BLIP) <unit4/multimodal-models/clip-and-relatives/blip>
+   Multimodal Object Detection (OWL-ViT) <unit4/multimodal-models/clip-and-relatives/owl_vit>
+   Transfer Learning of Multimodal Models <unit4/multimodal-models/transfer_learning>
+   Supplementary Reading and Resources <unit4/multimodal-models/supplementary-material>
+
+.. toctree::
+   :caption: Unit 5 - Generative Models
+   :maxdepth: 1
+
+   Introduction <unit5/generative-models/introduction/introduction>
+   Variational Autoencoders <unit5/generative-models/variational_autoencoders>
+   Generative Adversarial Networks <unit5/generative-models/gans>
+   StyleGAN Variants <unit5/generative-models/gans-vaes/stylegan>
+   CycleGAN Introduction <unit5/generative-models/practical-applications/cycle_gan>
+   Introduction to Diffusion Models <unit5/generative-models/diffusion-models/introduction>
+   Introduction to Stable Diffusion <unit5/generative-models/diffusion-models/stable-diffusion>
+   Control over Diffusion Models <unit5/generative-models/diffusion-models/simple-explanation>
+   Privacy, Bias and Societal Concerns <unit5/generative-models/practical-applications/ethical-issues>
+
+.. toctree::
+   :caption: Unit 6 - Basic CV Tasks
+   :maxdepth: 1
+
+   Introduction <unit6/basic-cv-tasks/introduction>
+   Object Detection <unit6/basic-cv-tasks/object_detection>
+   Image Segmentation <unit6/basic-cv-tasks/segmentation>
+
+.. toctree::
+   :caption: Unit 7 - Video and Video Processing
+   :maxdepth: 1
+
+   Introduction <unit7/video-processing/introduction-to-video>
+   Video Processing Basics <unit7/video-processing/video-processing-basics>
+   Overview of the previous SOTA models <unit7/video-processing/overview-of-previous-sota-models>
+
+.. toctree::
+   :caption: Unit 8 - 3D Vision, Scene Rendering and Reconstruction
+   :maxdepth: 1
+
+   Introduction <unit8/introduction/introduction>
+   Applications of 3D Vision <unit8/introduction/applications>
+   A Brief History of 3D Vision <unit8/introduction/brief_history>
+   Camera models <unit8/terminologies/camera-models>
+   Basics of Linear Algebra for 3D Data <unit8/terminologies/linear-algebra>
+   Representations for 3D Data <unit8/terminologies/representations>
+   Metric and Relative Monocular Depth Estimation <unit8/monocular_depth_estimation>
+   Novel View Synthesis <unit8/3d-vision/nvs>
+   Introduction to Stereo Vision <unit8/3d_measurements_stereo_vision>
+   Neural Radiance Fields (NeRFs) <unit8/nerf>
+
+.. toctree::
+   :caption: Unit 9 - Model Optimization
+   :maxdepth: 1
+
+   Introduction to Model Optimization for Deployment <unit9/intro_to_model_optimization>
+   Model Deployment Considerations <unit9/model_deployment>
+   Model Optimization Tools and Frameworks <unit9/tools_and_frameworks>
+
+.. toctree::
+   :caption: Unit 10 - Synthetic Data Creation
+   :maxdepth: 1
+
+   Introduction <unit10/introduction>
+   Synthetic Datasets <unit10/synthetic_datasets>
+   Using a 3D Renderer to Generate Synthetic Data <unit10/blenderProc>
+   Synthetic Data Generation Using DCGAN <unit10/synthetic-lung-images>
+   Synthetic Data Generation with Diffusion Models <unit10/datagen-diffusion-models>
+   Challenges and Opportunities Associated With Using Synthetic Data <unit10/challenges>
+   Introduction to Point Clouds <unit10/point_clouds>
+
+.. toctree::
+   :caption: Unit 11 - Zero Shot Computer Vision
+   :maxdepth: 1
+
+   Introduction <unit11/1>
+   Zero-shot Learning <unit11/2>
+
+.. toctree::
+   :caption: Unit 12 - Ethics and Biases
+   :maxdepth: 1
+
+   Exploring Ethical Foundations in CV Models <unit12/pre-intro>
+   Introduction <unit12/introduction>
+   Ethics and Bias in AI <unit12/ethics-bias-ai>
+   Hugging Face's efforts: Ethics and Society <unit12/conclusion>
+   Supplementary reading and resources <unit12/supplementary-material>
+
+.. toctree::
+   :caption: Unit 13 - Outlook
+   :maxdepth: 1
+
+   Retention In Vision <unit13/retention>
+   Overview of Hiera <unit13/hiera>
+   Overview of Hyena <unit13/hyena>
+   Overview of I-JEPA <unit13/i-jepa>

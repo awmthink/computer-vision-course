@@ -1,46 +1,47 @@
-# Multimodal Tasks and Models
+# 多模态任务与模型
 
-In this section, we will briefly look at the different multimodal tasks involving Image and Text modalities and their corresponding models. Before diving in, let's have a small recap on what is meant by "multimodal" which was covered in previous sections. The human world is a symphony of diverse sensory inputs. We perceive and understand through sight, sound, touch, and more. This multimodality is what separates our rich understanding from the limitations of traditional, unimodal AI models. Drawing inspiration from human cognition, multimodal models aim to bridge this gap by integrating information from multiple sources, like text, images, audio, and even sensor data. This fusion of modalities leads to a more comprehensive and nuanced understanding of the world, unlocking a vast range of tasks and applications.
+在本节中，我们将简要介绍涉及图像和文本模态的多模态任务及其对应模型。在深入研究之前，我们先回顾一下前面章节中提到的“多模态”的含义。人类的世界是各种感官输入的交响曲，我们通过视觉、听觉、触觉等来感知和理解。这种多模态性让我们能够超越传统单模态 AI 模型的局限性。受人类认知的启发，多模态模型旨在通过整合来自多个来源（如文本、图像、音频，甚至是传感器数据）的信息来弥补这一差距。这种模态的融合带来了更全面和细致的世界理解，解锁了广泛的任务和应用场景。
 
-## Examples of Tasks
-Before looking into specific models, it's crucial to understand the diverse range of tasks involving image and text. These tasks include but are not limited to:
+## 任务示例
+在研究特定模型之前，了解涉及图像和文本的多样化任务至关重要。这些任务包括但不限于：
 
-- **Visual Question Answering (VQA) and Visual Reasoning:** Imagine a machine that looks at a picture and understands your questions about it. Visual Question Answering (VQA) is just that! It trains computers to extract meaning from images and answer questions like "Who's driving the car?" while Visual Reasoning is the secret sauce, enabling the machine to go beyond simple recognition and infer relationships, compare objects, and understand scene context to give accurate answers. It's like asking a detective to read the clues in a picture, only much faster and better!
+- **视觉问答 (VQA) 和视觉推理**：想象一个机器能够看着一张图片，并理解你对图片的提问。视觉问答 (VQA) 正是这样！它训练计算机从图像中提取意义，并回答像“谁在开车？”这样的问题，而视觉推理则是其中的关键，使得机器能够超越简单的识别，推断关系、比较对象，并理解场景的上下文，以给出准确的答案。就像请一位侦探读取图片中的线索，只是更快、更精准！
 
-- **Document Visual Question Answering (DocVQA):** Imagine a computer understanding both the text and layout of a document, like a map or contract, and then answering questions about it directly from the image. That's Document Visual Question Answering (DocVQA) in a nutshell. It combines computer vision for processing image elements and natural language processing to interpret text, allowing machines to "read" and answer questions about documents just like humans do. Think of it as supercharging document search with AI to unlock all the information trapped within those images.
+- **文档视觉问答 (DocVQA)**：想象一台计算机能够理解文档的文本和布局（如地图或合同），并直接从图像中回答有关文档的问题。这就是文档视觉问答 (DocVQA)。它结合了计算机视觉来处理图像元素和自然语言处理来解读文本，使得机器能够像人类一样“阅读”并回答文档中的问题。可以把它看作是 AI 超级增强的文档搜索，解锁了那些图像中隐藏的信息。
 
-- **Image captioning:** Image captioning bridges the gap between vision and language. It analyzes an image like a detective, extracting details, understanding the scene, and then crafting a sentence or two that tells the story – a sunset over a calm sea, a child laughing on a swing, or even a bustling city street. It's a fascinating blend of computer vision and language, letting computers describe the world around them, one picture at a time.
+- **图像字幕生成**：图像字幕生成弥合了视觉与语言之间的差距。它像侦探一样分析图像，提取细节、理解场景，并创建一两句话来描述——比如“宁静海面上的夕阳”，或者“秋千上笑着的孩子”，甚至是“熙熙攘攘的城市街道”。这是计算机视觉和语言的奇妙结合，让计算机能够用文字描述周围的世界，一张图片接着一张图片。
 
-- **Image-Text Retrieval:** Image-text retrieval is like a matchmaker for images and their descriptions. Think of it like searching for a specific book in a library, but instead of browsing titles, you can use either the picture on the cover or a brief summary to find it. It's like a super-powered search engine that understands both pictures and words, opening doors for exciting applications like image search, automatic captioning, and even helping visually impaired people "see" through text descriptions.
+- **图像-文本检索**：图像-文本检索就像是图像和其描述的媒人。想象一下在图书馆中寻找一本特定的书，但不是浏览书名，而是通过封面图片或简要描述来找到它。这就像一个超强的搜索引擎，既能理解图像，也能理解文字，开启了许多有趣的应用，如图像搜索、自动字幕生成，甚至帮助视障人士通过文字描述“看见”世界。
 
-- **Visual grounding:** Visual grounding is like connecting the dots between what we see and say. It's about understanding how language references specific parts of an image, allowing AI models to pinpoint objects or regions based on natural language descriptions. Imagine asking "Where's the red apple in the fruit bowl?" and the AI instantly highlights it in the picture - that's visual grounding at work!
+- **视觉定位**：视觉定位就像将我们所见和所说的内容联系在一起。它的目标是理解语言如何指代图像中的特定部分，使 AI 模型能够根据自然语言描述来定位对象或区域。想象你问“水果碗里的红苹果在哪里？”然后 AI 即时在图像中高亮显示它——这就是视觉定位的应用！
 
-- **Text-to-Image generation:** Imagine a magical paintbrush that interprets your words and brings them to life! Text-to-image generation is like that; it transforms your written descriptions into unique images. It's a blend of language understanding and image creation, where your text unlocks a visual world from photorealistic landscapes to dreamlike abstractions, all born from the power of your words.
+- **文本生成图像**：想象一支能够解读你的文字并将其带入现实的神奇画笔！文本生成图像就像这样，它将你的书面描述转化为独特的图像。这是语言理解和图像创造的结合，让你的文字解锁一个视觉世界，从照片般逼真的风景到梦幻般的抽象，一切都源自你的语言之力。
 
-## Visual Question Anwering (VQA) and Visual Reasoning
-![VQA](https://huggingface.co/datasets/hf-vision/course-assets/resolve/main/multimodal_fusion_text_vision/vqa_visual_reasoning.png) *Example of Input (Image + Text) and Output (Text) for the VQA and Visual Reasoning Models [[1]](#pretraining-paper)*
+## 视觉问答 (VQA) 和视觉推理
+![VQA](https://huggingface.co/datasets/hf-vision/course-assets/resolve/main/multimodal_fusion_text_vision/vqa_visual_reasoning.png) *VQA 和视觉推理模型的输入（图像 + 文本）和输出（文本）示例 [[1]](#pretraining-paper)*
 
-**Visual Question Answering (VQA)**
-- **Input:** An image-question pair (image and a question about it).
-- **Output:** In multiple-choice setting: A label corresponding to the correct answer among pre-defined choices.
-In open-ended setting: A free-form natural language answer based on the image and question.
-- **Task:** Answer questions about images. (Most VQA models treat as a classification problem with pre-defined answers). See the above example for the reference.
+**视觉问答 (VQA)**
+- **输入：** 图像-问题对（图像及关于该图像的一个问题）。
+- **输出：** 在多项选择设置中：一个标签，表示在预定义的选项中对应正确答案的选项。
+在开放式设置中：基于图像和问题的自由形式自然语言答案。
+- **任务：** 回答关于图像的问题。（大多数 VQA 模型将其视为一个具有预定义答案的分类问题）。请参阅上方示例作为参考。
 
-**Visual Reasoning**
-- **Input:** Varies depending on the specific visual reasoning task:
-    - VQA-style tasks: Image-question pairs.
-    - Matching tasks: Images and text statements.
-    - Entailment tasks: Image and text pair (potentially with multiple statements).
-    - Sub-question tasks: Image and a primary question with additional perception-related sub-questions.
-- **Output:** Varies depending on the task:
-    - VQA: Answers to questions about the image.
-    - Matching: True/False for whether the text is true about the image(s).
-    - Entailment: Prediction of whether the image semantically entails the text.
-    - Sub-question: Answers to the sub-questions related to perception.
-- **Task:** Performs various reasoning tasks on images. See the above example for the reference.
+**视觉推理**
+- **输入：** 根据特定的视觉推理任务而变化：
+    - VQA 风格的任务：图像-问题对。
+    - 匹配任务：图像和文本语句。
+    - 蕴含任务：图像和文本对（可能包含多个语句）。
+    - 子问题任务：图像和主要问题以及附加的感知相关子问题。
+- **输出：** 根据任务的不同而变化：
+    - VQA：图像问题的答案。
+    - 匹配：判断文本是否真实地描述了图像（真/假）。
+    - 蕴含：预测图像是否在语义上暗含文本。
+    - 子问题：感知相关子问题的答案。
+- **任务：** 执行多种图像上的推理任务。请参阅上方示例作为参考。
 
-In general, both VQA and Visual Reasoning are treated as *Visual Question Answering (VQA)* task. Some of the popular models for VQA tasks are:
-- **BLIP-VQA**: It is a large pre-trained model for visual question answering (VQA) tasks developed by Salesforce AI. It uses a "Bootstrapping Language-Image Pre-training" (BLIP) approach, which leverages both noisy web data and caption generation to achieve state-of-the-art performance on various vision-language tasks. You can use the BLIP in huggingface as follows:
+一般来说，视觉问答 (VQA) 和视觉推理任务都被视为*视觉问答 (VQA)* 任务。以下是一些流行的 VQA 模型：
+
+- **BLIP-VQA**：这是 Salesforce AI 开发的一个大规模预训练模型，专用于视觉问答 (VQA) 任务。它采用了“自举式语言-图像预训练” (BLIP) 方法，通过利用噪声的网页数据和字幕生成，在各种视觉语言任务上达到了最先进的性能。你可以在 huggingface 中使用 BLIP，如下所示：
 ```python
 from PIL import Image
 from transformers import pipeline
@@ -54,7 +55,8 @@ question = "Is there an elephant?"
 
 vqa_pipeline(image, question, top_k=1)
 ```
-- **Deplot**: It is a one-shot visual language reasoning model trained on translating plots and charts to text summaries. This enables its integration with LLMs for answering complex questions about the data, even with novel human-written queries. DePlot achieves this by standardizing the plot-to-table translation task and leveraging Pix2Struct architecture, surpassing previous SOTA on chart QA with just a single example and LLM prompting. You can use the Deplot in huggingface as follows:
+
+- **Deplot**：这是一个单样本的视觉语言推理模型，专门训练用于将图表和图表翻译为文本摘要。这使其能够与 LLM 集成，以回答有关数据的复杂问题，即使是人类编写的全新查询。DePlot 通过标准化图表到表格的翻译任务并利用 Pix2Struct 架构，实现了图表问答的最新水平，仅凭一个示例和 LLM 提示即可超越之前的 SOTA。你可以在 huggingface 中使用 Deplot，如下所示：
 ```python
 from transformers import Pix2StructProcessor, Pix2StructForConditionalGeneration
 import requests
@@ -74,13 +76,14 @@ inputs = processor(
 predictions = model.generate(**inputs, max_new_tokens=512)
 print(processor.decode(predictions[0], skip_special_tokens=True))
 ```
-- **VLIT**: It is a Vision-and-Language Transformer (ViLT) model, utilizing a transformer architecture without convolutions or region supervision, fine-tuned on the VQAv2 dataset for answering natural language questions about images. The base ViLT model boasts a large architecture (B32 size) and leverages joint image and text training, making it effective for various vision-language tasks, particularly VQA, achieving competitive performance. You can use VLIT in HuggingFace as follows:
+
+- **VLIT**：这是一个视觉和语言 Transformer (ViLT) 模型，采用 Transformer 架构，无需卷积或区域监督，针对 VQAv2 数据集进行了微调，用于回答关于图像的自然语言问题。基础 ViLT 模型具有大规模架构 (B32 大小)，利用图像和文本的联合训练，在 VQA 等各种视觉语言任务中表现出色，具有竞争力的性能。你可以在 HuggingFace 中使用 VLIT，如下所示：
 ```python
 from transformers import ViltProcessor, ViltForQuestionAnswering
 import requests
 from PIL import Image
 
-# prepare image + question
+# 准备图像和问题
 url = "http://images.cocodataset.org/val2017/000000039769.jpg"
 image = Image.open(requests.get(url, stream=True).raw)
 text = "How many cats are there?"
@@ -88,32 +91,35 @@ text = "How many cats are there?"
 processor = ViltProcessor.from_pretrained("dandelin/vilt-b32-finetuned-vqa")
 model = ViltForQuestionAnswering.from_pretrained("dandelin/vilt-b32-finetuned-vqa")
 
-# prepare inputs
+# 准备输入
 encoding = processor(image, text, return_tensors="pt")
 
-# forward pass
+# 前向传播
 outputs = model(**encoding)
 logits = outputs.logits
 idx = logits.argmax(-1).item()
 print("Predicted answer:", model.config.id2label[idx])
 ```
-Learn more about how to train and use VQA models in HuggingFace `transformers` library [here](https://huggingface.co/docs/transformers/v4.36.1/tasks/visual_question_answering).
+了解更多关于如何在 HuggingFace `transformers` 库中训练和使用 VQA 模型，请点击[此处](https://huggingface.co/docs/transformers/v4.36.1/tasks/visual_question_answering)。
 
-## Document Visual Question Answering (DocVQA)
+## 文档视觉问答 (DocVQA)
 ![DocVQA](https://huggingface.co/datasets/hf-vision/course-assets/resolve/main/multimodal_fusion_text_vision/doc_vqa.jpg)
-*Example of Input (Image + Text) and Output (Text) for the Doc VQA Model. [[2]](#doc-vqa-paper)*
-- **Input:**
-    - Document image: A scanned or digital image of a document, containing text, layout, and visual elements.
-    - Question about the document: A natural language question posed in text format.
-- **Task:**
-    - Analyze and understand: The DocVQA model must process both the visual and textual information within the document to fully comprehend its content.
-    - Reason and infer: The model needs to establish relationships between visual elements, text, and the question to draw relevant conclusions.
-    - Generate a natural language answer: The model must produce a clear, concise, and accurate answer to the question in natural language text format. See the above example for the reference.
+*Doc VQA 模型的输入 (图像 + 文本) 和输出 (文本) 示例。 [[2]](#doc-vqa-paper)*
 
-- **Output:** Answer to the question: A text response that directly addresses the query and accurately reflects the information found in the document.
+- **输入：**
+    - 文档图像：一个包含文本、布局和视觉元素的扫描或数字文档图像。
+    - 关于文档的问题：一个以自然语言文本格式呈现的问题。
 
-Now, let's look at the some of the popular DocVQA models in the HuggingFace:
-- **LayoutLM:** It is a pre-trained neural network that understands document images by jointly analyzing both the text and its layout. Unlike traditional NLP models, it considers factors like font size, position, and proximity to learn relationships between words and their meaning in the context of the document. This allows it to excel at tasks like form understanding, receipt analysis, and document classification, making it a powerful tool for extracting information from scanned documents. You can use LayoutLM in HuggingFace as follows:
+- **任务：**
+    - 分析和理解：DocVQA 模型必须处理文档中的视觉和文本信息，以完全理解其内容。
+    - 推理和推断：模型需要在视觉元素、文本和问题之间建立联系，以得出相关结论。
+    - 生成自然语言答案：模型必须以自然语言文本格式生成清晰、简洁且准确的答案。参见上面的示例作为参考。
+
+- **输出：**问题的答案：直接回答查询并准确反映文档中找到的信息的文本响应。
+
+接下来，让我们看一下 HuggingFace 中一些流行的 DocVQA 模型：
+
+- **LayoutLM**：这是一个预训练神经网络模型，通过联合分析文本及其布局来理解文档图像。与传统 NLP 模型不同，它会考虑字体大小、位置和邻近度等因素，以学习单词间的关系及其在文档上下文中的含义。使其在表单理解、收据分析和文档分类等任务中表现优异，成为从扫描文档中提取信息的强大工具。你可以在 HuggingFace 中使用 LayoutLM，如下所示：
 ```python
 from transformers import pipeline
 from PIL import Image
@@ -127,7 +133,8 @@ pipe(image=image, question=question)
 
 ## [{'answer': '20,000$'}]
 ```
-- **Donut:** Also known as OCR-free Document Understanding Transformer, is a state-of-the-art image processing model that bypasses traditional optical character recognition (OCR) and directly analyzes document images to understand their content. It combines a vision encoder (Swin Transformer) with a text decoder (BART) to extract information and generate textual descriptions, excelling in tasks like document classification, form understanding, and visual question answering. Its unique strength lies in its "end-to-end" nature, avoiding potential errors introduced by separate OCR steps and achieving impressive accuracy with efficient processing. You can use Donut model in HuggingFace as follows:
+
+- **Donut：** 也被称为 OCR-free Document Understanding Transformer，是一种先进的图像处理模型，它绕过传统的光学字符识别（OCR）直接分析文档图像以理解其内容。它结合了视觉编码器（Swin Transformer）和文本解码器（BART），以提取信息并生成文本描述，擅长于文档分类、表单理解和视觉问答等任务。其独特的优势在于其“端到端”特性，避免了单独的 OCR 步骤带来的潜在错误，并通过高效的处理实现了令人印象深刻的准确性。您可以在 HuggingFace 中使用 Donut 模型，如下所示：
 ```python
 from transformers import pipeline
 from PIL import Image
@@ -143,7 +150,7 @@ pipe(image=image, question=question)
 
 ## [{'answer': '20,000$'}]
 ```
-- **Nougat:** It is a visual transformer model, trained on millions of academic papers, that can directly "read" scanned PDFs and output their content in a structured markup language, even understanding complex elements like math equations and tables. It bypasses traditional Optical Character Recognition, achieving high accuracy while preserving semantics, making scientific knowledge stored in PDFs more accessible and usable. Nougat uses the same architecture as Donut, meaning an image Transformer encoder and an autoregressive text Transformer decoder to translate scientific PDFs to markdown, enabling easier access to them. You can use Nougat model in HuggingFace as follows:
+- **Nougat：** 这是一种视觉 Transformer 模型，训练于数百万篇学术论文上，可以直接“读取”扫描的 PDF，并以结构化标记语言输出其内容，甚至能够理解复杂的元素如数学公式和表格。它绕过了传统的光学字符识别，实现了高精度并保持了语义完整，使存储在 PDF 中的科学知识更易于访问和使用。Nougat 使用与 Donut 相同的架构，即图像 Transformer 编码器和自回归文本 Transformer 解码器，将科学 PDF 转换为 markdown，以便更容易访问。您可以在 HuggingFace 中使用 Nougat 模型，如下所示：
 ```python
 from huggingface_hub import hf_hub_download
 import re
@@ -158,7 +165,7 @@ model = VisionEncoderDecoderModel.from_pretrained("facebook/nougat-base")
 
 device = "cuda" if torch.cuda.is_available() else "cpu"
 model.to(device)
-# prepare PDF image for the model
+# 为模型准备 PDF 图像
 filepath = hf_hub_download(
     repo_id="hf-internal-testing/fixtures_docvqa",
     filename="nougat_paper.png",
@@ -167,7 +174,7 @@ filepath = hf_hub_download(
 image = Image.open(filepath)
 pixel_values = processor(image, return_tensors="pt").pixel_values
 
-# generate transcription (here we only generate 30 tokens)
+# 生成转录（此处我们只生成 30 个 token）
 outputs = model.generate(
     pixel_values.to(device),
     min_length=1,
@@ -177,22 +184,22 @@ outputs = model.generate(
 
 sequence = processor.batch_decode(outputs, skip_special_tokens=True)[0]
 sequence = processor.post_process_generation(sequence, fix_markdown=False)
-# note: we're using repr here such for the sake of printing the \n characters, feel free to just print the sequence
+# 注意：我们在此处使用 repr 只是为了打印 \n 字符，您可以直接打印 sequence
 print(repr(sequence))
 ```
-Learn more about how to train and use DocVQA models in HuggingFace `transformers` library [here](https://huggingface.co/docs/transformers/tasks/document_question_answering).
+了解更多关于如何在 HuggingFace 的 `transformers` 库中训练和使用 DocVQA 模型的内容，请参考[这里](https://huggingface.co/docs/transformers/tasks/document_question_answering)。
 
-## Image Captioning
+## 图像描述
 ![Image Captioning](https://huggingface.co/datasets/hf-vision/course-assets/resolve/main/multimodal_fusion_text_vision/image_captioning.png)
-*Example of Input (Image) and Output (Text) for the Image Captioning Model. [[1]](#pretraining-paper)*
-- **Inputs:**
-    - Image: Image in various formats (e.g., JPEG, PNG).
-    - Pre-trained image feature extractor (optional): A pre-trained neural network that can extract meaningful features from images, such as a convolutional neural network (CNN).
-- **Outputs:** Textual captions: Single Sentence or Paragraph that accurately describe the content of the input images, capturing objects, actions, relationships, and overall context. See the above example for the reference.
-- **Task:** To automatically generate natural language descriptions of images. This involves: (1) Understanding the visual content of the image (objects, actions, relationships). (2) Encoding this information into a meaningful representation. (3) Decoding this representation into a coherent, grammatically correct, and informative sentence or phrase.
+*图像描述模型的输入（图像）和输出（文本）的示例。[[1]](#pretraining-paper)*
+- **输入：**
+    - 图像：多种格式的图像（例如 JPEG，PNG）。
+    - 预训练的图像特征提取器（可选）：一种预训练的神经网络，可从图像中提取有意义的特征，如卷积神经网络（CNN）。
+- **输出：** 文本描述：准确描述输入图像内容的单句或段落，捕捉对象、动作、关系及整体上下文。参见上图示例。
+- **任务：** 自动生成图像的自然语言描述。包括：(1) 理解图像的视觉内容（对象、动作、关系）。(2) 将该信息编码为有意义的表示。(3) 将此表示解码为连贯、语法正确且信息丰富的句子或短语。
 
-Now, let's look at some of the popular Image Captioning models in HuggingFace:
-- **ViT-GPT2:** It is a PyTorch model for generating image captions, built by combining Vision Transformer (ViT) for visual feature extraction and GPT-2 for text generation. Trained on the COCO dataset, it leverages ViT's ability to encode rich image details and GPT-2's fluency in language production to create accurate and descriptive captions. This open-source model offers an effective solution for image understanding and captioning tasks. You can use **ViT-GPT2** in HuggingFace as follows:
+接下来，让我们看看 HuggingFace 中一些流行的图像描述模型：
+- **ViT-GPT2：** 这是一种用于生成图像描述的 PyTorch 模型，通过将 Vision Transformer (ViT) 用于视觉特征提取和 GPT-2 用于文本生成构建而成。在 COCO 数据集上训练，利用 ViT 编码丰富的图像细节以及 GPT-2 生成流畅语言的能力，以创建准确和描述性的文本。此开源模型为图像理解和描述任务提供了有效的解决方案。您可以在 HuggingFace 中使用 **ViT-GPT2**，如下所示：
 ```python
 from transformers import pipeline
 
@@ -202,7 +209,7 @@ image_to_text("https://ankur3107.github.io/assets/images/image-captioning-exampl
 
 # [{'generated_text': 'a soccer game with a player jumping to catch the ball '}]
 ```
-- **BLIP-Image-Captioning:** It is a state-of-the-art image captioning model based on BLIP, a framework pre-trained on both clean and noisy web data for unified vision-language understanding and generation. It utilizes a bootstrapping process to filter out noisy captions, achieving improved performance on tasks like image captioning, image-text retrieval, and VQA. This large version, built with a ViT-L backbone, excels in generating accurate and detailed captions from images. You can use the BLIP Image Captioning model in HuggingFace as follows:
+- **BLIP-Image-Captioning：** 这是基于 BLIP 的一种先进图像描述模型，BLIP 是一种在清洁和噪声的网络数据上预训练的框架，适用于统一的视觉语言理解和生成。它利用自举过程来过滤噪声描述，在图像描述、图像-文本检索和视觉问答等任务中表现更佳。此大型版本以 ViT-L 主干为基础，擅长从图像生成准确且详细的描述。您可以在 HuggingFace 中使用 BLIP 图像描述模型，如下所示：
 ```python
 import requests
 from PIL import Image
@@ -216,20 +223,20 @@ model = BlipForConditionalGeneration.from_pretrained(
 img_url = "https://storage.googleapis.com/sfr-vision-language-research/BLIP/demo.jpg"
 raw_image = Image.open(requests.get(img_url, stream=True).raw).convert("RGB")
 
-# conditional image captioning
+# 条件图像描述
 text = "a photography of"
 inputs = processor(raw_image, text, return_tensors="pt")
 
 out = model.generate(**inputs)
 print(processor.decode(out[0], skip_special_tokens=True))
 
-# unconditional image captioning
+# 无条件图像描述
 inputs = processor(raw_image, return_tensors="pt")
 
 out = model.generate(**inputs)
 print(processor.decode(out[0], skip_special_tokens=True))
 ```
-- **git-base:** `microsoft/git-base` is a base-sized version of the GIT (GenerativeImage2Text) model, a Transformer decoder trained to generate text descriptions of images. It takes both image tokens and text tokens as input, predicting the next text token based on both the image and previous text. This makes it suitable for tasks like image and video captioning. Fine-tuned versions like `microsoft/git-base-coco` and `microsoft/git-base-textcaps` exist for specific datasets, while the base model offers a starting point for further customization. You can use git-base model in HuggingFace as follows:
+- **git-base：** `microsoft/git-base` 是 GIT（GenerativeImage2Text）模型的基础版，一种 Transformer 解码器，旨在生成图像的文本描述。它同时接收图像 token 和文本 token 作为输入，并基于图像和先前的文本预测下一个文本 token。它适用于图像和视频描述等任务。已微调的版本如 `microsoft/git-base-coco` 和 `microsoft/git-base-textcaps` 针对特定数据集，而基础模型则为进一步定制提供了起点。您可以在 HuggingFace 中使用 git-base 模型，如下所示：
 ```python
 from transformers import AutoProcessor, AutoModelForCausalLM
 import requests
@@ -248,23 +255,25 @@ generated_caption = processor.batch_decode(generated_ids, skip_special_tokens=Tr
 print(generated_caption)
 ```
 
-Learn more about how to train and use Image Captioning models in HuggingFace `transformers` libraries [here.](https://huggingface.co/docs/transformers/v4.36.1/en/tasks/image_captioning)
+了解更多关于如何在 HuggingFace 的 `transformers` 库中训练和使用图像描述模型的内容，请参考[这里](https://huggingface.co/docs/transformers/v4.36.1/en/tasks/image_captioning)。
 
-## Image-Text Retrieval
+## 图像-文本检索
 ![Image-Text Retrieval](https://huggingface.co/datasets/hf-vision/course-assets/resolve/main/multimodal_fusion_text_vision/image_text_retrieval.png)
-*Example of Input (Text Query) and Output (Image) for the Text-to-Image Retrieval. [[1]](#pretraining-paper)*
-- **Inputs:**
-    - Images: Image in various formats (e.g., JPEG, PNG).
-    - Text: Natural language text, usually in the form of captions, descriptions, or keywords associated with images.
-- **Outputs:** 
-    - Relevant images: When a text query is given, the system returns a ranked list of images most relevant to the text.
-    - Relevant text: When an image query is given, the system returns a ranked list of text descriptions or captions that best describe the image.
-- **Tasks:**
-    - Image-to-text retrieval: Given an image as input, retrieve text descriptions or captions that accurately describe its content.
-    - Text-to-image retrieval: Given a text query, retrieve images that visually match the concepts and entities mentioned in the text.
+*文本到图像检索的输入（文本查询）和输出（图像）示例。[[1]](#pretraining-paper)*
 
-One of most popular model for the Image-Text Retrieval is CLIP.
-- **CLIP (Contrastive Language-Image Pretraining):** It excels in image-text retrieval by leveraging a shared embedding space. Through contrastive learning, it pretrains on large-scale image and text datasets, enabling the model to map diverse concepts into a common space. CLIP leverages a contrastive learning approach during pretraining, where it learns to map images and text into a shared embedding space. This shared space enables direct comparison between the two modalities, allowing for efficient and accurate retrieval tasks. In image-text retrieval, CLIP can be applied by encoding images and text into the shared embedding space, and the similarity between an image and a textual query is measured by the proximity of their respective embeddings.  The model's versatility arises from its ability to grasp semantic relationships without task-specific fine-tuning, making it efficient for applications ranging from content-based image retrieval to interpreting natural language queries for images. You can use CLIP in HuggingFace for Image-Text retrieval as follows:
+- **输入：**
+    - 图像：各种格式的图像（如 JPEG、PNG）。
+    - 文本：自然语言文本，通常以标题、描述或与图像相关的关键词形式出现。
+- **输出：**
+    - 相关图像：当提供文本查询时，系统返回与文本最相关的图像的排序列表。
+    - 相关文本：当提供图像查询时，系统返回最能描述该图像的文本描述或标题的排序列表。
+- **任务：**
+    - 图像到文本检索：给定图像作为输入，检索准确描述其内容的文本描述或标题。
+    - 文本到图像检索：给定文本查询，检索与文本中提到的概念和实体在视觉上相符的图像。
+
+CLIP 是图像-文本检索中最流行的模型之一。
+
+- **CLIP（对比语言-图像预训练）：** 通过共享的嵌入空间在图像-文本检索中表现出色。它通过对比学习在大规模的图像和文本数据集上预训练，使模型能够将多种概念映射到一个公共空间。在图像-文本检索中，可以通过将图像和文本编码到共享的嵌入空间中来应用 CLIP，并通过其各自嵌入的接近度来测量图像与文本查询之间的相似性。该模型的多功能性在于其无需任务特定的微调即可掌握语义关系，使其高效适用于从基于内容的图像检索到自然语言图像查询的解释等应用。你可以在 HuggingFace 中如下使用 CLIP 进行图像-文本检索：
 ```python
 from PIL import Image
 import requests
@@ -285,25 +294,27 @@ inputs = processor(
 )
 
 outputs = model(**inputs)
-logits_per_image = outputs.logits_per_image  # this is the image-text similarity score
+logits_per_image = outputs.logits_per_image  # 这是图像-文本相似度得分
 probs = logits_per_image.softmax(
     dim=1
-)  # we can take the softmax to get the label probabilities
+)  # 我们可以取 softmax 得到标签概率
 ```
-Learn more about how to use CLIP for Image-Text retrieval in HuggingFace [here](https://huggingface.co/docs/transformers/model_doc/clip#resources).
+在 HuggingFace [这里](https://huggingface.co/docs/transformers/model_doc/clip#resources)了解如何使用 CLIP 进行图像-文本检索。
 
-## Visual Grounding
+## 视觉定位
 ![Visual Grounding](https://huggingface.co/datasets/hf-vision/course-assets/resolve/main/multimodal_fusion_text_vision/visual_grounding.jpg)
-*Example of Input (Image + Text) and Output (Bounding Boxes).(a) Phrase Grounding (b) Expression Comprehension. [[1]](#pretraining-paper)*
-- **Inputs:**
-    - Image: A visual representation of a scene or object.
-    - Natural language query: A text description or question that refers to a specific part of the image.
+*输入（图像 + 文本）和输出（边界框）的示例。(a) 短语定位 (b) 表达理解。[[1]](#pretraining-paper)*
 
-- **Output:** Bounding box or segmentation mask: A spatial region within the image that corresponds to the object or area described in the query. This is typically represented as coordinates or a highlighted region.
-- **Task:** Locating the relevant object or region: The model must correctly identify the part of the image that matches the query. This involves understanding both the visual content of the image and the linguistic meaning of the query.
+- **输入：**
+    - 图像：场景或对象的视觉表示。
+    - 自然语言查询：指向图像中特定部分的文本描述或问题。
 
-Now, see some of the popular Visual Grounding (Object Detection) models in HuggingFace.
-- **OWL-ViT:** OWL-ViT (Vision Transformer for Open-World Localization) is a powerful object detection model built on a standard Vision Transformer architecture and trained on large-scale image-text pairs. It excels at "open-vocabulary" detection, meaning it can identify objects not present in its training data based on textual descriptions. By leveraging contrastive pre-training and fine-tuning, OWL-ViT achieves impressive performance in both zero-shot (text-guided) and one-shot (image-guided) detection tasks, making it a versatile tool for flexible search and identification in images. You can use OWL-ViT in HuggingFace as follows:
+- **输出：** 边界框或分割掩码：图像中对应于查询描述的对象或区域的空间区域，通常以坐标或高亮区域表示。
+- **任务：** 定位相关对象或区域：模型必须正确识别图像中与查询匹配的部分，这涉及到对图像的视觉内容和查询的语言含义的理解。
+
+以下是一些在 HuggingFace 上流行的视觉定位（对象检测）模型。
+
+- **OWL-ViT：** OWL-ViT（用于开放世界定位的视觉 Transformer）是一种基于标准视觉 Transformer 架构并在大规模图像-文本对上训练的强大对象检测模型。它擅长“开放词汇”检测，这意味着它可以根据文本描述识别未出现在训练数据中的对象。通过对比预训练和微调，OWL-ViT 在零样本（基于文本引导）和一次样本（基于图像引导）检测任务中表现出色，使其成为图像中灵活搜索和识别的多功能工具。你可以如下在 HuggingFace 上使用 OWL-ViT：
 ```python
 import requests
 from PIL import Image
@@ -320,46 +331,49 @@ texts = [["a photo of a cat", "a photo of a dog"]]
 inputs = processor(text=texts, images=image, return_tensors="pt")
 outputs = model(**inputs)
 
-# Target image sizes (height, width) to rescale box predictions [batch_size, 2]
+# 目标图像尺寸（高度，宽度）以重新缩放框预测 [batch_size, 2]
 target_sizes = torch.Tensor([image.size[::-1]])
-# Convert outputs (bounding boxes and class logits) to COCO API
+# 将输出（边界框和类别 logits）转换为 COCO API 格式
 results = processor.post_process_object_detection(
     outputs=outputs, threshold=0.1, target_sizes=target_sizes
 )
 
-i = 0  # Retrieve predictions for the first image for the corresponding text queries
+i = 0  # 获取第一个图像对应文本查询的预测结果
 text = texts[i]
 boxes, scores, labels = results[i]["boxes"], results[i]["scores"], results[i]["labels"]
 
-# Print detected objects and rescaled box coordinates
+# 打印检测到的对象和重新缩放的边框坐标
 for box, score, label in zip(boxes, scores, labels):
     box = [round(i, 2) for i in box.tolist()]
     print(
         f"Detected {text[label]} with confidence {round(score.item(), 3)} at location {box}"
     )
 ```
-- **Grounding DINO[[3]](#grounding-dino):** It combines the Transformer-based object detector (DINO) with "grounded pre-training" to create a state-of-the-art, zero-shot object detection model. This means it can identify objects even if they weren't in its training data, thanks to its ability to understand both images and human language inputs (like category names or descriptions). Its architecture combines text and image backbones, a feature enhancer, language-guided query selection, and a cross-modality decoder, achieving impressive results on benchmarks like COCO and LVIS. Essentially, Grounding DINO takes visual information, links it to textual descriptions, and then uses that understanding to pinpoint objects even within completely new categories.
-You can try out the Grounding DINO model in the Google Colab [here](https://colab.research.google.com/github/roboflow-ai/notebooks/blob/main/notebooks/zero-shot-object-detection-with-grounding-dino.ipynb).
+- **Grounding DINO[[3]](#grounding-dino)：** 它结合了基于 Transformer 的对象检测器（DINO）和“基础预训练”来创建一个最先进的零样本对象检测模型。这意味着即使它们不在训练数据中，它也能识别对象，这得益于它理解图像和人类语言输入（如类别名称或描述）的能力。其架构结合了文本和图像主干、特征增强器、语言引导的查询选择和跨模态解码器，在 COCO 和 LVIS 等基准测试中取得了出色的成绩。Grounding DINO 从视觉信息中获取，将其与文本描述关联，并使用这种理解来精确定位全新类别中的对象。
+你可以在 Google Colab [这里](https://colab.research.google.com/github/roboflow-ai/notebooks/blob/main/notebooks/zero-shot-object-detection-with-grounding-dino.ipynb)尝试 Grounding DINO 模型。
 
-## Text-to-Image Generation
+## 文本到图像生成
 ![Text-Image Generation](https://huggingface.co/datasets/hf-vision/course-assets/resolve/main/multimodal_fusion_text_vision/text_image_generation.png)
-*Illustration of Auto-regressive and Diffusion Models for Text-Image Generation.[[1]](#pretraining-paper)*
-- **Auto-regressive Models:** These models treat the task like translating text descriptions into sequences of image tokens, similar to language models generating sentences. Like puzzle pieces, these tokens, created by image tokenizers like VQ-VAE, represent basic image features. The model uses an encoder-decoder architecture: the encoder extracts information from the text prompt, and the decoder, guided by this information, predicts one image token at a time, gradually building the final image pixel by pixel. This approach allows for high control and detail, but faces challenges in handling long, complex prompts and can be slower than alternative methods like diffusion models. The generation process is shown in the above figure (a).
+*自回归和扩散模型用于文本到图像生成的示例。[[1]](#pretraining-paper)*
 
-- **Stable Diffusion Models:** Stable Diffusion Models uses "Latent Diffusion" technique, where it builds images from noise by progressively denoising it, guided by a text prompt and a frozen CLIP text encoder. Its light architecture with a UNet backbone and CLIP encoder allows for GPU-powered image generation, while its latent focus reduces memory consumption. This unique setup empowers diverse artistic expression, translating textual inputs into photorealistic and imaginative visuals. The generation process is shown in the above figure (b).
+- **自回归模型：** 这些模型将任务视为将文本描述转换为图像标记序列，类似于语言模型生成句子。类似拼图，这些标记由像 VQ-VAE 这样的图像标记器创建，代表图像的基本特征。该模型使用编码器-解码器架构：编码器从文本提示中提取信息，解码器在该信息的指导下逐个预测图像标记，逐渐生成最终的图像。这种方法允许高控制和细节，但在处理长而复杂的提示方面存在挑战，且速度可能比扩散模型更慢。生成过程如上图（a）所示。
 
-Now, let's how can we use text-image generation models in HuggingFace.
+- **稳定扩散模型：** 稳定扩散模型使用“潜在扩散”技术，通过逐步对噪声去噪生成图像，指导该过程的是文本提示和冻结的 CLIP 文本编码器。其轻量级架构使用 UNet 主干和 CLIP 编码器，使 GPU 驱动的图像生成成为可能，同时其潜在聚焦降低了内存消耗。这种独特的设置支持多样化的艺术表达，将文本输入转化为逼真且富有想象力的视觉效果。生成过程如上图（b）所示。
 
-Install `diffusers` library:
+现在，让我们看看如何在 HuggingFace 中使用文本-图像生成模型。
+
+安装 `diffusers` 库：
 ```bash
 pip install diffusers --upgrade
 ```
 
-In addition make sure to install transformers, safetensors, accelerate as well as the invisible watermark:
+此外，确保安装 transformers、safetensors、accelerate 以及 invisible watermark：
 ```bash
+
+
 pip install invisible_watermark transformers accelerate safetensors
 ```
-To just use the base model, you can run:
+要仅使用基础模型，可以运行以下代码：
 ```python
 from diffusers import DiffusionPipeline
 import torch
@@ -377,19 +391,21 @@ prompt = "An astronaut riding a unicorn"
 images = pipe(prompt=prompt).images[0]
 ```
 
-To learn more about text-image generation models, you can refer to the HuggingFace [Diffusers Course](https://huggingface.co/docs/diffusers/training/overview).
+要了解更多关于文本-图像生成模型的信息，可以参考 HuggingFace 的 [Diffusers 课程](https://huggingface.co/docs/diffusers/training/overview)。
 
-Now you know what some of the popular tasks and models involving Image and Text modalities. But you might be wondering on how to train or fine-tune for the above mentioned tasks. So, let's have a glimpse on training the Vision-Language models.
+现在你已经了解了一些涉及图像和文本模态的流行任务和模型，但你可能会好奇如何训练或微调上述任务。接下来，让我们简要了解视觉-语言模型的训练。
 
-## Glimpse of Vision-Language Pretrained Models
+## 视觉-语言预训练模型概览
+
 ![VLP Framework](https://huggingface.co/datasets/hf-vision/course-assets/resolve/main/multimodal_fusion_text_vision/vlp_framework.png)
-*General framework for Transformer based vision-language models. [[1]](#pretraining-paper)*
+*基于 Transformer 的视觉-语言模型的通用框架。[[1]](#pretraining-paper)*
 
-Given an image-text pair, a VL model first extracts text features via a text encoder and a vision encoder, respectively. The text and visual features are then fed into a multimodal fusion module to produce cross-modal representations, which are then optionally fed into a decoder before generating the final outputs. An illustration of this general framework is shown in the above figure. In many cases, there are no clear boundaries among image/text backbones, multimodal fusion module, and the decoder.
+给定一个图像-文本对，VL 模型首先通过文本编码器和视觉编码器分别提取文本特征和视觉特征，然后将这些特征输入到多模态融合模块中，以生成跨模态表示，这些表示可以在生成最终输出之前可选地输入到解码器中。上述图显示了这一通用框架。在许多情况下，图像/文本主干、多模态融合模块和解码器之间没有明确的边界。
 
-Congratulations! you made it till the end. Now on to the next section for more on Vision-Language Pretrained Models.
+恭喜你！你已经到达最后，现在进入下一部分，了解更多视觉-语言预训练模型。
 
-## References
-1. [Vision-Language Pre-training: Basics, Recent Advances, and Future Trends](https://arxiv.org/abs/2210.09263)<a id="pretraining-paper"></a>
-2. [Document Collection Visual Question Answering](https://arxiv.org/abs/2104.14336)<a id="doc-vqa-paper"></a>
-3. [Grounding DINO: Marrying DINO with Grounded Pre-Training for Open-Set Object Detection](https://arxiv.org/abs/2303.05499)<a id="grounding-dino"></a>
+## 参考文献
+
+1. [视觉-语言预训练：基础、最新进展及未来趋势](https://arxiv.org/abs/2210.09263)<a id="pretraining-paper"></a>
+2. [文档集合视觉问答](https://arxiv.org/abs/2104.14336)<a id="doc-vqa-paper"></a>
+3. [Grounding DINO：结合 DINO 和基础预训练进行开放集对象检测](https://arxiv.org/abs/2303.05499)<a id="grounding-dino"></a>

@@ -32,7 +32,7 @@ KL损失指的是[相对熵](https://en.wikipedia.org/wiki/Kullback–Leibler_di
   <img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/>
 </a>
 
-# 利用知识蒸馏用于边缘设备
+## 利用知识蒸馏用于边缘设备
 
 随着AI模型在边缘设备上的部署，知识蒸馏变得越来越重要。部署一个大小为1GB、延迟为1秒的大规模模型对于实时应用来说不可行，因为其高计算和存储需求。主要的限制来源于模型的大小。因此，知识蒸馏得到了广泛应用，这种技术可以在性能几乎不变的情况下将模型参数减少90%以上。
 

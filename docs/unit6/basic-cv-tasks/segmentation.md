@@ -1,46 +1,25 @@
-# Image Segmentation
+# 图像分割
 
-Image segmentation is dividing an image into meaningful segments. It's all about creating masks that spotlight each object in the picture. 
-The intuition behind this task is *that it can be viewed as a classification for each pixel of the image*.
-Segmentation models are the 
-core models in various industries. They can be found in agriculture and autonomous driving. In the farming world, these models are used 
-for identifying different land sections and assessing the growth stage of crops. They're also key players for self-driving cars, where 
-they are used to identify lanes, sidewalks, and other road users.
+图像分割是将图像划分为有意义的部分，其核心在于创建掩膜，以突出显示图像中的每个对象。这个任务的直观理解是*可以将其视为对图像中每个像素的分类*。分割模型是各行各业中的核心模型，广泛应用于农业和自动驾驶领域。在农业中，这些模型用于识别不同的土地区域和评估作物的生长阶段。在自动驾驶汽车中，它们用于识别车道、人行道和其他道路使用者。
 
-![Image segmentation](https://huggingface.co/datasets/hf-vision/course-assets/resolve/main/segmentation-example.png)
+![图像分割](https://huggingface.co/datasets/hf-vision/course-assets/resolve/main/segmentation-example.png)
 
-Different types of segmentations can be applied depending on the context and the intended goal.
-The most commonly defined segmentations are the following.
-- **Semantic Segmentation**:  This involves assigning the most probable class to each pixel. For example, in semantic segmentation, 
-the model does not distinguish between two individual cats but rather focuses on the pixel class. It's all about classification of 
-each pixel.
-- **Instance Segmentation**: This type involves identifying each instance of an object with a unique mask. It combines aspects of 
-object detection and segmentation to differentiate between individual objects of the same class.
-- **Panoptic Segmentation**: A hybrid approach that combines elements of semantic and instance segmentation. It assigns a class and 
-an instance to each pixel, effectively integrating the *what* and *where* aspects of the image.
+根据不同的上下文和预期目标，可以应用不同类型的分割。以下是最常见的分割类型。
+- **语义分割**：每个像素被赋予最有可能的类别。例如，在语义分割中，模型不区分两只独立的猫，而是关注像素的类别。这完全是关于每个像素的分类。
+- **实例分割**：这种类型包括使用唯一的掩膜识别每个对象的实例。它结合了目标检测和分割的方面，用于区分同一类别的各个独立对象。
+- **全景分割**：一种混合方法，结合了语义和实例分割的元素。它为每个像素分配一个类别和实例，有效地整合了图像中的*是什么*和*在哪里*的内容。
 
-![Comparison of segmentation types](https://huggingface.co/datasets/hf-vision/course-assets/resolve/main/segmentation-types.png)
+![分割类型比较](https://huggingface.co/datasets/hf-vision/course-assets/resolve/main/segmentation-types.png)
 
-Choosing the right segmentation type depends on the context and the intended goal. One cool thing is that recent models allow you to achieve the three 
-segmentation types with a single model. We recommend you to check out this [article](https://huggingface.co/blog/mask2former), which introduces Mask2former, 
-a new model by Meta that achieves the three segmentation types with only a Panoptic dataset.
+选择合适的分割类型取决于上下文和预期目标。一个很酷的事情是，最近的模型允许您使用单一模型实现这三种分割类型。我们推荐您查看这篇[文章](https://huggingface.co/blog/mask2former)，其中介绍了由Meta推出的新模型Mask2former，该模型仅使用全景数据集就能实现这三种分割类型。
 
-### Modern Approach: Vision Transformer-based Segmentation
+### 现代方法：基于视觉Transformer的分割
 
-You've probably heard of U-Net, a popular network used for image segmentation. It's designed with several convolutional layers and works 
-in two main phases: the downsampling phase, which compresses the image to understand its features, and the upsampling phase, which expands 
-the image back to its original size for detailed segmentation.
+您可能听说过U-Net，这是一个用于图像分割的流行网络。它设计了多个卷积层，工作在两个主要阶段：下采样阶段，将图像压缩以理解其特征；以及上采样阶段，将图像扩展回原始大小以进行详细分割。
 
-Computer vision was once dominated by convolutional models, but it has recently shifted towards the vision transformer approach. 
-An example is *[Segment anything model (SAM)](https://arxiv.org/abs/2304.02643)* that is a popular prompt based model introduced 
-in April 2023 by *Meta AI Research, FAIR*. The model is based on the Vision Transformer (ViT) model and focuses on creating a promptable 
-(i.e. you can provide words to describe what you would like to segment in the image) segmentation model capable of 
-zero-shot transfer on new images. The strength of the model comes from its training on the largest dataset available, which includes over 
-1 billion masks on 11 million images. I recommend you play with [Meta's demo](https://segment-anything.com/) on a few images and even 
-better you can play with the [model](https://huggingface.co/ybelkada/segment-anything) in transformers. 
+计算机视觉曾经被卷积模型主导，但最近已转向视觉Transformer方法。例如，*[Segment anything model (SAM)](https://arxiv.org/abs/2304.02643)*，是Meta AI Research，FAIR在2023年4月推出的一个基于提示的流行模型。该模型基于Vision Transformer (ViT) 模型，旨在创建一个可提示的（即，您可以提供描述希望分割图像中内容的文字）分割模型，能够在新图像上实现零样本迁移。该模型的优势来自于在可用的最大数据集上进行训练，包括11亿个掩膜和1100万张图像。建议您尝试[Meta的演示](https://segment-anything.com/)中的几个图像，甚至更好的是可以在transformers中试用[模型](https://huggingface.co/ybelkada/segment-anything)。
 
-Here is an example of how to use the model in transformers. First, we will initialize the `mask-generation` pipeline. 
-Then, we will pass the image in pipeline for inference.
+以下是如何在transformers中使用模型的示例。首先，我们将初始化`mask-generation`管道。然后，将图像传递到管道中进行推理。
 
 ```python
 from transformers import pipeline
@@ -52,35 +31,28 @@ raw_image = Image.open("path/to/image").convert("RGB")
 masks = pipe(raw_image)
 ```
 
-More details on how to use the model can be found in the [documentation](https://huggingface.co/docs/transformers/main/en/model_doc/sam).
+更多关于如何使用该模型的详细信息可以在[文档](https://huggingface.co/docs/transformers/main/en/model_doc/sam)中找到。
 
-### How to Evaluate a Segmentation Model?
+### 如何评估分割模型？
 
-You have now seen how to use a segmentation model, but how can you evaluate it? As demonstrated in the previous section, segmentation is 
-primarily a supervised learning task. This means that the dataset is composed of images and their corresponding masks, which serve as the 
-ground truth. A few metrics can be used to evaluate your model. The most common ones are:
+您现在已经了解了如何使用分割模型，但如何评估它呢？如前一节所示，分割主要是一个监督学习任务。这意味着数据集由图像及其对应的掩膜组成，这些掩膜作为真实值。可以使用一些指标来评估您的模型。最常见的指标包括：
 
-- **The Intersection over Union (IoU) or Jaccard index** metric is the ratio between the intersection and the union of the predicted mask and the ground truth. 
-IoU is arguably the most common metric used in segmentation tasks. Its advantage lies in being less sensitive to class imbalance, making 
-it often a good choice when you begin modeling.
+- **交并比（IoU）或Jaccard指数**：是预测掩膜和真实掩膜的交集与并集的比率。IoU可以说是分割任务中最常用的指标。其优点在于对类别不平衡不太敏感，因此通常在开始建模时是一个不错的选择。
 
 ![IoU](https://huggingface.co/datasets/hf-vision/course-assets/resolve/main/iou.png)
 
-- **Pixel accuracy**: Pixel accuracy is calculated as the ratio of the number of correctly classified pixels to the total number of pixels. 
-While being an intuitive metric, it can be misleading due to its sensitivity to class imbalance.
+- **像素准确率**：像素准确率计算为正确分类的像素数量与总像素数量的比率。尽管是一个直观的指标，但由于对类别不平衡敏感，可能会产生误导。
 
-![Pixel accuracy](https://huggingface.co/datasets/hf-vision/course-assets/resolve/main/pixel-accuracy.png)
+![像素准确率](https://huggingface.co/datasets/hf-vision/course-assets/resolve/main/pixel-accuracy.png)
 
-- **Dice coefficient**: It's the ratio between the double of the intersection and the sum of the predicted mask and the ground truth.
-The dice coefficient is simply the percentage of overlap between the prediction and the ground truth. It's a good metric to use when 
-you need sensibility to small differences between the overlap.
+- **Dice系数**：它是交集的两倍与预测掩膜和真实掩膜之和的比率。Dice系数只是预测与真实掩膜之间的重叠百分比。当您需要对重叠之间的微小差异敏感时，这是一个不错的选择。
 
-![Dice coefficient](https://huggingface.co/datasets/hf-vision/course-assets/resolve/main/dice-coefficient.png)
+![Dice系数](https://huggingface.co/datasets/hf-vision/course-assets/resolve/main/dice-coefficient.png)
 
-## Resources and Further Reading
+## 资源与进一步阅读
 
 - [Segment Anything Paper](https://arxiv.org/abs/2304.02643)
-- [Fine-tuning Segformer blog post](https://huggingface.co/blog/fine-tune-segformer)
-- [Mask2former blog post](https://huggingface.co/blog/mask2former)
-- [Hugging Face's documentation on segmentation tasks](https://huggingface.co/docs/transformers/main/tasks/semantic_segmentation)
-- If you want to go deeper into the topic, we recommend you to check out Stanford's [lecture on segmentation](https://www.youtube.com/watch?v=nDPWywWRIRo).
+- [Fine-tuning Segformer 博客文章](https://huggingface.co/blog/fine-tune-segformer)
+- [Mask2former 博客文章](https://huggingface.co/blog/mask2former)
+- [Hugging Face上关于分割任务的文档](https://huggingface.co/docs/transformers/main/tasks/semantic_segmentation)
+- 如果您希望更深入地了解该主题，我们推荐您查看斯坦福的[分割讲座](https://www.youtube.com/watch?v=nDPWywWRIRo)。

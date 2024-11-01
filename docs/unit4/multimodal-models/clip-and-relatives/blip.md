@@ -1,23 +1,23 @@
-# Multimodal Text Generation (BLIP)
-## Introduction
+# 多模态文本生成（BLIP）
+## 介绍
 
-After the release of CLIP, the AI community recognized the immense potential of larger datasets and contrastive learning in deep learning. One significant development in this area is [BLIP (Bootstrapping Language-Image Pre-training)](https://arxiv.org/abs/2201.12086), which extends the capabilities of multimodal models to include text generation.
+在 CLIP 发布后，AI 社区认识到更大数据集和对比学习在深度学习中的巨大潜力。多模态模型的一个重要发展是 [BLIP（Bootstrapping Language-Image Pre-training）](https://arxiv.org/abs/2201.12086)，它扩展了多模态模型的能力，包括文本生成。
 
-## CapFilt: Caption and Filtering
-As multimodal models require large datasets, they often have to be scraped from the internet using image and alternative-text (alt-text) pairs. However, the alt-texts often do not accurately describe the visual content of the images, making them a noisy signal that is suboptimal for learning vision-language alignment. Hence, the BLIP paper introduced a caption and filtering mechanism (CapFilt). This is made up of a deep learning model which filters out noisy pairs and another model which creates captions for images. Both of these models are first fine-tuned using a human annotated dataset. They found that cleaning the dataset using CapFit produced superior performance to just using the web dataset. Further details on this process can be found in the [BLIP paper](https://arxiv.org/abs/2201.12086). 
+## CapFilt：生成与过滤
+由于多模态模型需要大量数据集，通常需要从互联网抓取图像和替代文本（alt-text）对。然而，这些替代文本往往不能准确描述图像的视觉内容，使得它们成为对视觉-语言对齐效果不佳的噪声信号。因此，BLIP 论文提出了一个生成和过滤机制（CapFilt）。这个机制由一个深度学习模型组成，用于过滤掉噪声对，并通过另一个模型为图像生成描述。这两个模型首先使用人工标注的数据集进行微调。研究发现，通过 CapFilt 清理数据集比直接使用网络数据集的效果更好。关于此过程的更多细节可以参考 [BLIP 论文](https://arxiv.org/abs/2201.12086)。
 
-## BLIP Architecture and Training
-The BLIP architecture combines a vision encoder and a Multimodal Mixture of Encoder-Decoder (MED), enabling versatile processing of both visual and textual data. Its structure is shown in the figure below which features (blocks with the same color share parameters):
+## BLIP 架构与训练
+BLIP 架构结合了视觉编码器和多模态的编码-解码器混合模型（MED），能够灵活处理视觉和文本数据。其结构如下图所示（相同颜色的模块共享参数）：
 
-- **Vision Transformer (ViT):** This is a plain vision transformer featuring self-attention, feed-forward blocks, and a [CLS] token for embedding representation.
-- **Unimodal Text Encoder:** Resembling BERT's architecture, it uses a [CLS] token for embedding and employs contrastive loss like CLIP, for aligning image and text representations.
-- **Image-Grounded Text Encoder:** This substitutes the [CLS] token with an [Encode] token. Cross-attention layers enable the integration of image and text embeddings, creating a multimodal representation. It employs a linear layer to assess the congruence of image-text pairs.
-- **Image-Grounded Text Decoder:** Replacing the bidirectional self-attention with causal self-attention, this decoder is trained via cross-entropy loss in an autoregressive manner for tasks like caption generation or answering visual questions.
+- **视觉 Transformer（ViT）：** 一个基础的视觉 Transformer，包含自注意力、前馈模块以及用于嵌入表示的 [CLS] 令牌。
+- **单模态文本编码器：** 类似于 BERT 的架构，它使用 [CLS] 令牌进行嵌入，并采用与 CLIP 相似的对比损失，以对齐图像和文本表示。
+- **图像锚定的文本编码器：** 该编码器用 [Encode] 令牌替换 [CLS] 令牌。交叉注意力层使图像和文本嵌入得以融合，创建多模态表示。它通过线性层来评估图像-文本对的匹配度。
+- **图像锚定的文本解码器：** 该解码器将双向自注意力替换为因果自注意力，并通过自回归的方式使用交叉熵损失进行训练，支持描述生成和视觉问题回答等任务。
 
-BLIP's architecture integrates a vision encoder with a multimodal mixture of encoder-decoder components, enabling advanced text and image processing. This design allows it to adeptly handle diverse tasks, from aligning image-text pairs to generating captions and answering visual questions.
+BLIP 架构集成了视觉编码器和多模态的编码-解码器组件，支持先进的文本和图像处理。这种设计使其能够熟练地处理多样化任务，从图像-文本对齐到生成描述以及回答视觉问题。
 
-## Example Use Case: BLIP-2
-Following BLIP's success, it's creator Salesforce introduced BLIP-2, an enhanced iteration. BLIP-2's advancements and capabilities are detailed in the [BLIP-2 paper](https://arxiv.org/abs/2301.12597) and the [Hugging Face documentation](https://huggingface.co/docs/transformers/model_doc/blip-2). Here, we utilize BLIP-2 for visual questioning answering.
+## 使用案例示例：BLIP-2
+在 BLIP 成功之后，其开发者 Salesforce 推出了增强版本 BLIP-2。BLIP-2 的改进与能力在 [BLIP-2 论文](https://arxiv.org/abs/2301.12597) 和 [Hugging Face 文档](https://huggingface.co/docs/transformers/model_doc/blip-2) 中详细描述。在此，我们使用 BLIP-2 来进行视觉问题回答。
 
 ```python
 from PIL import Image
@@ -43,7 +43,7 @@ outputs = model.generate(**inputs)
 text = processor.tokenizer.batch_decode(outputs, skip_special_tokens=True)
 print(text)
 ```
-This code snippet illustrates the application of BLIP-2 for visual question answering. Experiment with more complex queries or explore this functionality further using the provided Gradio app:
+此代码示例演示了使用 BLIP-2 进行视觉问题回答。可以尝试更复杂的查询，或使用提供的 Gradio 应用进一步探索此功能：
 
 <iframe
 	src="https://merve-BLIP2-with-transformers.hf.space"
@@ -52,6 +52,6 @@ This code snippet illustrates the application of BLIP-2 for visual question answ
 	height="450">
 </iframe>
 
-## Conclusion
+## 结论
 
-BLIP marks a significant milestone in multimodal text generation, leveraging CLIP's strengths to create a robust model. It underscores the importance of dataset quality over quantity, contributing to the advancement of multimodal learning. For more details, refer to the [BLIP paper](https://arxiv.org/abs/2201.12086), [BLIP-2 paper](https://arxiv.org/abs/2301.12597), and the Hugging Face documentation for [BLIP](https://huggingface.co/docs/transformers/model_doc/blip) and [BLIP-2](https://huggingface.co/docs/transformers/model_doc/blip-2).
+BLIP 标志着多模态文本生成领域的一个重要里程碑，利用 CLIP 的优势构建了一个强大的模型。它强调数据集质量优先于数量，推动了多模态学习的进步。更多详情请参考 [BLIP 论文](https://arxiv.org/abs/2201.12086)、[BLIP-2 论文](https://arxiv.org/abs/2301.12597) 以及 Hugging Face 上的 [BLIP 文档](https://huggingface.co/docs/transformers/model_doc/blip) 和 [BLIP-2 文档](https://huggingface.co/docs/transformers/model_doc/blip-2)。

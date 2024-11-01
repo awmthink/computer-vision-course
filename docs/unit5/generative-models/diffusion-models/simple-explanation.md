@@ -1,30 +1,29 @@
-# Control over Diffusion Models
+# 对扩散模型的控制
 
 ## Dreambooth
 
-Although diffusion models and GANs can generate many unique images, they can't always generate what you need exactly. Hence, you have to fine-tune a model, which usually requires a lot of data and computation. However, some techniques can be used to personalize a model with just a few examples.
+尽管扩散模型和GAN能够生成许多独特的图像，但它们并不总能精确生成所需的内容。因此，需要对模型进行微调，这通常需要大量数据和计算资源。然而，有些技术可以使用少量样本对模型进行个性化调整。
 
-One example is Dreambooth by Google Research, a training technique that updates the entire diffusion model by training on just a few images of a subject or style. It works by associating a special word in the prompt with the example images. The details on Dreambooth can be found in the [paper](https://dreambooth.github.io/) and the [Hugging Face Dreambooth training documentation](https://huggingface.co/docs/diffusers/training/dreambooth).
+其中一个例子是Google Research的Dreambooth，这是一种训练技术，通过在少量主体或风格的图像上进行训练来更新整个扩散模型。它通过在提示词中关联一个特殊词语与示例图像来工作。有关Dreambooth的详细信息可以在[论文](https://dreambooth.github.io/)和[Hugging Face Dreambooth训练文档](https://huggingface.co/docs/diffusers/training/dreambooth)中找到。
 
-Below, you can see the results of Dreambooth being used to train on 4 images of a dog and some inference examples.
+下面可以看到Dreambooth用于训练4张狗狗图像以及一些推理示例的结果。
 ![Dreambooth Dog Example](https://huggingface.co/datasets/hf-vision/course-assets/resolve/main/teaser_static.jpg)
-You can recreate the results following the Hugging Face documentation given above.
+可以按照上述Hugging Face文档再现这些结果。
 
-From this example, it's clear that the model has learned about that specific dog and can generate new images of that dog in diverse poses and backgrounds. Although computing, data, and time are improvements, others have found more efficient ways to customize a model.
+从这个示例可以看出，模型已经学习到该特定狗狗的特征，能够生成在不同姿势和背景下的该狗狗的新图像。尽管在计算、数据和时间方面有所改进，其他人也找到了更高效的模型定制方法。
 
-This is where the current most popular method for this comes in, which is Low Rank Adaptation (LoRA). This method was initially developed to efficiently fine-tune Large Language Models by Microsoft in this [paper](https://arxiv.org/abs/2106.09685). The main idea is to factorise the weight update matrix into 2 low-rank matrices, which are optimized during training whilst the rest of the model is frozen. [Hugging face documentation](https://huggingface.co/docs/peft/conceptual_guides/lora) has a good conceptual guide on how LoRA works.
+这时，当前最流行的方法之一出现了，即低秩适应（LoRA）。此方法最初由微软在这篇[论文](https://arxiv.org/abs/2106.09685)中开发，用于高效微调大型语言模型。其主要思想是将权重更新矩阵分解为两个低秩矩阵，这些矩阵在训练过程中被优化，而模型的其余部分保持冻结状态。[Hugging Face文档](https://huggingface.co/docs/peft/conceptual_guides/lora)提供了关于LoRA如何工作的概念指南。
 
-Now, if we put those ideas together we can use LoRA to efficiently fine-tune a diffusion model on a few examples using Dreambooth. A tutorial Google Colab notebook on how to do this can be found [here](https://colab.research.google.com/github/huggingface/notebooks/blob/main/diffusers/SDXL_DreamBooth_LoRA_.ipynb).
+现在，如果我们将这些想法结合起来，就可以使用LoRA在少量样本上高效地微调扩散模型，使用Dreambooth。一个关于如何执行此操作的Google Colab教程笔记本可以在[这里](https://colab.research.google.com/github/huggingface/notebooks/blob/main/diffusers/SDXL_DreamBooth_LoRA_.ipynb)找到。
 
-Due to the quality and efficiency of this method, many people have created their own LoRA parameters which many can be found on a website called [Civitai](https://civitai.com/models) and [Hugging Face](https://huggingface.co/collections/multimodalart/awesome-sdxl-loras-64f9af6d5cce4f4e8f351466). 
-For Civitai you can download the LoRA weights which usually are in the range of 50-500MB and in the case of Hugging Face version you can just load the model directly from the model hub.
-Below is an example of how to load the LoRA weights in both cases and then fuse them with the model.
+由于此方法的质量和效率，许多人创建了自己的LoRA参数，许多可以在名为[Civitai](https://civitai.com/models)的网站和[Hugging Face](https://huggingface.co/collections/multimodalart/awesome-sdxl-loras-64f9af6d5cce4f4e8f351466)上找到。在Civitai上可以下载通常大小为50-500MB的LoRA权重，而在Hugging Face版本中则可以直接从模型库加载模型。
+下面是如何在两种情况下加载LoRA权重并将它们与模型融合的示例。
 
-We can start with installing diffusers library.
+我们可以从安装`diffusers`库开始。
 ```bash
 pip install diffusers
 ````
-We will initialize the `StableDiffusionXLPipeline` and load LoRA adapter weights.
+我们将初始化`StableDiffusionXLPipeline`并加载LoRA适配器权重。
 ```python
 from diffusers import StableDiffusionXLPipeline
 import torch
@@ -33,16 +32,16 @@ model = "stabilityai/stable-diffusion-xl-base-1.0"
 pipe = StableDiffusionXLPipeline.from_pretrained(model, torch_dtype=torch.float16)
 pipe.load_lora_weights(
     "lora_weights.safetensors"
-)  # if you want to install from a weight file
+)  # 如果希望从权重文件安装
 pipe.load_lora_weights(
     "ostris/crayon_style_lora_sdxl"
-)  # if you wish to install a lora from a repository directly
+)  # 如果希望直接从仓库安装LoRA
 pipe.fuse_lora(lora_scale=0.8)
 ```
 
-This makes it quick to load a customised diffusion model and use it for inference, especially since there are a lot of models to choose from. Then, if we want to remove the LoRA weights, we can call `pipe.unfuse_lora()` which will return the model to its original state. As for the `lora_scale` parameter, this is a hyperparameter that controls how much the LoRA weights are used during inference. A value of 1.0 means the LoRA weights are fully used and a value of 0.0 means the LoRA weights are not used at all. The best value is often between 0.7 and 1.0 but it's worth experimenting with different values to see what works best for your use case.
+这使得加载一个定制的扩散模型并用于推理变得快捷，尤其是有很多模型可供选择。然后，如果我们想要移除LoRA权重，可以调用`pipe.unfuse_lora()`，这将使模型恢复到原始状态。对于`lora_scale`参数，这是一个控制推理过程中LoRA权重使用程度的超参数。值为1.0表示LoRA权重完全使用，值为0.0表示不使用LoRA权重。最佳值通常在0.7到1.0之间，但值得尝试不同的值以找到最适合的应用场景。
 
-You can try some of the Hugging Face LoRA models in this Gradio demo:
+可以在这个Hugging Face Gradio演示中试用一些Hugging Face的LoRA模型：
 <iframe
 	src="https://multimodalart-LoraTheExplorer.hf.space"
 	frameborder="0"
@@ -50,15 +49,17 @@ You can try some of the Hugging Face LoRA models in this Gradio demo:
 	height="450">
 </iframe>
 
-## Guided Diffusion via ControlNet
+## 使用ControlNet引导扩散
 
-Diffusion models have many ways in which they can be guided to create a desired output, such as prompts, negative prompts, guidance scale, inpainting and many others. Here, we will focus on a method that has many variants and can be combined with all the other methods, called ControlNet. It was introduced in this [paper](https://arxiv.org/abs/2302.05543) by Stanford University. This method allows us to guide the diffusion model with an image that usually holds very specific information such as depth, pose, edges, and many others. This allows for more consistency in the generated images, which is often a problem with diffusion models.
+扩散模型有多种方式可以被引导生成期望的输出，如提示词、负面提示词、引导尺度、修复绘制等。这里我们将聚焦于一种可以与所有其他方法结合并具有多种变体的方法，称为ControlNet。这一方法由斯坦福大学在这篇[论文](https://arxiv.org/abs/2302.05543)中提出。该方法允许我们通过包含深度、姿势、边缘等特定信息的图像来引导扩散模型生成更一致的图像，解决扩散模型常见的一致性问题。
 
-ControlNet can be used in both text-to-image and image-to-image. Below is a text 2 image example using a ControlNet which was trained on edge detection conditioning, with the top left image being used as input.
-Here we can see how all of the generated images have a very similar shape but with different colours. This is because the ControlNet is guiding the diffusion model to create images with the same shape as the input image.
+ControlNet可以在文本到图像和图像到图像之间使用。下面是一个文本到图像的示例，使用了在边缘检测条件下训练的ControlNet，左上角的图像被用作输入。
+可以看到，所有生成的图像形状非常相似但颜色各异。这是因为ControlNet正在引导扩散模型生成具有与输入图像相同形状的图像。
+
  ![bird](https://github.com/lllyasviel/ControlNet/raw/main/github_page/p1.png)
 
-For code to run ControlNet with Stable Diffusion XL refer to the official documentation [here](https://huggingface.co/docs/diffusers/api/pipelines/controlnet_sdxl#diffusers.StableDiffusionXLControlNetPipeline) but if you just want to test out some examples take a look at this Gradio demo that lets you try different types of ControlNet:
+要在Stable Diffusion XL上运行ControlNet代码，请参考官方文档[这里](https://huggingface.co/docs/diffusers/api/pipelines/controlnet_sdxl#diffusers.StableDiffusionXLControlNetPipeline)。如果只是想测试一些示例，可以看看这个让你试验不同类型ControlNet的Gradio演示：
+
 <iframe
 	src="https://hysts-ControlNet-v1-1.hf.space"
 	frameborder="0"

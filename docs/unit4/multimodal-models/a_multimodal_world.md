@@ -1,101 +1,99 @@
-# A Multimodal World
+# 多模态世界
 
-Welcome to the chapter on the fundamentals of multimodality. This chapter builds the foundation for the later sections of the unit. We will explore:
+欢迎来到多模态基础知识章节。本章为后续单元的内容奠定基础。我们将探讨：
 
-- The notion of multimodality, and different sensory inputs humans use for efficient decision making.
-- Why is it important for making innovative applications and services through which we can interact and make lives easier.
-- Multimodality in context to Deep Learning, data, tasks, and models.
-- Related applications like multimodal emotion recognition and multimodal search.
+- 多模态的概念，以及人类用于高效决策的不同感官输入。
+- 为什么多模态在创新应用和服务中很重要，通过它我们可以互动并使生活更便捷。
+- 深度学习中多模态的背景，包括数据、任务和模型。
+- 相关应用，如多模态情感识别和多模态搜索。
 
-So let's begin 🤗
+让我们开始吧 🤗
 
-## What is Multimodality? 📸📝🎵
+## 什么是多模态？ 📸📝🎵
 
-A modality means a medium or a way in which something exists or is done. In our daily lives, we come across many scenarios where we have to make decisions and perform tasks. For this, we use our 5 sense organs (eyes to see, ears to hear, nose to smell, tongue to taste, and skin to touch). Based on the information from all sense organs, we assess our environment, perform tasks, and make decisions for our survival. Each of these 5 sense organs is a different modality through which information comes to us and thus the word multimodality or multimodal.
+模态指的是事物存在或进行的媒介或方式。在日常生活中，我们会遇到许多需要决策和执行任务的场景。为此，我们利用五种感官器官（眼睛看、耳朵听、鼻子闻、舌头尝和皮肤触觉）。基于来自所有感官器官的信息，我们评估环境、执行任务并做出生存决策。这五种感官器官中的每一种都是信息传递给我们的不同模态，这也是多模态或多模态的来源。
 
-Think about this scenario for a moment, on a windy night you hear an eerie sound while you are on your bed 👻😨. You feel a bit scared, as you are unaware about the source of the sound. You try to gather some courage and check your environment but you are unable to figure this out 😱. Daringly, you turn on the lights and you find out that it was just your window which was half-opened through which the wind was blowing and making the sound in the first place 😒.
+想象一下这样的情境，在一个风大的夜晚，你在床上听到一个诡异的声音 👻😨。你感到有些害怕，因为你不知道声音的来源。你鼓起勇气去检查环境，但还是无法弄清楚情况 😱。勇敢地打开灯，你发现只是窗户半开着，风吹进来发出声音 😒。
 
-So what just happened here? Initially you had restricted understanding of the situation due to your limited knowledge of the environment. This limited knowledge was due to the fact because you were just relying on your ears (the eerie sound), to make sense. But as soon as you turned on the lights in the room and looked around through your eyes (added another sense organ), you had a better understanding about the whole situation. As we kept on adding modalities our understanding of the situation became better and clearer than before, for the same scenario, this suggests that adding more modalities to the same situation assist each other and improves the information content.
-Even while taking this course and moving ahead, would you not like cool infographics, accompanied by video content explaining minute concepts instead of just plain textual content 😉
-Here you go:
+那么，这里发生了什么？起初，由于对环境的认知有限，你对情况的理解也受限。这种有限的认知是因为你仅依赖耳朵（诡异的声音）来理解情况。但是，当你打开房间的灯并通过眼睛（增加了另一个感官）观察时，你对整个情况有了更好的理解。随着我们添加更多的模态，对同一情境的理解变得更清晰，这表明添加更多模态可以互相补充，提高信息内容。
+在学习这门课程时，你是否更愿意看到带有视频内容的酷炫信息图，而不是仅有纯文本内容 😉
+以下是示例：
 
-![Multimodality Notion](https://huggingface.co/datasets/hf-vision/course-assets/resolve/main/multimodal_fusion_text_vision/multimodal_elephant.png)
+![多模态概念](https://huggingface.co/datasets/hf-vision/course-assets/resolve/main/multimodal_fusion_text_vision/multimodal_elephant.png)
 
-_An infographic on multimodality and why it is important to capture the overall sense of data through different modalities. The infographic is multimodal as well (image + text)._
+_关于多模态及其重要性的图表，展示通过不同模态捕捉数据整体感知。该信息图也是多模态的（图像+文本）。_
 
-Many times communication between 2 people gets really awkward in textual mode, slightly improves when voices are involved but greatly improves when you are able to visualize body language and facial expressions as well. This has been studied in detail by the American Psychologist, Albert Mehrabian who stated this as the 7-38-55 rule of communication, the rule states:
-"In communication, 7% of the overall meaning is conveyed through verbal mode (spoken words), 38% through voice and tone and 55% through body language and facial expressions."
+许多时候，两人之间的交流在纯文本模式下可能显得非常尴尬，加入声音后有所改善，而当你能看到对方的肢体语言和面部表情时，交流效果大大提升。美国心理学家Albert Mehrabian详细研究了这一点，并提出了交流中的7-38-55法则，该法则指出：
+“在交流中，7%的意义通过语言传达（口头语），38%通过声音和语调，55%通过肢体语言和面部表情。”
 
+在人工智能的背景下，一般来说，7%的意义通过文本模态传达，38%通过音频模态，55%通过视觉模态。
+在深度学习的上下文中，我们将每种模态视为数据传递到深度学习模型以进行处理和预测的方式。深度学习中最常用的模态是：视觉、音频和文本。其他模态也可用于特定用途，如激光雷达（LIDAR）、脑电图（EEG）数据、眼动数据等。
 
-To be more general, in the context of AI, 7% of the meaning conveyed is through textual modality, 38% through audio modality and 55% through vision modality.
-Within the context of deep learning, we would refer each modality as a way data arrives to a deep learning model for processing and predictions. The most commonly used modalities in deep learning are: vision, audio and text. Other modalities can also be considered for specific use cases like LIDAR, EEG Data, eye tracking data etc.
+单模态模型和数据集纯粹基于单一模态，已被广泛研究，具有许多任务和基准，但其能力有限。依赖单一模态可能无法全面掌握情况，而结合更多模态可以增加信息内容，减少漏掉可能存在的提示的可能性。
+为了使我们周围的机器更智能、更善于与我们沟通并具有增强的解释和推理能力，建立基于多模态模型和数据集的应用和服务非常重要。因为多模态能够为我们提供更清晰、更准确的世界表征，使我们能够开发更贴近真实场景的应用。
 
-Unimodal models and datasets are purely based on a single modality, and have been studied for long with many tasks and benchmarks but are limited in their capabilities. Relying on a single modality might not give us the complete picture, and combining more modalities will increase the information content and reduce the possibility of missing cues that might be in them.
-For the machines around us to be more intelligent, better at communicating with us and have enhanced interpretation and reasoning capabilities, it is important to build applications and services around models and datasets that are multimodal in nature. Because, multimodality can give us a clearer and more accurate representation of the world around us enabling us to develop applications that are closer to the real-world scenarios.
+**常见模态组合和现实生活示例：**
 
-**Common combinations of modalities and real life examples:**
+- 视觉 + 文本：信息图、网络迷因、文章、博客。
+- 视觉 + 音频：与朋友的Skype通话、双人对话。
+- 视觉 + 音频 + 文本：观看带字幕的YouTube视频或电影，社交媒体内容通常是多模态的。
+- 音频 + 文本：语音笔记、带歌词的音乐文件。
 
-- Vision + Text : Infographics, Memes, Articles, Blogs.
-- Vision + Audio: A Skype call with your friend, dyadic conversations.
-- Vision + Audio + Text: Watching YouTube videos or movies with captions, social media content in general is multimodal.
-- Audio + Text: Voice notes, music files with lyrics.
+## 多模态数据集
 
-## Multimodal Datasets
+包含多种模态的数据集称为多模态数据集。让我们看看一些常见模态组合的例子：
 
-A dataset consisting of multiple modalities is a multimodal dataset. Out of the common modality combinations let us see some examples:
+- 视觉 + 文本: [视觉故事数据集](https://visionandlanguage.net/VIST/)、[视觉问答数据集](https://visualqa.org/download.html)、[LAION-5B 数据集](https://laion.ai/blog/laion-5b/)。
+- 视觉 + 音频：[VGG-Sound数据集](https://www.robots.ox.ac.uk/~vgg/data/vggsound/)、[RAVDESS数据集](https://zenodo.org/records/1188976)、[音视频身份数据库 (AVID)](https://www.avid.wiki/Main_Page)。
+- 视觉 + 音频 + 文本：[RECOLA数据库](https://diuf.unifr.ch/main/diva/recola/)、[IEMOCAP数据集](https://sail.usc.edu/iemocap/)。
 
-- Vision + Text: [Visual Storytelling Dataset](https://visionandlanguage.net/VIST/), [Visual Question Answering Dataset](https://visualqa.org/download.html), [LAION-5B Dataset](https://laion.ai/blog/laion-5b/).
-- Vision + Audio: [VGG-Sound Dataset](https://www.robots.ox.ac.uk/~vgg/data/vggsound/), [RAVDESS Dataset](https://zenodo.org/records/1188976), [Audio-Visual Identity Database (AVID)](https://www.avid.wiki/Main_Page).
-- Vision + Audio + Text: [RECOLA Database](https://diuf.unifr.ch/main/diva/recola/), [IEMOCAP Dataset](https://sail.usc.edu/iemocap/).
+现在，让我们看看可以使用多模态数据集执行的任务类型。有很多示例，但我们将一般聚焦于包含视觉和文本元素的任务。多模态数据集需要能够处理来自多个模态的数据的模型，这种模型称为多模态模型。
 
-Now, let us see what kind of tasks can be performed using a multimodal dataset. There are many examples, but we will generally focus on tasks that contain both visual and textual elements. A multimodal dataset requires a model that is able to process data from multiple modalities. Such a model is called a multimodal model.
+## 多模态任务和模型
 
-## Multimodal Tasks and Models
+每种模态都有不同的相关任务，例如：视觉下游任务包括图像分类、图像分割、目标检测等，我们会使用专门设计的模型来完成这些任务。因此，任务和模型是相辅相成的。如果一个任务涉及两个或更多模态，那么它可以被称为多模态任务。如果我们从输入和输出的角度考虑任务，多模态任务通常可以视为单一输入/输出结构，分别在输入和输出端拥有不同模态。
 
-Each modality has different tasks related to it, for example: vision downstream tasks contain image classification, image segmentation, object detection etc. and we would be using
-models specifically designed for these tasks. So tasks and models go hand in hand. If a task involves two or more modalities then it can be termed as a multimodal task. If we consider a task in terms of inputs and outputs, a multimodal task can generally be thought of as a single input/output arrangement with two different modalities at input and output ends respectively.
+Hugging Face 支持多种多模态任务。让我们了解其中的一些。
 
-Hugging Face supports a wide variety of multimodal tasks. Let us look into some of them.
+**🤗支持的部分多模态任务及其变体：**
 
-**Some multimodal tasks supported by 🤗 and their variants:**
+1. 视觉 + 文本：
 
-1. Vision + Text:
+- [视觉问答 (VQA)](https://huggingface.co/tasks/visual-question-answering)：帮助视障人士、高效图像检索、视频搜索、视频问答、文档VQA。
+- [图像转文本](https://huggingface.co/tasks/image-to-text)：图像描述、光学字符识别 (OCR)、Pix2Struct。
+- [文本转图像](https://huggingface.co/tasks/text-to-image)：图像生成。
+- [文本转视频](https://huggingface.co/tasks/text-to-video)：文本到视频编辑、文本到视频搜索、视频翻译、文本驱动的视频预测。
 
-- [Visual Question Answering or VQA](https://huggingface.co/tasks/visual-question-answering): Aiding visually impaired persons, efficient image retrieval, video search, Video Question Answering, Document VQA.
-- [Image to Text](https://huggingface.co/tasks/image-to-text): Image Captioning, Optical Character Recognition (OCR), Pix2Struct.
-- [Text to Image](https://huggingface.co/tasks/text-to-image): Image Generation.
-- [Text to Video](https://huggingface.co/tasks/text-to-video): Text-to-video editing, Text-to-video search, Video Translation, Text-driven Video Prediction.
+2. 音频 + 文本：
 
-2. Audio + Text:
-
-- [Automatic Speech Recognition](https://huggingface.co/tasks/automatic-speech-recognition) (or Speech to Text): Virtual Speech Assistants, Caption Generation.
-- [Text to Speech](https://huggingface.co/tasks/text-to-speech): Voice assistants, Announcement Systems.
+- [自动语音识别](https://huggingface.co/tasks/automatic-speech-recognition)（或语音转文本）：虚拟语音助手、字幕生成。
+- [文本转语音](https://huggingface.co/tasks/text-to-speech)：语音助手、公告系统。
 
 <Tip>
 
-💡An amazing usecase of multimodal task is Multimodal Emotion Recognition (MER). The MER task involves recognition of emotion from two or more modalities like audio+text, text+vision, audio+vision or vision+text+audio As we discussed in the example, MER is more efficient than unimodal emotion recognition and gives clear insight into the
-emotion recognition task. Check out more on MER with [this repository](https://github.com/EvelynFan/AWESOME-MER).
+💡多模态任务的一个出色应用是多模态情感识别 (MER)。MER 任务涉及从两个或多个模态中识别情感，例如音频+文本、文本+视觉、音频+视觉或视觉+文本+音频。正如我们在示例中讨论的，MER 比单模态情感识别更有效，能更清楚地洞察情感识别任务。可在[此处](https://github.com/EvelynFan/AWESOME-MER)了解更多关于MER的信息。
 
 </Tip>
 
-![Multimodal model flow](https://huggingface.co/datasets/hf-vision/course-assets/resolve/main/multimodal_fusion_text_vision/Multimodal.jpg)
+![多模态模型流程图](https://huggingface.co/datasets/hf-vision/course-assets/resolve/main/multimodal_fusion_text_vision/Multimodal.jpg)
 
-A multimodal model, is a model that can be used to perform multimodal tasks by processing data coming from multiple modalities at the same time. These models combine the uniqueness and strengths of different modalities to make a complete representation of data enhancing the performance on multiple tasks. Multimodal models are trained to integrate and process data from sources like images, videos, text, audio etc.
-The process of combining these modalities begins with multiple unimodal models. The outputs of these unimodal models (encoded data) are then fused using a strategy by the fusion module. The strategy of fusion can be early fusion, late fusion or hybrid fusion. The overall task of the fusion module is to make a combined representation of the encoded data from the unimodal models. Finally, a classification network takes up the fused representation to make predictions.
+多模态模型是一种能够通过同时处理来自多种模态的数据来执行多模态任务的模型。这些模型结合了不同模态的独特性和优势，完整地表示数据，增强了多任务的性能。多模态模型经过训练，可以整合并处理来自图像、视频、文本、音频等来源的数据。
+组合这些模态的过程从多个单模态模型开始。单模态模型的输出（编码数据）使用融合模块通过策略进行融合。融合策略可以是早期融合、后期融合或混合融合。融合模块的整体任务是从单模态模型的编码数据中生成一个联合表示。最后，分类网络利用该融合表示进行预测。
 
-A detailed section on multimodal tasks and models with a focus on Vision and Text, will be discussed in the next chapter.
+在接下来的章节中，我们将详细探讨以视觉和文本为重点
 
-## An application of multimodality: Multimodal Search 🔎📲💻
+的多模态任务和模型。
 
-Internet search was the one key advantage Google had, but with the introduction of ChatGPT by OpenAI, Microsoft started out with
-powering up their Bing search engine so that they can crush the competition. It was only restricted initially to LLMs, looking into large corpus of text data but the world around us, mainly social media content, web articles and all possible form of online content is largely multimodal. When we search about an image, the image pops up with a corresponding text to describe it. Won't it be super cool to have another powerful multimodal model which involved both Vision and Text at the same time? This can revolutionize the search landscape hugely, and the core tech involved in this is multimodal learning. We know that many companies also have a large database which is multimodal and mostly unstructured in nature. Multimodal models might help companies with internal search, interactive documentation (chatbots), and many such use cases. This is another domain of Enterprise AI where we leverage AI for organizational intelligence.
+## 多模态应用：多模态搜索 🔎📲💻
 
-Vision Language Models (VLMs) are models that can understand and process both vision and text modalities. The joint understanding of both modalities lead VLMs to perform various tasks efficiently like Visual Question Answering, Text-to-image search etc. VLMs thus can serve as one of the best candidates for multimodal search. So overall, VLMs should find some way to map text and image pairs to a joint embedding space where each text-image pair is present as an embedding. We can perform various downstream tasks using these embeddings, which can also be used for search. The idea of such a joint space is that image and text embeddings that are similar in meaning will lie close together, enabling us to do searches for images based on text (text-to-image search) or vice-versa.
+互联网搜索曾是谷歌的关键优势，但随着OpenAI推出ChatGPT，微软启动了增强Bing搜索引擎的项目，以在竞争中占得先机。最初，搜索仅限于大型语言模型（LLMs），主要搜索大规模文本数据，但我们周围的世界，尤其是社交媒体内容、网页文章和所有形式的在线内容，都是多模态的。当我们搜索图像时，该图像伴随相应的文本进行描述。是否会很酷拥有一个强大的多模态模型，同时涉及视觉和文本？这可以极大地改变搜索格局，而其中的核心技术就是多模态学习。我们知道，许多公司也有一个大型的多模态数据库，并且大多为非结构化数据。多模态模型可以帮助公司进行内部搜索、互动文档（如聊天机器人）等多个用例。这是企业AI的另一领域，利用AI实现组织智能。
+
+视觉语言模型（VLMs）是能够理解和处理视觉与文本模态的模型。两种模态的联合理解使VLMs能够高效地执行各种任务，如视觉问答、文本到图像搜索等。因此，VLMs可作为多模态搜索的理想选择。总体而言，VLMs 应找到一种方式将文本和图像对映射到一个联合嵌入空间，其中每个文本-图像对作为一个嵌入。我们可以使用这些嵌入执行多种下游任务，也可以用于搜索。这种联合空间的理念是，语义相似的图像和文本嵌入会相互靠近，使我们能够基于文本搜索图像（文本到图像搜索）或反之亦然。
 
 <Tip>
 
-💡Meta released the first multimodal AI model to bind information from 6 different modalities: images and videos, audio, text, depth, thermal, and inertial measurement units (IMUs). Learn more about it [here](https://imagebind.metademolab.com/).
+💡Meta发布了第一个多模态AI模型，能够整合来自六种不同模态的信息：图像和视频、音频、文本、深度、热成像和惯性测量单元（IMUs）。了解更多信息[点击此处](https://imagebind.metademolab.com/)。
 
 </Tip>
 
-After going through the fundamentals for multimodality, let's now take a look into different multimodal tasks and models available in 🤗 and their applications via cool demos and Spaces.
+在了解多模态基础知识后，让我们继续了解🤗中的不同多模态任务和模型及其在酷炫演示和空间中的应用。

@@ -1,37 +1,38 @@
-# Variational Autoencoders
+# 变分自编码器
 
-## Introduction to Autoencoders
-Autoencoders are a class of neural networks primarily used for unsupervised learning and dimensionality reduction. The fundamental idea behind autoencoders is to encode input data into a lower-dimensional representation and then decode it back to the original data, aiming to minimize the reconstruction error. The basic architecture of an autoencoder consists of two main components - `the encoder` and `the decoder`.
-* **Encoder:** The encoder is responsible for transforming the input data into a compressed or latent representation. It typically consists of one or more layers of neurons that progressively reduce the dimensions of the input.
-* **Decoder:** The decoder, on the other hand, takes the compressed representation produced by the encoder and attempts to reconstruct the original input data. Like the encoder, it often consists of one or more layers, but in the reverse order, gradually increasing the dimensions.
+## 自编码器简介
+自编码器是一类主要用于无监督学习和降维的神经网络。自编码器的基本思想是将输入数据编码为低维表示，然后再解码回原始数据，旨在最小化重构误差。自编码器的基本架构由两个主要组件组成——`编码器`和`解码器`。
+* **编码器:** 编码器负责将输入数据转化为压缩或潜在表示。它通常由一个或多个逐渐降低输入维度的神经元层组成。
+* **解码器:** 解码器则接收编码器生成的压缩表示，试图重构原始输入数据。与编码器类似，它通常也由一个或多个层组成，但层次顺序相反，逐渐增加维度。
 
 ![Vanilla Autoencoder Image - Lilian Weng Blog](https://huggingface.co/datasets/hf-vision/course-assets/resolve/main/generative_models/autoencoder.png)
 
-This encoder model consists of an encoder network (represented as \\(g_\phi\\)) and a decoder network (represented as \\(f_\theta\\)). The low-dimensional representation is learned in the bottleneck layer as \\(z\\) and the reconstructed output is represented as \\(x' = f_\theta(g_\phi(x))\\) with the goal of \\(x \approx x'\\).
+这个编码器模型由一个编码器网络（表示为 $g_\phi$）和一个解码器网络（表示为 $f_\theta$）组成。低维表示在瓶颈层中学习为 $z$，重构的输出表示为 $x' = f_\theta(g_\phi(x))$，其目标是 $x \approx x'$。
 
-A common loss function used in such vanilla autoencoders is \\(L(\theta, \phi) = \frac{1}{n}\sum_{i=1}^n (\mathbf{x}^{(i)} - f_\theta(g_\phi(\mathbf{x}^{(i)})))^2\\), which tries to minimize the error between the original image and the reconstructed one and is also known as the `reconstruction loss`.
+在这种基础自编码器中常用的损失函数是 $L(\theta, \phi) = \frac{1}{n}\sum_{i=1}^n (\mathbf{x}^{(i)} - f_\theta(g_\phi(\mathbf{x}^{(i)})))^2$，它尝试最小化原始图像与重构图像之间的误差，也称为`重构损失`。
 
-Autoencoders are useful for tasks such as data denoising, feature learning, and compression. However, traditional autoencoders lack the probabilistic nature that makes VAEs particularly intriguing and also useful for generational tasks.
+自编码器在数据去噪、特征学习和压缩等任务中非常有用。然而，传统的自编码器缺乏概率特性，这使得变分自编码器（VAE）在生成任务中更具吸引力和实用性。
 
-## Variational Autoencoders (VAEs) Overview
-Variational Autoencoders (VAEs) address some of the limitations of traditional autoencoders by introducing a `probabilistic approach` to encoding and decoding. The motivation behind VAEs lies in their ability to generate new data samples by sampling from a learned distribution in the latent space rather than from a latent vector as was the case with Vanilla Autoencoders which makes them suitable for generation tasks.
-* **Probabilistic Nature:** Unlike deterministic autoencoders, VAEs model the latent space as a probability distribution. This produces a probability distribution function over the input encodings instead of just a single fixed vector. This allows for a more nuanced representation of uncertainty in the data. The decoder then samples from this probability distribution.
-* **Role of Latent Space:** The latent space in VAEs serves as a continuous, structured representation of the input data. Since it is continuous by design, this allows for easy interpolation. Each point in the latent space corresponds to a potential output, enabling smooth transitions between different data points and also making sure that points which are closer to the latent space lead to similar generation
+## 变分自编码器（VAEs）概述
+变分自编码器（VAEs）通过引入一种`概率方法`来编码和解码，从而解决了传统自编码器的一些限制。VAE的动机在于其能够通过从潜在空间中的学习分布进行采样来生成新数据样本，而不是从一个固定的潜在向量生成数据，这使得其适用于生成任务。
+* **概率性:** 与确定性自编码器不同，VAE将潜在空间建模为一个概率分布。这在输入编码上生成了一个概率分布函数，而不仅仅是一个固定的向量。这种方法可以更好地表达数据中的不确定性。解码器随后从这个概率分布中进行采样。
+* **潜在空间的作用:** VAE中的潜在空间是输入数据的一个连续、结构化表示。由于它的连续性设计，使得插值更容易。潜在空间中的每一点对应一个潜在的输出，从而在不同数据点之间实现平滑过渡，并确保潜在空间中相近的点生成相似的结果。
 
-The concept can be elucidated through a straightforward example, as presented below. Encoders within a neural network are tasked with acquiring a representation of input images in the form of a vector. This vector encapsulates various features such as a subject's smile, hair color, gender, age, etc., denoted as a vector akin to [0.4, 0.03, 0.032, ...]. In this illustration, the focus is narrowed to a singular latent representation, specifically the attribute of a "smile."
+这个概念可以通过以下简单示例来说明。神经网络中的编码器负责获取输入图像的表示，形成一个向量。这个向量包含不同的特征，例如主体的微笑、发色、性别、年龄等，类似于[0.4, 0.03, 0.032, ...]。在这个例子中，聚焦于单一潜在表示，即"微笑"的特征。
 ![Autoencoders vs VAEs - Sciforce Medium](https://huggingface.co/datasets/hf-vision/course-assets/resolve/main/generative_models/comparison.png)
-In the context of Vanilla Autoencoders (AE), the smile feature is encapsulated as a fixed, deterministic value. In contrast, Variational Autoencoders (VAEs) are deliberately crafted to encapsulate this feature as a probabilistic distribution. This design choice facilitates the introduction of variability in generated images by enabling the sampling of values from the specified probability distribution.
 
-## Mathematics Behind VAEs
-Understanding the mathematical concepts behind VAEs involves grasping the principles of probabilistic modeling and variational inference.
+在基础自编码器（AE）的背景下，微笑特征被表示为一个固定的、确定性的值。而在变分自编码器（VAEs）中，该特征则被设计为一个概率分布。这种设计选择使得通过从指定的概率分布中采样值来生成具有不同变化的图像成为可能。
+
+## VAEs背后的数学
+理解VAEs的数学概念需要掌握概率建模和变分推理的基本原理。
 ![Variational Autoencoder - Lilian Weng Blog](https://huggingface.co/datasets/hf-vision/course-assets/resolve/main/generative_models/vae.png)
-* **Probabilistic Modeling:** In VAEs, the latent space is modeled as a probability distribution, often assumed to be a multivariate Gaussian. This distribution is parameterized by the mean and standard deviation vectors, which are outputs of the probabilistic encoder  \\( q_\phi(z|x) \\). This comprosises of our learned representation z which is further used to sample from the decoder as \\(p_\theta(x|z) \\).
-* **Loss Function:** The loss function for VAEs comprises two components: the reconstruction loss (measuring how well the model reconstructs the input) similar to the vanilla autoencoders and the KL divergence (measuring how closely the learned distribution resembles a chosen prior distribution, usually gaussian). The combination of these components encourages the model to learn a latent representation that captures both the data distribution and the specified prior.
-* **Encouraging Meaningful Latent Representations:** By incorporating the KL divergence term into the loss function, VAEs are encouraged to learn a latent space where similar data points are closer, ensuring a meaningful and structured representation. The autoencoder's loss function aims to minimize both the reconstruction loss and the latent loss. A smaller latent loss implies a limited encoding of information that would otherwise enhance the reconstruction loss. Consequently, the Variational Autoencoder (VAE) finds itself in a delicate balance between the latent loss and the reconstruction loss. This equilibrium becomes pivotal, as a `smaller latent loss` tends to result in generated images closely resembling those present in the training set but lacking in visual quality. Conversely, a `smaller reconstruction loss` leads to well-reconstructed images during training but hampers the generation of novel images that deviate significantly from the training set. Striking a harmonious balance between these two aspects becomes imperative to achieve desirable outcomes in both image reconstruction and generation.
+* **概率建模:** 在VAE中，潜在空间被建模为一个概率分布，通常假设为多变量高斯分布。该分布由均值和标准差向量参数化，输出由概率编码器 $ q_\phi(z|x) $ 得到。这组成了我们学习到的表示 $z$，并进一步用于从解码器中采样得到 $p_\theta(x|z)$。
+* **损失函数:** VAE的损失函数包含两个部分：重构损失（衡量模型对输入的重构质量）类似于基础自编码器，以及KL散度（衡量学习分布与选定先验分布（通常为高斯分布）的接近程度）。这两个组件的组合鼓励模型学习一个既捕捉数据分布又符合指定先验的潜在表示。
+* **鼓励有意义的潜在表示:** 通过将KL散度项纳入损失函数，VAE被鼓励学习一个潜在空间，使得相似的数据点彼此更接近，确保一种有意义且结构化的表示。自编码器的损失函数旨在同时最小化重构损失和潜在损失。较小的潜在损失意味着信息的编码受到限制，从而增强了重构损失。因此，变分自编码器（VAE）在潜在损失和重构损失之间找到一种微妙的平衡。这种平衡非常重要，因为`较小的潜在损失`往往导致生成的图像与训练集中的图像极为相似，但视觉质量较差。相反，`较小的重构损失`则会导致训练过程中图像重构效果良好，但难以生成与训练集显著不同的新图像。在这两个方面取得和谐平衡对于实现良好的图像重构和生成效果至关重要。
 
-In summary, VAEs go beyond mere data reconstruction; they generate new samples and provide a probabilistic framework for understanding latent representations. The inclusion of probabilistic elements in the model's architecture sets VAEs apart from traditional autoencoders. Compared to traditional autoencoders, VAEs provide a richer understanding of the data distribution, making them particularly powerful for generative tasks.
+总之，VAE不仅仅进行数据重构；它生成新的样本，并提供一种理解潜在表示的概率框架。模型架构中引入的概率元素使VAE区别于传统的自编码器。与传统自编码器相比，VAE提供了更丰富的数据分布理解，使其在生成任务中特别强大。
 
-## References
-1. [Lilian Weng's Awesome Blog on Autoencoders](https://lilianweng.github.io/posts/2018-08-12-vae/)
-2. [Generative models under a microscope: Comparing VAEs, GANs, and Flow-Based Models](https://medium.com/sciforce/generative-models-under-a-microscope-comparing-vaes-gans-and-flow-based-models-344f20085d83)
-3. [Autoencoders, Variational Autoencoders (VAE) and β-VAE](https://medium.com/@rushikesh.shende/autoencoders-variational-autoencoders-vae-and-%CE%B2-vae-ceba9998773d)
+## 参考文献
+1. [Lilian Weng的关于自编码器的精彩博客](https://lilianweng.github.io/posts/2018-08-12-vae/)
+2. [在显微镜下观察生成模型：比较VAE、GAN和基于流的模型](https://medium.com/sciforce/generative-models-under-a-microscope-comparing-vaes-gans-and-flow-based-models-344f20085d83)
+3. [自编码器、变分自编码器（VAE）和β-VAE](https://medium.com/@rushikesh.shende/autoencoders-variational-autoencoders-vae-and-%CE%B2-vae-ceba9998773d)

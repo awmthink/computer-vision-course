@@ -1,42 +1,41 @@
-# Introduction
+# 介绍
 
-In the last unit we have learned about multimodality and especially about how to fuse vision and language models to harness the best of the two worlds and outperform simple vision models in tasks like Zero-Shot Image Classification.
-Another area where multimodal models have had an significant impact, are generative vision models. In this unit, we will have a deeper look at these types of Neural Networks.
+在上一单元中，我们学习了多模态，尤其是如何融合视觉和语言模型，以利用两者的优点，并在零样本图像分类等任务中超越简单的视觉模型。
+另一个多模态模型有显著影响的领域是生成视觉模型。在本单元中，我们将更深入地探讨这些类型的神经网络。
 
-## Definition
+## 定义
 
-What are generative vision models and how do they differ from other models?
+什么是生成视觉模型？它们如何与其他模型不同？
 
-Mathematical models can generally be separated into two large families, generative models and discriminative models.
-The main difference between discriminative models and generative models is that discriminative models learn boundaries that separate different classes, while generative models learn the distribution of different classes.
+数学模型通常可以分为两大类：生成模型和判别模型。
+判别模型和生成模型的主要区别在于，判别模型学习不同类别的边界，而生成模型学习不同类别的分布。
 
-Discriminative models can be applied to standard computer vision tasks such as classification and regression,
-these tasks can be expanded into more complex processes such as semantic segmentation or object detection.
+判别模型可以应用于标准的计算机视觉任务，如分类和回归，这些任务可以扩展为更复杂的过程，如语义分割或目标检测。
 
-For the sake of brevity, in this chapter, we will consider generative models that solve these tasks:
+为简洁起见，在本章中，我们将讨论解决以下任务的生成模型：
 
-* noise to image (DCGAN)
-* text to image (diffusion models)
-* image to image (StyleGAN, cycleGAN, diffusion models)
+* 噪声到图像（DCGAN）
+* 文本到图像（扩散模型）
+* 图像到图像（StyleGAN, CycleGAN, 扩散模型）
 
-This section will cover 2 kinds of generative models. GAN-based models, and diffusion-based models.
+本节将涵盖两种生成模型：基于GAN的模型和基于扩散的模型。
 
-## Evaluation of generative models in computer vision
+## 计算机视觉中生成模型的评估
 
-Generally, it is really hard to come up with meaningful metrics for evaluating generative models. Because often you don't have a solid "ground truth", and it is difficult to quantify the quality of an image. FID is the most commonly used metric, but it is not perfect.
+通常来说，为生成模型设计有意义的评估指标是非常困难的。因为通常没有一个可靠的“真实值”，并且很难量化图像的质量。FID 是最常用的指标，但它并不完美。
 
-Let's quickly go over FID. FID stands for Fréchet Inception Distance, it is an improvement on the Inception Score and was introduced in [GANs Trained by a Two Time-Scale Update Rule Converge to a Local Nash Equilibrium](https://arxiv.org/pdf/1706.08500.pdf). FID is considered to be resistant to noise and certain artifacts that can be present in generated images. The lower the FID, the better.
+我们快速了解一下 FID。FID 代表 Fréchet Inception Distance，它是对 Inception Score 的改进，并在 [GANs Trained by a Two Time-Scale Update Rule Converge to a Local Nash Equilibrium](https://arxiv.org/pdf/1706.08500.pdf) 中提出。FID 被认为对噪声和生成图像中可能存在的某些伪影具有抗性。FID 越低越好。
 
-It is calculated by constructing 2 distributions from the Inception-v3 features. The first distribution is calculated from the training data features, and the second distribution is calculated from the generated image features. Then the Fréchet distance between these 2 distributions is calculated, and that is your FID score. The lower this score, the better the perceived quality of the generated images. Here is a [short explanation](https://www.youtube.com/watch?v=9zTwSzXxNDo&t=398s) on FID.
+FID 的计算方式是通过从 Inception-v3 特征中构建两个分布。第一个分布是从训练数据特征计算的，第二个分布是从生成图像特征计算的。然后计算这两个分布之间的 Fréchet 距离，这就是你的 FID 分数。分数越低，生成图像的感知质量越高。这里有一个关于 FID 的[简短解释](https://www.youtube.com/watch?v=9zTwSzXxNDo&t=398s)。
 
-Some other metrics you might come across are SSIM, PSNR, IS(Inception Score), and the recently introduced CLIP Score.
+其他可能遇到的指标包括 SSIM, PSNR, IS（Inception Score）以及最近引入的 CLIP Score。
 
-* PSNR (peak signal-to-noise ratio) can be interpreted almost as mean-squared-error. Generally, values from [25,34] are okay results while 34+ is very good.
+* PSNR（峰值信噪比）几乎可以解释为均方误差。通常，范围在 [25,34] 之间的值是可以接受的结果，而34+ 被认为非常好。
 
-* SSIM (Structural Similarity Index) is a metric in the range [0, 1] where 1 is a perfect match. The final index is calculated from 3 components: luminance, contrast, and structure. [this paper](https://arxiv.org/pdf/2006.13846.pdf) analyzes SSIM and its components if you're really interested.
+* SSIM（结构相似性指数）是一个在 [0,1] 范围内的度量，其中1是完美匹配。最终指数由亮度、对比度和结构三个组件计算得出。如果你感兴趣，[这篇论文](https://arxiv.org/pdf/2006.13846.pdf)分析了SSIM及其组件。
 
-* Inception score was introduced in [Improved Techniques for Training GANs](https://arxiv.org/pdf/1606.03498.pdf). It is calculated using the features on the inceptionv3 model. The higher the better. It is a mathematically very interesting metric, but has recently fallen out of favor.
+* Inception Score 在 [Improved Techniques for Training GANs](https://arxiv.org/pdf/1606.03498.pdf) 中提出。它是使用 Inception-v3 模型的特征计算的，数值越高越好。虽然数学上很有趣，但最近不再被广泛使用。
 
-* CLIP Score, this metric was introduced in [CLIPScore: A Reference-free Evaluation Metric for Image Captioning](https://arxiv.org/pdf/2104.08718.pdf) is used to evaluate the quality of text to image models. It is calculated by using the CLIP model to calculate the cosine similarity between the generated image and the text prompt. Its range is [0, 100], the higher the better.
+* CLIP Score，这一指标在 [CLIPScore: A Reference-free Evaluation Metric for Image Captioning](https://arxiv.org/pdf/2104.08718.pdf) 中提出，用于评估文本到图像模型的质量。它通过使用 CLIP 模型计算生成图像和文本提示之间的余弦相似性，范围为 [0, 100]，值越高越好。
 
- If you're *really curious* about FID. [The Role of ImageNet Classes in Fréchet Inception Distance](https://arxiv.org/pdf/2203.06026.pdf) tries to analyze what FID considers important in an image, and how the features pretrained on imagenet affect the FID score. It is a very interesting read.
+如果你对 FID *非常好奇*，[The Role of ImageNet Classes in Fréchet Inception Distance](https://arxiv.org/pdf/2203.06026.pdf) 试图分析 FID 在图像中认为重要的特征，以及在ImageNet上预训练的特征如何影响 FID 分数。这是一篇非常有趣的读物。
