@@ -1,165 +1,151 @@
-# Model optimization tools and frameworks
+# 模型优化工具和框架
 
-## Tensorflow Model optimization Toolkit (TMO)
+## TensorFlow 模型优化工具包 (TMO)
 
-### Overview
+### 概述
 
-The TensorFlow Model Optimization Toolkit is a suite of tools for optimizing machine learning models for deployment. 
-The TensorFlow Lite post-training quantization tool enable users to convert weights to 8 bit precision which reduces the trained model size by about 4 times. 
-The tools also include API for pruning and quantization during training is post-training quantization is insufficient.
-These help user to reduce latency and inference cost, deploy models to edge devices with restricted resources and optimized execution for existing hardware or new special purpose accelerators.
+TensorFlow 模型优化工具包是一组用于优化机器学习模型以便部署的工具。TensorFlow Lite 的训练后量化工具可以将权重转换为 8 位精度，从而将训练模型的大小减少约 4 倍。该工具包还包括在训练期间进行剪枝和量化的 API，如果训练后量化不足以满足需求，这些工具可以帮助用户减少延迟和推理成本，将模型部署到资源受限的边缘设备，并为现有硬件或新型专用加速器优化执行。
 
-### Setup guide
+### 设置指南
 
-The Tensorflow Model Optimization Toolkit is available as a pip package, `tensorflow-model-optimization`. To install the package, run the following command:
+TensorFlow 模型优化工具包作为 pip 包提供，包名为 `tensorflow-model-optimization`。要安装该包，请运行以下命令：
 ```
 pip install -U tensorflow-model-optimization
 ```
 
-### Hands-on guide
+### 实践指南
 
-For a hands-on guide on how to use the Tensorflow Model Optimization Toolkit, refer this [notebook](https://github.com/johko/computer-vision-course/blob/main/notebooks/Unit%209%20-%20Model%20Optimization/tmo.ipynb)
-## PyTorch Quantization
+有关如何使用 TensorFlow 模型优化工具包的实践指南，请参阅此 [notebook](https://github.com/johko/computer-vision-course/blob/main/notebooks/Unit%209%20-%20Model%20Optimization/tmo.ipynb)。
 
-### Overview
+## PyTorch 量化
 
-For optimizing model, PyTorch supports INT8 quantization compared to typical FP32 models which leads to 4x reduction in the model size and a 4x reduction in memory bandwidth requirements. 
-PyTorch supports multiple approaches to quantizing a deep learning model which are as follows:
-1. Model is trained in FP32 and then the model is converted to INT8. 
-2. Quantization aware training, where models quantization errors in both the forward and backward passes using fake-quantization modules. 
-3. Represent quantized tensors and perform operations with them. They can be used to directly construct models that perform all or part of the computation in lower precision. 
+### 概述
 
-For more details on quantization in PyTorch, see [here](https://pytorch.org/docs/stable/quantization.html)
+为了优化模型，PyTorch 支持与典型 FP32 模型相比的 INT8 量化，从而使模型大小减少 4 倍，并减少 4 倍的内存带宽需求。PyTorch 支持多种量化深度学习模型的方法，包括以下几种：
+1. 在 FP32 下训练模型，然后将模型转换为 INT8。
+2. 量化感知训练，通过前向和后向传播中使用伪量化模块来处理模型的量化误差。
+3. 表示量化张量并进行操作。可以直接构建部分或全部计算在低精度下进行的模型。
 
-### Setup guide
+有关 PyTorch 中量化的更多详细信息，请参见[此处](https://pytorch.org/docs/stable/quantization.html)。
 
-PyTorch quantization is available as API in the PyTorch package. To use it simple install PyTorch and import the quantization API as follows: 
+### 设置指南
+
+PyTorch 量化在 PyTorch 包中提供为 API。使用时，只需安装 PyTorch 并导入量化 API：
 ```
 pip install torch
 import torch.quantization
 ```
-## Hands-on guide
 
-For a hands-on guide on how to use the Pytorch Quantization, refer this [notebook](https://github.com/johko/computer-vision-course/blob/main/notebooks/Unit%209%20-%20Model%20Optimization/torch.ipynb)
+## 实践指南
+
+有关如何使用 PyTorch 量化的实践指南，请参阅此 [notebook](https://github.com/johko/computer-vision-course/blob/main/notebooks/Unit%209%20-%20Model%20Optimization/torch.ipynb)。
 
 ## ONNX Runtime
 
-### Overview
+### 概述
 
-ONNX Runtime is a cross-platform machine-learning model accelerator, with a flexible interface to integrate hardware-specific libraries. 
-ONNX Runtime can be used with models from PyTorch, Tensorflow/Keras, TFLite, scikit-learn, and other frameworks.
-The benefits of using ONNX Runtime for Inferencing are as follows:
-- Improve inference performance for a wide variety of ML models.
-- Run on different hardware and operating systems.
-- Train in Python but deploy into a C#/C++/Java app.
-- Train and perform inference with models created in different frameworks.
+ONNX Runtime 是一个跨平台的机器学习模型加速器，具有灵活的接口来集成特定硬件库。ONNX Runtime 可以与来自 PyTorch、TensorFlow/Keras、TFLite、scikit-learn 和其他框架的模型一起使用。使用 ONNX Runtime 进行推理的好处如下：
+- 提高各种机器学习模型的推理性能。
+- 在不同的硬件和操作系统上运行。
+- 在 Python 中训练，但在 C#/C++/Java 应用中部署。
+- 训练和推理使用不同框架创建的模型。
 
-For more details on ONNX Runtime, see [here](https://onnxruntime.ai/docs/).
+有关 ONNX Runtime 的更多详细信息，请参见[此处](https://onnxruntime.ai/docs/)。
 
-### Setup guide
+### 设置指南
 
-ONNX Runtime has 2 python package and only one of these packages should be installed at a time in any one environment. 
-Use the GPU package if you want to use ONNX Runtime with GPU support.
-The python package for ONNX Runtime is available as a pip package. To install the package, run the following command:
+ONNX Runtime 有两个 Python 包，并且同一环境中一次只能安装其中一个包。如果需要使用 GPU 支持 ONNX Runtime，请使用 GPU 包。ONNX Runtime 的 Python 包可通过 pip 安装。安装命令如下：
 ```
 pip install onnxruntime
 ```
 
-For GPU version, run the following command:
+对于 GPU 版本，请运行以下命令：
 ```
 pip install onnxruntime-gpu
 ```
 
-### Hands-on guide
+### 实践指南
 
-For a hands-on guide on how to use the ONNX Runtime, refer this [notebook](https://github.com/johko/computer-vision-course/blob/main/notebooks/Unit%209%20-%20Model%20Optimization/onnx.ipynb)
+有关如何使用 ONNX Runtime 的实践指南，请参阅此 [notebook](https://github.com/johko/computer-vision-course/blob/main/notebooks/Unit%209%20-%20Model%20Optimization/onnx.ipynb)。
 
 ## TensorRT
 
-### Overview
+### 概述
 
-NVIDIA® TensorRT™ is an SDK for optimizing trained deep learning models to enable high-performance inference. 
-TensorRT contains a deep learning inference optimizer for trained deep learning models, and a runtime for execution.
-After user have trained their deep learning model in a framework of their choice, TensorRT enables user to run it with higher throughput and lower latency.
+NVIDIA® TensorRT™ 是一个 SDK，用于优化训练好的深度学习模型以实现高性能推理。TensorRT 包含一个用于训练深度学习模型的推理优化器和一个运行时执行模块。在用户选择的框架中训练好深度学习模型后，TensorRT 可以帮助用户实现更高的吞吐量和更低的延迟。
 
-### Setup guide
+### 设置指南
 
-TensorRT is available as a pip package, `tensorrt`. To install the package, run the following command:
+TensorRT 作为 pip 包提供，包名为 `tensorrt`。要安装该包，请运行以下命令：
 ```
 pip install tensorrt
 ```
-for other installation methods, see [here](https://docs.nvidia.com/deeplearning/tensorrt/quick-start-guide/index.html#install).
 
-### Hands-on guide
+有关其他安装方法，请参见[此处](https://docs.nvidia.com/deeplearning/tensorrt/quick-start-guide/index.html#install)。
 
-For a hands-on guide on how to use the TensorRT, refer this [notebook](https://github.com/johko/computer-vision-course/blob/main/notebooks/Unit%209%20-%20Model%20Optimization/tensorrt.ipynb)
+### 实践指南
+
+有关如何使用 TensorRT 的实践指南，请参阅此 [notebook](https://github.com/johko/computer-vision-course/blob/main/notebooks/Unit%209%20-%20Model%20Optimization/tensorrt.ipynb)。
 
 ## OpenVINO
 
-### Overview
+### 概述
 
-The OpenVINO™ toolkit enables user to optimize a deep learning model from almost any framework and deploy it with best-in-class performance on a range of Intel® processors and other hardware platforms.
-The benefits of using OpenVINO includes:
-- link directly with OpenVINO Runtime to run inference locally or use OpenVINO Model Server to serve model inference from a separate server or within Kubernetes environment
-- Write an application once, deploy it anywhere on your preferred device, language and OS
-- has minimal external dependencies
-- Reduces first-inference latency by using the CPU for initial inference and then switching to another device once the model has been compiled and loaded to memory
+OpenVINO™ 工具包使用户能够优化来自几乎任何框架的深度学习模型，并在一系列 Intel® 处理器和其他硬件平台上以最佳性能部署。使用 OpenVINO 的好处包括：
+- 可以直接与 OpenVINO Runtime 链接在本地运行推理，或使用 OpenVINO Model Server 从独立服务器或 Kubernetes 环境提供模型推理服务。
+- 一次编写应用程序，可以在任何首选设备、语言和操作系统上部署。
+- 依赖外部资源较少。
+- 通过在初次推理时使用 CPU 来减少首次推理的延迟，然后在模型编译并加载到内存后切换到另一设备。
 
-### Setup guide
+### 设置指南
 
-Openvino is available as a pip package, `openvino`. To install the package, run the following command:
+OpenVINO 作为 pip 包提供，包名为 `openvino`。要安装该包，请运行以下命令：
 ```
 pip install openvino
 ```
 
-For other installation methods, see [here](https://docs.openvino.ai/2023.2/openvino_docs_install_guides_overview.html?VERSION=v_2023_2_0&OP_SYSTEM=LINUX&DISTRIBUTION=ARCHIVE).
+有关其他安装方法，请参见[此处](https://docs.openvino.ai/2023.2/openvino_docs_install_guides_overview.html?VERSION=v_2023_2_0&OP_SYSTEM=LINUX&DISTRIBUTION=ARCHIVE)。
 
-### Hands-on guide
+### 实践指南
 
-For a hands-on guide on how to use the OpenVINO, refer this [notebook](https://github.com/johko/computer-vision-course/blob/main/notebooks/Unit%209%20-%20Model%20Optimization/openvino.ipynb)
+有关如何使用 OpenVINO 的实践指南，请参阅此 [notebook](https://github.com/johko/computer-vision-course/blob/main/notebooks/Unit%209%20-%20Model%20Optimization/openvino.ipynb)。
 
 ## Optimum
 
-### Overview
+### 概述
 
-Optimum serves as an extension of [Transformers](https://huggingface.co/docs/transformers), offering a suite of tools designed for optimizing performance in training and 
-running models on specific hardware, ensuring maximum efficiency. In the rapidly evolving AI landscape, specialized hardware and unique optimizations continue to emerge regularly. 
-Optimum empowers developers to seamlessly leverage these diverse platforms, maintaining the ease of use inherent in Transformers. 
-Platforms supported by optimum as of now are:
-1. [Habana](https://huggingface.co/docs/optimum/habana/index) 
+Optimum 是 [Transformers](https://huggingface.co/docs/transformers) 的扩展，提供一组工具，用于在特定硬件上优化训练和运行模型的性能，以确保最大效率。在迅速发展的 AI 领域，不断出现专门的硬件和独特的优化。Optimum 让开发人员能够轻松利用这些多样化的平台，同时保持 Transformers 的易用性。目前，Optimum 支持的平台有：
+1. [Habana](https://huggingface.co/docs/optimum/habana/index)
 2. [Intel](https://huggingface.co/docs/optimum/intel/index)
 3. [Nvidia](https://github.com/huggingface/optimum-nvidia)
-4. [AWS Trainium and Inferentia](https://huggingface.co/docs/optimum-neuron/index)
+4. [AWS Trainium 和 Inferentia](https://huggingface.co/docs/optimum-neuron/index)
 5. [AMD](https://huggingface.co/docs/optimum/amd/index)
-8. [FuriosaAI](https://huggingface.co/docs/optimum/furiosa/index)
-9. [ONNX Runtime](https://huggingface.co/docs/optimum/onnxruntime/overview)
-10. [BetterTransformer](https://huggingface.co/docs/optimum/bettertransformer/overview)
+6. [FuriosaAI](https://huggingface.co/docs/optimum/furiosa/index)
+7. [ONNX Runtime](https://huggingface.co/docs/optimum/onnxruntime/overview)
+8. [BetterTransformer](https://huggingface.co/docs/optimum/bettertransformer/overview)
 
-### Setup guide
+### 设置指南
 
-Optimum is available as a pip package, `optimum`. To install the package, run the following command:
+Optimum 作为 pip 包提供，包名为 `optimum`。要安装该包，请运行以下命令：
 ```
 pip install optimum
-``` 
+```
 
-For installation of accelerator-specific features, see [here](https://huggingface.co/docs/optimum/installation).
+有关加速器特定功能的安装，请参见[此处](https://huggingface.co/docs/optimum/installation)。
 
-### Hands-on guide
+### 实践指南
 
-For a hands-on guide on how to use Optimum for quantization, refer this [notebook](https://github.com/johko/computer-vision-course/blob/main/notebooks/Unit%209%20-%20Model%20Optimization/optimum.ipynb)
+有关如何使用 Optimum 进行量化的实践指南，请参阅此 [notebook](https://github.com/johko/computer-vision-course/blob/main/notebooks/Unit%209%20-%20Model%20Optimization/optimum.ipynb)。
 
 ## EdgeTPU
 
-### Overview
+### 概述
 
-Edge TPU is Google’s purpose-built ASIC designed to run AI at the edge. It delivers high performance in a small physical and power footprint, enabling the deployment of high-accuracy AI at the edge.
-The benefits of using EdgeTPU includes:
-- Complements Cloud TPU and Google Cloud services to provide an end-to-end, cloud-to-edge, hardware + software infrastructure for AI-based solutions deployment
-- High performance in a small physical and power footprint
-- Combined custom hardware, open software, and state-of-the-art AI algorithms to provide high-quality, easy to deploy AI solutions for the edge
+Edge TPU 是 Google 为边缘运行 AI 而专门设计的 ASIC，它在物理和功耗占用较小的情况下提供高性能，使高精度 AI 可以在边缘部署。使用 EdgeTPU 的好处包括：
+- 补充了 Cloud TPU 和 Google Cloud 服务，提供从云到边缘的硬件+软件基础设施，以部署基于 AI 的解决方案。
+- 在较小的物理和功率占用下实现高性能。
+- 结合定制硬件、开放软件和最先进的 AI 算法，为边缘提供高质量、易于部署的 AI 解决方案。
 
-For more details on EdgeTPU, see [here](https://cloud.google.com/edge-tpu)
+有关 EdgeTPU 的更多详细信息，请参见[此处](https://cloud.google.com/edge-tpu)。
 
-For guide on how to setup and use EdgeTPU, refer this [notebook](https://github.com/johko/computer-vision-course/blob/main/notebooks/Unit%209%20-%20Model%20Optimization/edge_tpu.ipynb)
-
-
+有关如何设置和使用 EdgeTPU 的指南，请参阅此 [notebook](https://github.com/johko/computer-vision-course/blob/main/notebooks/Unit%209%20-%20Model%20Optimization/edge_tpu.ipynb)。

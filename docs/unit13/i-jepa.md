@@ -1,88 +1,83 @@
-# Image-based Joint-Embedding Predictive Architecture (I-JEPA)
+# 基于图像的联合嵌入预测架构（I-JEPA）
 
-## Overview
+## 概述
 
-The Image-based Joint-Embedding Predictive Architecture (I-JEPA) is a groundbreaking self-supervised learning model [introduced by Meta AI in 2023](https://ai.meta.com/blog/yann-lecun-ai-model-i-jepa/). It tackles the challenge of understanding images without relying on traditional labels or hand-crafted data augmentations.
-To get to know I-JEPA better, let’s first discuss a few concepts.
+基于图像的联合嵌入预测架构（I-JEPA）是一种突破性的自监督学习模型，[由Meta AI在2023年推出](https://ai.meta.com/blog/yann-lecun-ai-model-i-jepa/)。该模型解决了无需依赖传统标签或手工设计的数据增强的图像理解问题。为了更好地理解I-JEPA，让我们先讨论几个概念。
 
-### Invariance-based vs. Generative Pretraining Methods
+### 基于不变性与生成性预训练方法
 
-We can say that there are broadly two main approaches for self-supervised learning from images: invariance-based methods and generative methods. Both approaches have their strengths and weaknesses.
+我们可以大致说，自监督学习的图像预训练方法主要有两类：基于不变性的方法和生成性方法。这两种方法各有优缺点。
 
-- **Invariance-based methods**: In these methods, the model tries to reproduce similar embeddings for different views of the same image. And, of course, these different views are hand-crafted, the image augmentations we’re all familiar with. For example, rotating, scaling, and cropping. These methods are good at producing representations at high semantic levels, but the problem is that they introduce strong biases that may be detrimental to certain downstream tasks. For example, image classification and instance segmentation do not require data augmentations.
+- **基于不变性的方法**：在这种方法中，模型尝试为同一图像的不同视图生成相似的嵌入。当然，这些不同的视图是手工制作的，即我们熟悉的图像增强手段。例如，旋转、缩放和裁剪。这些方法善于在高语义层次上生成表示，但问题在于它们会引入强烈的偏差，可能对某些下游任务有害。例如，图像分类和实例分割并不需要数据增强。
 
-- **Generative methods**: The model tries to reconstruct the input image using these methods. That’s why these methods are sometimes called reconstruction-based self-supervised learning. Masks hide patches of the input image, and the model tries to reconstruct these corrupted patches at the pixel or token level (let’s keep this point in mind). This masked approach can easily generalize beyond image modality but doesn’t produce representations at the quality level of invariance-based methods. Also, these methods are computationally expensive and require large datasets for robust training.
+- **生成性方法**：使用这种方法时，模型尝试重建输入图像，因此这种方法有时也称为基于重构的自监督学习。掩码隐藏了输入图像的部分区域，模型尝试在像素或令牌级别重建这些被破坏的区域（我们稍后会详细讨论）。这种掩码方法可以很容易地推广到超出图像的其他模态，但无法生成与基于不变性方法相同质量的表示。此外，这些方法计算开销较大，并且需要大规模数据集以确保稳健的训练效果。
 
-Now let’s talk about Joint-Embedding Architectures.
+接下来，让我们探讨联合嵌入架构。
 
-### Joint-Embedding Architectures
+### 联合嵌入架构
 
-This is a recent and popular approach for self-supervised learning from images in which two networks are trained to produce similar embeddings for different views of the same image. Basically, they train two networks to "speak the same language" about different views of the same picture. A common choice is the Siamese network architecture where the two networks share the same weights. But like everything else, it has its own problems:
+这是图像自监督学习中一种最新且流行的方法，两个网络被训练为同一图像的不同视图生成相似的嵌入。基本上，它们训练两个网络对同一图像的不同视图“说同一种语言”。一种常见的选择是使用共享权重的Siamese网络架构。但和其他方法一样，它也存在问题：
 
-- **Representation collapse**: A case in which the model produces the same representation regardless of the input.
+- **表示崩塌**：模型无论输入是什么都会生成相同表示的情况。
 
-- **Inputs compatibility criteria**: Finding good and appropriate compatibility measures can be challenging sometimes.
+- **输入兼容性标准**：找到良好且适当的兼容性测量标准有时会很具挑战性。
 
-An example of a Joint-Embedding Architecture is [VICReg](https://arxiv.org/abs/2105.04906)
+一个联合嵌入架构的示例是 [VICReg](https://arxiv.org/abs/2105.04906)。
 
 <Tip>
 
-Different training methods can be employed to train Joint-Embedding Architectures, for example:
+可以使用不同的训练方法来训练联合嵌入架构，例如：
 
-- Contrastive methods
-- Non-Contrastive methods
-- Clustering methods
+- 对比方法
+- 非对比方法
+- 聚类方法
 
 </Tip>
 
-So far so good, now to I-JEPA. As a start, the picture below from the I-JEPA paper shows the difference between Joint-Embedding methods, generative methods, and I-JEPA.
+到目前为止一切顺利，现在进入I-JEPA的讨论。下图来自I-JEPA论文，展示了联合嵌入方法、生成性方法和I-JEPA之间的区别。
 
 ![I-JEPA Comparisons](https://huggingface.co/datasets/hf-vision/course-assets/resolve/main/i-jepa-1.png)
 
-### Image-based Joint-Embedding Predictive Architecture (I-JEPA)
+### 基于图像的联合嵌入预测架构（I-JEPA）
 
-I-JEPA tries to improve on both generative and joint-embedding methods. Conceptually, it is similar to generative methods but with the following key differences:
+I-JEPA尝试改进生成性和联合嵌入方法。概念上，它类似于生成性方法，但具有以下关键区别：
 
-1. **Abstract prediction**: This is the most fascinating aspect of I-JEPA in my opinion. Remember when we mentioned generative methods and how they try to reconstruct the corrupted input at the pixel level? Now, unlike generative methods, I-JEPA tries to predict it in representation space using its introduced predictor, that’s why they call it abstract prediction. This leads to the model learning more powerful semantic features.
+1. **抽象预测**：在我看来，这是I-JEPA最引人入胜的方面。还记得我们提到的生成性方法如何在像素级别重建被破坏的输入吗？I-JEPA与生成性方法不同，它在表示空间中进行预测，而不是在像素级别进行重建，这是通过其引入的预测器实现的，这就是所谓的抽象预测。这使模型能够学习更强大的语义特征。
 
-2. **Multi-block masking**: Another design choice that improves the semantic features produced by I-JEPA is masking sufficiently large blocks of the input image.
+2. **多块掩码**：另一个设计选择是对输入图像的足够大块进行掩码，这提高了I-JEPA生成的语义特征。
 
-### I-JEPA Components
+### I-JEPA组件
 
-The previous diagrams show and compare the I-JEPA architecture, below is a brief description of its main components:
+前面的图示展示了I-JEPA架构，下文是其主要组件的简要描述：
 
-1. **Target Encoder (y-encoder)**: Encodes target images and the target blocks are produced by masking its output.
+1. **目标编码器（y-encoder）**：对目标图像进行编码，并通过掩码其输出来生成目标块。
 
-2. **Context Encoder (x-encoder)**: Encodes a randomly sampled context block from the image to obtain a corresponding patch-level representation.
+2. **上下文编码器（x-encoder）**：从图像中随机采样一个上下文块进行编码，以获得相应的补丁级表示。
 
-3. **Predictor**: Takes as input the output of the context encoder and a mask token for each patch we wish to predict and tries to predict the masked target blocks.
+3. **预测器**：将上下文编码器的输出和每个需要预测的补丁的掩码令牌作为输入，并尝试预测被掩码的目标块。
 
-The target-encoder, context-encoder, and predictor all use a Vision Transformer (ViT) architecture. You have a refresher about them in unit 3 of this course.
+目标编码器、上下文编码器和预测器均使用视觉Transformer（ViT）架构。在本课程的第3单元中有关于它们的复习内容。
 
-The image below from the paper illustrates how I-JEPA works.
+下图来自论文，展示了I-JEPA的工作原理。
 
 ![I-JEPA method](https://huggingface.co/datasets/hf-vision/course-assets/resolve/main/i-jepa-2.png)
 
-## Why It Matters
+## 重要性
 
-So, why I-JEPA? I-JEPA introduced many new design features while still being a simple and efficient method for learning semantic image representations without relying on hand-crafted data augmentations. Briefly,
+那么，为什么是I-JEPA？I-JEPA引入了许多新的设计特性，同时仍然是一种简单且高效的语义图像表示学习方法，无需依赖手工设计的数据增强。简而言之，
 
-1. I-JEPA outperforms pixel-reconstruction methods such as Masked autoencoders (MAE) on ImageNet-1K linear probing, semi-supervised 1% ImageNet-1K, and semantic transfer tasks.
+1. I-JEPA在ImageNet-1K线性探测、半监督1% ImageNet-1K和语义迁移任务上优于像素重建方法（如MAE）。
 
-2. I-JEPA is competitive with view-invariant pretraining approaches on semantic tasks and achieves better performance on low-level vision tasks such as object counting and depth prediction.
+2. I-JEPA在语义任务上与基于视图不变性的方法具有竞争力，并在低层次视觉任务（如目标计数和深度预测）上表现更佳。
 
-3. By using a simpler model with less rigid inductive bias, I-JEPA is applicable to a wider set of tasks.
+3. 通过使用更简单、偏差更少的模型，I-JEPA可以应用于更多任务。
 
-4. I-JEPA is also scalable and efficient. Pretraining on ImageNet requires *less than 1200 GPU hours*.
+4. I-JEPA具有可扩展性和高效性。在ImageNet上的预训练仅需*少于1200 GPU小时*。
 
-## References
+## 参考资料
 
-- [I-JEPA paper](https://arxiv.org/abs/2301.08243)
+- [I-JEPA论文](https://arxiv.org/abs/2301.08243)
 
-- [Meta's blog post about I-JEPA](https://ai.meta.com/blog/yann-lecun-ai-model-i-jepa/)
+- [Meta关于I-JEPA的博客文章](https://ai.meta.com/blog/yann-lecun-ai-model-i-jepa/)
 
-- [I-JEPA official GitHub repository](https://github.com/facebookresearch/ijepa)
-
-
-
-
+- [I-JEPA官方GitHub仓库](https://github.com/facebookresearch/ijepa)

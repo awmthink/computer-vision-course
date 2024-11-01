@@ -1,100 +1,103 @@
-# Introduction
+# 引言
 
-Welcome to the introduction chapter for the unit Ethics and Bias in Computer Vision. This chapter will build the foundation for many important concepts we will encounter later in this unit.
-In this chapter, we will:
-- Cover the popular ImageNet Roulette case study in context to ethics and bias in computer vision with examples.
-- Explore what implications it can have on people and certain groups.
-- Take a look into the consequences of the experiment.
-- Efforts by ImageNet team to tackle and mitigate these problems.
-- Conclude the chapter with some questions on the case study and lay foundation for next chapters.
+欢迎来到计算机视觉中的伦理与偏见单元的引言章节。本章将为我们在本单元中遇到的许多重要概念奠定基础。
+在本章中，我们将：
 
-So let us dive in 🤗
+- 通过示例讨论著名的 ImageNet Roulette 案例研究，探讨计算机视觉中的伦理与偏见问题。
+- 探索其对个人和特定群体可能带来的影响。
+- 了解实验的后果。
+- ImageNet 团队为解决和减轻这些问题所做的努力。
+- 以该案例研究的一些问题为本章结尾，并为后续章节奠定基础。
 
-## ImageNet Roulette: A Case Study on Biases in Classification 
+让我们深入了解 🤗
 
-Imagine you wake up Sunday morning and play around with your phone. You come across this app that tries to return sarcastic and funny labels if you upload different images or maybe take a selfie. You don't mind some fun, so you try the app out by uploading a selfie, and to your shock, it returns an alarming label. It mentions you as a crime suspect (this crime can also be highly dangerous and heinous). You also see social media posts on the same app of different people with provoking labels, increasing the chances of racial and gender profiling. Some of these labels would mean a person who is a crime offender, a person with specific facial features linked with one's ethnicity, or a person's ancestry. This app returns very offensive labels often and might harm self-interests and target a special group of people. A wide range of such labels, which can offend people based on their religion, ethnicity, gender, or age, were present in the app, and you are just shocked and also kind of confused about what's going on with this. 
+## ImageNet Roulette：关于分类偏见的案例研究
 
-AI has made our lives easier and more comfortable, but many times, if AI is not kept in check, it can cause havoc in people's lives. Humans should be more inclusive and aware of others' needs and preferences. The same human values must be incorporated and reflected while developing and deploying AI models. AI models should not create negative sentiments or try to manipulate anyone against a group. 
+想象一下，你在周日早晨醒来，玩手机时发现一个应用。这个应用可以在上传不同图片或拍自拍时返回一些带有讽刺或搞笑标签的结果。你不介意一些乐趣，于是上传了一张自拍，结果却返回了一个令人震惊的标签：它把你标记为犯罪嫌疑人（可能涉及非常危险或令人发指的罪行）。你还在社交媒体上看到其他人使用该应用时收到激起种族和性别偏见的标签。一些标签指向犯罪分子、具有特定种族面貌特征的人，或与个人祖先相关的身份。这个应用经常返回带有冒犯性标签的结果，可能会损害个人利益并针对特定人群。该应用的标签范围广泛，涉及宗教、种族、性别或年龄等特征，可能冒犯用户。这让你感到震惊和困惑。
 
-### Introduction to ImageNet: A Large Scale Dataset for Object Recognition
+AI 使我们的生活更方便舒适，但如果不加控制，它可能会对人们的生活造成破坏。人类应更具包容性，关注他人需求和偏好。这种人文价值观应在开发和部署 AI 模型时得到体现。AI 模型不应引发负面情绪，也不应激发对某一群体的偏见。
 
-ImageNet is a large-scale dataset that was created for object recognition benchmarks at scale. The aim was to map out the entire world of objects to make machines around us smarter in scene understanding, in which humans are far better. This dataset was one of the earliest attempts of its kind to create a large-scale dataset for object recognition. 
+### ImageNet 简介：大规模对象识别数据集
 
-The ImageNet team started scraping image data from various sources on the internet. The original dataset consisted of around 14,197,122 images with 21,841 classes; this was referred to as Imagenet-21K, reflecting around 21K classes. The annotations were crowdsourced using Amazon Mechanical Turk. A smaller subset of this dataset called ImageNet-1K contained 1,281,167 training images, 50,000 validation images, and 100,000 test images with 1000 classes which was used as the foundation for the popular ImageNet Large Scale Visual Recognition Challenge (ILSVRC). The ILSVRC became the competition ground for many aspiring companies and labs working in computer vision to outperform previous approaches on accurately labeling objects. The structure for ImageNet was based on WordNet, a database of word classifications developed at Princeton University.
+ImageNet 是一个为大规模对象识别基准测试而创建的大规模数据集，旨在为周围的机器赋予更好的场景理解能力，这在目前人类中表现更为优越。此数据集是早期为对象识别创建的大规模数据集之一。
 
-<Tip>
-
-💡You can read more about ImageNet [here](https://www.image-net.org/). Also check out [this TED Talk](https://www.youtube.com/watch?v=40riCqvRoMs) by Prof. Fei Fei Li on the same topic.
-</Tip>
-
-### Motivation Behind ImageNet Roulette 🃏
-
-Now, let's talk about the app we discussed earlier. This app existed on the internet a few years ago as a web application. This was an intentional experiment termed ImageNet Roulette and is still one of the most popular cases of how AI models can go wrong if the training data is not prepared carefully with guidelines. This project was developed by artist Trevor Paglen and researcher Kate Crawford. They trained their model based on the 2,833 subcategories of the Person category found in the dataset.
-
-The model was trained using Caffe on the images and labels in the "person" category. The app prompts the user for an image, and a face detector detects faces in the image. The detected face was then sent to the Caffe model for classification. Finally, the app returned an image with a bounding box around the detected face and the label the Caffe model predicted. 
-
-The main motivation behind ImageNet Roulette was to show inherent biases in classifying people. It was trained on only the "person" category from the ImageNet dataset (as discussed earlier). So what went wrong? The inference on different images reflected harmful and provocative on many levels. The biggest cause for bias in this system was largely due to the already available ImageNet categories. The classes reflect how they were kind of absurd, offensive, and provocative while annotating the images. Some of the labels (after rephrasing them from their initial labels to avoid triggering) would mean a person who is an addict, a person with questionable character, a person who is against a specific group of people, a person who is unsuccessful, and a loser, and many more. 
-
-A wide range of labels that categorize people based on gender, race, profession, etc., was inherent in ImageNet. And where did it go wrong? These labels are all drawn from the structure of WordNet. This is exactly where the biases crept into this model (due to overlooking the data preparation process, irrelevant images were downloaded in bulk). We will explore the reasons mentioned by the ImageNet team `later` in the chapter.
-
-Would you like such models to be deployed without any checks? If deployed, are you fine with letting people around you refer to you as an unsuccessful person and make a viral post? This is what went wrong and unlooked for while preparing the dataset. 
-
-### Implications of ImageNet Roulette
-
-Let us explore the implications this experiment had:
-
-1. It exposed deep rooted biases within the ImageNet annotations which are often offensive and stereotypical, particularly concerning race and gender.
-2. The experiment also questions the integrity of datasets used to train AI models especially within the ImageNet dataset. It highlights the need for more rigorous scrutiny and ethical considerations in creating and annotating the training data.
-3. The shocking results acted as a catalyst for discussions around ethical considerations in AI. It prompted a broader conversation within the AI community about the responsibility to ensure fair and unbiased training data, emphasizing the need for ethical data practices.
-In general, if models like this are deployed in real life applications, it can have alarming effects on different people and target groups.
-
-### Consequences of ImageNet Roulette
-
-Initially, the "person" category was not noticed as ImageNet was an object recognition benchmark. But after this experiment, some crucial changes happened in the community. In this case study, the creators were able to show the problems with the inherent biases in ImageNet (which was in shadow till around 2018, when some research started showing up). After a few days, ImageNet released a research paper summarizing their one-year-long project funded by NSF. The full ImageNet dataset was disabled for download since January 2019, whereas the 1000-category dataset ImageNet-1K was not affected. The ImageNet team provided some underlying issues and ways to deal with them (surprisingly, the ImageNet Roulette was not mentioned in their report).
-
-**Problem 1: Offensive Synonym Sets in WordNet** WordNet contains many offensive synsets that are inappropriate as image labels. Somehow, a lot of these labels creeped into ImageNet and were included. 
-
-**Solutions:** 
-a. ImageNet appointed a group of in-house manual annotators to classify synsets in three categories: *offensive*, *sensitive* and *safe*. Offensive labels are racial or gender slurs, sensitive labels are not offensive but might cause offense according to the context, and safe labels are not offensive.
-b. Out of the 2,832 synsets within the person category, 1,593 unsafe synsets (offensive and sensitive) were identified and the remaining 1,239 synsets were temporarily deemed safe. 
-c. A new version of ImageNet was prepared by removing unsafe synsets resulting in removal of around 600,000 images in total.
-
-**Problem 2: Non-imageable concepts** Some synsets might not be offensive, but including them in the overall dataset is also not logical. For example, we cannot classify a person in the image as a philanthropist. Similarly, there might be many synsets that cannot be captured visually using images. 
-
-**Solutions:**
-
-a. For such concepts, multiple workers were asked to rate each of the 2,394 people synsets (safe + sensitive).
-b. The rating was done based on the ease with which the synset arouses mental imagery in a scale of 1-5, 1 being very hard and 5 begin very easy.
-c. The median rating was 2.36 and around 219 synsets had a rating more than 4, images with very low imageability were removed.
-
-**Problem 3: Diversity of images** Many images in ImageNet might have lesser representation. For example, an image search of a particular profession can end up returning different gender ratios as in the real world. Images of construction workers or gangsters might be more inclined toward a particular gender or race.  Not only during search but also during annotations and data cleaning, annotators might be inclined to respond to particular categories in an already socially stereotypical manner. 
-**Solutions:**
-a. To mitigate such stereotypes in search and annotations, images should have higher visual arousal (visually more strong).
-b. ImageNet team did a demographic analysis on most imageable attributes like gender, color and age.
-c. After this analysis, the dataset was balanced by removing overrepresented attributes in a synset leading to a more uniform gender, color and age balance. 
-
-**Problem 4: Privacy Concerns** While classification was subject to some inherent biases, to protect an individual's identity, privacy is also an equally important factor. If these classifications from the experiment were viral, it would have a huge impact on people's lives and overall well-being. To ensure this, AI models should not only be fair but also preserve subjects' privacy.
-
-**Solutions:**
-
-a. Imagenet-1K dataset had 3 people categories. Separate face annotations were carried out and a face-blurred version of the dataset was created.
-b. Image obfuscation techniques like blurring and mosaicing were applied to these images.
-c. It was shown that these images lead to a very minimal drop of accuracy while benchmarking on object recognition tasks and are suitable for training privacy-aware visual classifiers.
+ImageNet 团队从互联网的各种来源抓取图像数据。最初的数据集包含约 14,197,122 张图像和 21,841 个类别，被称为 Imagenet-21K，反映了约 21K 个类别。这些标注是通过亚马逊的 Mechanical Turk 众包平台完成的。数据集的一个较小子集被称为 ImageNet-1K，包含 1,281,167 张训练图像，50,000 张验证图像和 100,000 张测试图像，共 1000 个类别，用作著名的 ImageNet 大规模视觉识别挑战赛（ILSVRC）的基础。ILSVRC 成为众多计算机视觉公司和实验室竞争地，通过准确标注对象来超越以往的成果。ImageNet 的结构基于普林斯顿大学开发的词汇分类数据库 WordNet。
 
 <Tip>
 
-💡For more details on the ImageNet Roulette experiment, you can follow the article on ImageNet Roulette. The experiment is posted on [Excavating AI](https://excavating.ai/) which discusses this in detail. To know more about ImageNet's stance and research on mitigating these issues, you can take a look into the full technical report submitted by them [here](https://www.image-net.org/filtering-and-balancing/).
+💡你可以在[这里](https://www.image-net.org/)查看更多关于 ImageNet 的信息。还可以观看[这场 TED 演讲](https://www.youtube.com/watch?v=40riCqvRoMs)，由李飞飞教授讲述相关主题。
 </Tip>
 
-## Conclusion 
+### ImageNet Roulette 的动机 🃏
 
-In the later chapters, we will also follow the same flow for case studies and try to answer some basic questions. Although we will discuss AI models in general, our focus will be mainly on CV models and the ethical concerns revolving around them.
+现在，让我们讨论一下之前提到的应用。该应用几年前作为一个网页应用存在。它是一个名为 ImageNet Roulette 的实验，展示了如果训练数据未得到良好控制，AI 模型可能会出错。此项目由艺术家 Trevor Paglen 和研究员 Kate Crawford 开发。他们的模型基于数据集中“人”类别下的 2,833 个子类别进行训练。
 
-1. Exploration, what the case study or experiment is all about?
-2. What can go wrong or what went wrong and where?
-3. What is the impact on target groups and other implications (impact assessment)?
-4. How to evaluate bias in CV models using metrics?
-4. How to mitigate these problems for fair and ethical development of CV models.
-5. Role of community and other target groups in fostering and cultivating open dialogues.
+模型使用 Caffe 在“人”类别的图像和标签上进行训练。应用提示用户上传图片，面部检测器在图片中检测面部。检测到的面部随后发送至 Caffe 模型进行分类。最终，应用返回一个带有检测面部边框的图像以及 Caffe 模型预测的标签。
 
-In conclusion over the whole unit, we will come across various case studies related to ethics and bias, will evaluate bias and try to think of what impact they can have if biases are unresolved. We will also explore various strategies to mitigate the biases, and make CV models safe and inclusive for usage.
+ImageNet Roulette 的主要动机是展示分类人群时的内在偏见。模型只在 ImageNet 数据集中的“人”类别上进行训练（如前所述）。那么，出了什么问题？对不同图像的推断在很多层面上表现出有害和挑衅的倾向。系统中的最大偏见主要来源于 ImageNet 的现有类别。这些类别在图像标注时反映出荒谬、冒犯和挑衅的性质。一些标签（在重新措辞以避免触发敏感的情况下）意味着一个人是成瘾者、品行可疑者、反对某特定群体者、不成功者、失败者等。
+
+在 ImageNet 中，存在大量根据性别、种族、职业等分类人的标签。哪里出了问题？这些标签全部来源于 WordNet 的结构。这正是偏见渗入模型的地方（由于忽视了数据准备过程，错误下载了大量无关图片）。我们将在本章`稍后`探讨 ImageNet 团队提到的原因。
+
+你是否希望这样的模型在没有检查的情况下被部署？如果被部署，你是否愿意周围的人称你为“不成功的人”并发一条爆红的帖子？这是在数据集准备时被忽视的问题。
+
+### ImageNet Roulette 的影响
+
+让我们探讨该实验的影响：
+
+1. 它揭示了 ImageNet 标注中的深层偏见，特别是种族和性别方面的冒犯性和刻板印象。
+2. 实验还质疑了用于训练 AI 模型的数据集的完整性，特别是 ImageNet 数据集。这强调了在创建和标注训练数据时需更加严谨的审查和伦理考虑。
+3. 令人震惊的结果成为 AI 伦理问题讨论的催化剂，促使 AI 社区就保证公平和无偏数据进行更广泛的对话，强调了伦理数据实践的重要性。
+在实际应用中，如果这样的模型被部署，可能对不同人群和目标群体带来令人担忧的影响。
+
+### ImageNet Roulette 的后果
+
+最初，“人”类别并未受到重视，因为 ImageNet 是一个对象识别基准测试。但在该实验后，社区发生了一些关键变化。在该案例研究中，研究人员展示了 ImageNet 中的内在偏见问题（直到 2018 年左右一些研究开始显现之前，这个问题都处于隐蔽状态）。几天后，ImageNet 发布了一篇研究论文，总结了由 NSF 资助的长达一年的项目。自 2019 年 1 月起，完整的 ImageNet 数据集被禁用下载，而包含 1000 个类别的 ImageNet-1K 未受影响。ImageNet 团队提出了一些基本问题及其解决方案（意外地，ImageNet Roulette 并未在报告中提到）。
+
+**问题 1：WordNet 中的冒犯性同义词集合** WordNet 包含许多不适合作为图像标签的冒犯性同义词集合。这些标签不知何故进入了 ImageNet 并被包含在内。
+
+**解决方案：**
+a. ImageNet 指派了一组内部标注员，将同义词集分类为：*冒犯性*、*敏感性* 和 *安全性*。冒犯性标签是种族或性别污名词，敏感性标签在特定上下文下可能引发冒犯，而安全性标签则没有冒犯性。
+b. 在“人”类别的 2,832 个同义词集中，1,593 个不安全的同义词集（冒犯性和敏感性）被识别，剩余 1,239 个同义词集暂时被认为是安全的。
+c. 新版本的 ImageNet 通过移除不安全的同义词集准备完成，导致总共约 600,000 张图片被移除。
+
+**问题 2：不可图像化的概念** 一些同义词集可能不具冒犯性，但将其纳入整个数据集中也不合逻辑。例如，我们无法通过图像将人分类为慈善家。类似地，许多同义词集无法通过图像进行视觉捕获。
+
+**解决方案：**
+
+a. 对于此类概念，多个工作人员被要求对每个 2,394 人物同义词集（安全+敏感性）进行评级。
+b. 评级依据是同义词集唤起视觉意象的难易度，评分为 1-5，1 表示非常难，5 表示非常容易。
+c. 中位数评分为 2.36，约 219 个同义词集的评分高于 4，低图像化的图像被移除。
+
+**问题 3：图像的多样性
+
+** ImageNet 中的许多图像可能代表性不足。例如，特定职业的图像搜索可能最终显示出与现实世界不同的性别比例。建筑工人或帮派成员的图像可能更偏向某一性别或种族。在搜索、标注和数据清理时，标注员可能倾向于以既有社会刻板印象响应特定类别。
+**解决方案：**
+a. 为缓解搜索和标注中的此类刻板印象，图像应具有更高的视觉唤起性（视觉上更强）。
+b. ImageNet 团队对性别、肤色和年龄等最具图像化属性进行了人口分析。
+c. 在此分析后，数据集通过移除同义词集中过度表现的属性，获得了更加均衡的性别、肤色和年龄平衡。
+
+**问题 4：隐私问题** 虽然分类受到一些内在偏见的影响，为保护个人隐私，隐私同样是重要因素。如果这些分类在实验中被广泛传播，可能对人们的生活和整体福祉产生巨大影响。为了确保这一点，AI 模型不仅应公平，还应保护被识别对象的隐私。
+
+**解决方案：**
+
+a. ImageNet-1K 数据集中有 3 个人物类别。进行了单独的面部标注，并创建了一个面部模糊版本的数据集。
+b. 对这些图像应用了模糊和马赛克等图像遮蔽技术。
+c. 实验证明，这些图像在对象识别任务的基准测试中精度损失极小，适合训练隐私保护的视觉分类器。
+
+<Tip>
+
+💡有关 ImageNet Roulette 实验的更多细节，可以参阅关于 ImageNet Roulette 的文章。实验发布在[Excavating AI](https://excavating.ai/)上，详细讨论了这一问题。若想了解 ImageNet 的立场和减轻这些问题的研究，可以参考他们的完整技术报告[此处](https://www.image-net.org/filtering-and-balancing/)。
+</Tip>
+
+## 结论 
+
+在后续章节中，我们也将遵循相同的案例研究流程，并尝试回答一些基本问题。尽管我们会讨论 AI 模型的一般性问题，重点将主要放在计算机视觉模型及其相关伦理问题上。
+
+1. 探索，案例研究或实验的主题是什么？
+2. 什么地方可能出错或确实出错了？
+3. 对目标群体和其他影响的评估（影响评估）。
+4. 如何通过指标评估 CV 模型中的偏见？
+5. 如何缓解这些问题，以实现 CV 模型的公平和伦理开发。
+6. 社区和其他目标群体在促进和培养开放对话中的角色。
+
+在整个单元的总结中，我们将涉及与伦理与偏见相关的各种案例研究，评估偏见并思考如果偏见未被解决可能带来的影响。我们还将探讨各种偏见缓解策略，使 CV 模型更安全、更具包容性。
