@@ -1,16 +1,15 @@
-# Introduction
+# 引言
 
-Apart from videos, about which we talked in the last chapter, another common form of visual data comes in the 3-dimensional form.
-While for 2D images we usually have the two dimensions, commonly labelled as _x_ and _y_, for 3D images we have three dimensions, referred to as _x_, _y_ and _z_.
+除了我们在上一章讨论的视频之外，另一种常见的视觉数据形式是三维形式。对于二维图像，我们通常有两个维度，通常标记为 _x_ 和 _y_；而对于三维图像，我们有三个维度，分别称为 _x_、_y_ 和 _z_。
 
-"But wait," I hear you say, "videos also have three dimensions!" That is completely correct - videos have the two spatial dimensions, _x_ and _y_, and the temporal dimension, _t_. The difference with 3D data is that here all three dimensions are of a spatial nature. This helps us to create a better model of our world and our perceptive capabilities. That is why one very common field for 3D applications nowadays is Mixed Reality applications, in which we try to merge the digital and analog worlds.
+“等等，”我听到你说，“视频也有三维！”这是完全正确的——视频具有两个空间维度 _x_ 和 _y_，以及一个时间维度 _t_。与三维数据的区别在于，这里所有三个维度都是空间性质的。这有助于我们更好地构建对世界和感知能力的模型。这就是为什么如今三维应用的一个非常常见的领域是混合现实应用，我们试图将数字世界与模拟世界结合起来。
 
-## Unit Overview
+## 单元概述
 
-You will learn more about applications of 3D Computer Vision in the first chapter after this introduction. Right after that, we will take a look at the historical developments of 3D applications - all the way from the 19th century to today.
+在这一引言之后，你将学习到三维计算机视觉的应用。在那之后，我们将回顾三维应用的发展历程——从19世纪一直到今天。
 
-After these general topics, we'll dive right into the terminologies and concepts with three chapters about camera models, linear algebra and different representations.
+在这些一般主题之后，我们将深入研究术语和概念，分三个章节讨论相机模型、线性代数和不同的表示方式。
 
-We are following up the theory with some proper fields of use for 3D Computer Vision. Starting off with Novel View Synthesis, followed by Stereo Vision and finishing this unit (for now) with one of the most popular applications right now - Neural Radiance Fields (NeRFs).
+我们将理论与三维计算机视觉的一些实际应用相结合。从新视图合成开始，接着是立体视觉，并最终以目前最流行的应用之一——神经辐射场（NeRFs）结束本单元（暂时）。
 
-Ready? Then get out your 3D goggles and lets learn! 🌟
+准备好了吗？那么拿出你的3D眼镜，让我们开始学习吧！🌟

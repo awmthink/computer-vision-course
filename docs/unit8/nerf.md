@@ -1,87 +1,65 @@
-# Neural Radiance Fields (NeRFs)
+# 神经辐射场（NeRFs）
 
-Neural Radiance Fields are a way of storing a 3D scene within a neural network. This way of storing and representing a scene is often called an implicit representation, since the scene parameters are fully represented by the underlying Multi-Layer Perceptron (MLP). 
-(As compared to an explicit representation that stores scene parameters like colour or density explicitly in voxel grids.) 
-This novel way of representing a scene showed very impressive results in the task of [novel view synthesis](https://en.wikipedia.org/wiki/View_synthesis), the task of interpolating novel views from camera perspectives that are not in the training set. 
-Furthermore, it allows us to store large scenes with a smaller memory footprint than explicit representation, since we merely need to store the weights of our neural network compared to voxel grids, which increase in memory size by a cubic term.
+神经辐射场是一种在神经网络中存储 3D 场景的方法。这种存储和表示场景的方式通常被称为隐式表示，因为场景参数完全由底层的多层感知机（MLP）表示。（与显式表示相比，显式表示将场景参数如颜色或密度明确存储在体素网格中。）这种新颖的场景表示方式在[新视角合成](https://en.wikipedia.org/wiki/View_synthesis)任务中显示出了非常令人印象深刻的结果，新视角合成任务是从不在训练集中的相机视角插值新视角。此外，与显式表示相比，它允许我们以更小的内存占用存储大型场景，因为与体素网格相比，我们只需要存储神经网络的权重，而体素网格的内存大小以立方项增加。
 
-## Short History 📖
-The field of NeRFs is relatively young with the first publication by [Mildenhall et al.](https://www.matthewtancik.com/nerf) appearing in 2020. 
-Since then, a vast number of papers have been published and fast advancements have been made. 
-Since 2020, more than 620 preprints and publications have been released, with more than 250 repositories on GitHub. *(as of Dec 2023, statistics from [paperswithcode.com](https://paperswithcode.com/method/nerf))*.
+## 简短历史 📖
+NeRFs 领域相对较新，[Mildenhall 等人](https://www.matthewtancik.com/nerf)于 2020 年首次发表相关论文。从那时起，大量的论文被发表，并且取得了快速的进展。自 2020 年以来，已经发布了超过 620 篇预印本和出版物，在 GitHub 上有超过 250 个存储库。（截至 2023 年 12 月，数据来自[paperswithcode.com](https://paperswithcode.com/method/nerf)）。
 
-Since the first formulation of NeRFs requires long training times (up to days on beefy GPUs), there have been a lot of advancements towards faster training and inference. 
-An important leap was NVIDIA's [Instant-ngp](https://nvlabs.github.io/instant-ngp/), which was released in 2022. 
-While the model architecture used in this approach is similar to existing ones, the authors introduced a novel encoding method that uses trainable hash-tables. 
-Thanks to this type of encoding, we can shrink the MLP down significantly without loosing reconstruction quality.
-This novel approach was faster to train and query while performing on par quality wise with then state-of-the-art methods. 
-[Mipnerf-360](https://jonbarron.info/mipnerf360/), which was also released in 2022, is also worth mentioning. 
-Again, the model architecture is the same as for most NeRFs, but the authors introduced a novel scene contraction that allows us to represent scenes that are unbounded in all directions, which is important for real-world applications. 
-[Zip-NeRF](https://jonbarron.info/zipnerf/), released in 2023, combines recent advancements like the encoding from [Instant-ngp](https://nvlabs.github.io/instant-ngp/) and the scene contraction from [Mipnerf-360](https://jonbarron.info/mipnerf360/) to handle real-world situation whilst decreasing training times to under an hour. 
-*(this is still measured on beefy GPUs to be fair)*.
+由于 NeRFs 的首次提出需要很长的训练时间（在强大的 GPU 上长达数天），因此在更快的训练和推理方面取得了很多进展。一个重要的飞跃是 NVIDIA 的[Instant-ngp](https://nvlabs.github.io/instant-ngp/)，它于 2022 年发布。虽然这种方法中使用的模型架构与现有的相似，但作者引入了一种新颖的编码方法，该方法使用可训练的哈希表。由于这种编码类型，我们可以在不损失重建质量的情况下显著缩小 MLP。这种新颖的方法在训练和查询方面更快，同时在质量上与当时的最先进方法相当。[Mipnerf-360](https://jonbarron.info/mipnerf360/)也值得一提，它也于 2022 年发布。同样，模型架构与大多数 NeRFs 相同，但作者引入了一种新颖的场景收缩方法，使我们能够表示在所有方向上无界的场景，这对于实际应用非常重要。[Zip-NeRF](https://jonbarron.info/zipnerf/)于 2023 年发布，它结合了像[Instant-ngp](https://nvlabs.github.io/instant-ngp/)中的编码和[Mipnerf-360](https://jonbarron.info/mipnerf360/)中的场景收缩等最近的进展，以处理实际情况，同时将训练时间减少到不到一小时。（公平地说，这仍然是在强大的 GPU 上测量的）。
 
-Since the field of NeRFs is rapidly evolving, we added a section at the end where we will tease the latest research and the possible future direction of NeRFs.
+由于 NeRFs 领域正在迅速发展，我们在结尾处添加了一个部分，在这里我们将介绍最新的研究和 NeRFs 可能的未来方向。
 
-But now enough with the history, let's dive into the intrinsics of NeRFs! 🚀🚀
+但现在关于历史的内容已经足够了，让我们深入了解 NeRFs 的本质吧！🚀🚀
 
-## Underlying approach (Vanilla NeRF) 📘🔍
-The fundamental idea behind NeRFs is to represent a scene as a continuous function that maps a position, \\( \mathbf{x} \in \mathbb{R}^{3} \\), and a viewing direction,  \\( \boldsymbol{\theta} \in \mathbb{R}^{2} \\), to a colour \\( \mathbf{c} \in \mathbb{R}^{3} \\) and volume density \\( \sigma \in \mathbb{R}^{1}\\). 
-As neural networks can serve as universal function approximators, we can approximate this continuous function that represents the scene with a simple Multi-Layer Perceptron (MLP) \\( F_{\mathrm{\Theta}} : (\mathbf{x}, \boldsymbol{\theta}) \to (\mathbf{c},\sigma) \\).
+## 基础方法（原始 NeRF）📘🔍
+NeRFs 的基本思想是将场景表示为一个连续函数，该函数将位置$\mathbf{x} \in \mathbb{R}^{3}$和观察方向$\boldsymbol{\theta} \in \mathbb{R}^{2}$映射到颜色$\mathbf{c} \in \mathbb{R}^{3}$和体积密度$\sigma \in \mathbb{R}^{1}$。由于神经网络可以作为通用函数逼近器，我们可以用一个简单的多层感知机（MLP）$F_{\mathrm{\Theta}} : (\mathbf{x}, \boldsymbol{\theta}) \to (\mathbf{c},\sigma)$来逼近这个表示场景的连续函数。
 
-A simple NeRF pipeline can be summarized with the following picture:
+一个简单的 NeRF 流程可以用以下图片总结：
 
 <div style="display: flex; flex-direction: column; align-items: center;">
   <img src="https://huggingface.co/datasets/hf-vision/course-assets/resolve/main/nerf_pipeline.png" alt="nerf_pipeline" />
-  <p>Image from: <a href="https://www.matthewtancik.com/nerf">Mildenhall et al. (2020)</a></p>
+  <p>图片来自：<a href="https://www.matthewtancik.com/nerf">Mildenhall 等人（2020）</a></p>
 </div>
 
-**(a)** Sample points and viewing directions along camera rays and pass them through the network.
+**(a)** 沿着相机光线采样点和观察方向，并将它们通过网络。
 
-**(b)** Network output is a colour vector and density value for each sample.
+**(b)** 网络输出是每个样本的颜色向量和密度值。
 
-**(c)** Combine the outputs of the network via volumetric rendering to go from discrete samples in 3D space to a 2D image. 
+**(c)** 通过体绘制将网络的输出组合起来，从 3D 空间中的离散样本转换为 2D 图像。
 
-**(d)** Compute the loss and update network gradients via backpropagation to represent scene.
+**(d)** 计算损失并通过反向传播更新网络梯度以表示场景。
 
-This is overview is very high level, so for a better understanding, let's go into the details of the volume rendering and the used loss function.
+这个概述非常高层次，所以为了更好地理解，让我们深入了解体绘制的细节和使用的损失函数。
 
-**Volume Rendering**
+**体绘制**
 
-The principles behind the process of volumetric rendering are well established in classical computer graphics pipelines and do not stem from NeRFs. 
-What is important for the use case of NeRFs is that this step is **differentiable** in order to allow for backpropagation. The simplest form of volumetric rendering in NeRFs can be formulated as follows:
+体绘制过程背后的原理在经典计算机图形学管线中已经很成熟，并非源自 NeRFs。对于 NeRFs 的用例来说，重要的是这个步骤是**可微分的**，以便进行反向传播。NeRFs 中最简单的体绘制形式可以表述如下：
 
 $$\mathbf{C}(\mathbf{r}) = \int_{t_n}^{t_f}T(t)\sigma(\mathbf{r}(t))\mathbf{c}(\mathbf{r}(t),\mathbf{d})dt$$
 
-In the equation above, \\( \mathbf{C}(\mathbf{r}) \\) is the expected colour of a camera ray \\( \mathbf{r}(t)=\mathbf{o}+t\mathbf{d} \\), where \\( \mathbf{o} \in \mathbb{R}^{3} \\) is the origin of the camera, \\( \boldsymbol{d} \in \mathbb{R}^{3} \\) is the viewing direction as a 3D unit vector and \\( t \in \mathbb{R}_+ \\) is the distance along the ray. 
-\\( t_n \\) and \\( t_f \\) stand for the near and far bounds of the ray, respectively. 
-\\( T(t) \\) denotes the accumulated transmittance along ray \\( \mathbf{r}(t) \\) from \\( t_n \\) to \\( t \\).
+在上面的等式中，$\mathbf{C}(\mathbf{r})$ 是相机光线$\mathbf{r}(t)=\mathbf{o}+t\mathbf{d}$的预期颜色，其中$\mathbf{o} \in \mathbb{R}^{3}$是相机的原点，$\boldsymbol{d} \in \mathbb{R}^{3}$是作为 3D 单位向量的观察方向，$t \in \mathbb{R}_+$是沿光线的距离。$t_n$和$t_f$分别代表光线的近边界和远边界。$T(t)$表示沿光线$\mathbf{r}(t)$从$t_n$到$t$的累积透射率。
 
-After discretization, the equation above can be computed as the following sum:
+经过离散化后，上面的等式可以计算为以下求和：
 
 $$\boldsymbol{\hat{C}}(\mathbf{r})=\sum_{i=1}^{N}T_i (1-\exp(-\sigma_i \delta_i)) \mathbf{c}_i\,, \textrm{ where }T_i=\exp \bigg(-\sum_{j=1}^{i-1} \sigma_j \delta_j \bigg)$$
 
-Below, you can see a schematic visualisation of a discretized camera ray in order to get a better sense of the variables from above:
+下面，你可以看到一个离散化相机光线的示意可视化，以便更好地理解上面的变量：
 
 ![ray_image](https://huggingface.co/datasets/hf-vision/course-assets/resolve/main/nerf_ray_visualisation.png)
 
-**Loss formulation**
+**损失公式**
 
-As the discretized volumetric rendeing equation is fully differentiable, the weights of the underlying neural network can then be trained using a reconstruction loss on the rendered pixels. 
-Many NeRF approaches use a pixel-wise error term that can be written as follows:
+由于离散化的体绘制方程是完全可微分的，因此底层神经网络的权重可以使用渲染像素上的重建损失进行训练。许多 NeRF 方法使用像素级误差项，可以写成如下形式：
 
 $$\mathcal{L}_{\rm recon}(\boldsymbol{\hat{C}},\boldsymbol{C^*}) = \left\|\boldsymbol{\hat{C}}-\boldsymbol{C^*}\right\|^2$$
 
-,where \\( \boldsymbol{\hat{C}} \\) is the rendered pixel colour and \\( \boldsymbol{C}^* \\) is the ground truth pixel colour.
+其中$\boldsymbol{\hat{C}}$是渲染的像素颜色，$\boldsymbol{C}^*$是真实像素颜色。
 
-**Additional remarks**
+**附加说明**
 
-It is very hard to describe the whole NeRF pipeline in detail within a single chapter. 
-The explanations above are important to understand the basic concepts and similar if not identical in every NeRF model. 
-However, some additional tricks are needed to obtain a well performing model.
+很难在一个章节中详细描述整个 NeRF 流程。上面的解释对于理解基本概念很重要，并且在每个 NeRF 模型中如果不是完全相同，也是相似的。然而，为了获得性能良好的模型，还需要一些额外的技巧。
 
-First of all, it is necesarry to encode input signals in order to capture high-frequency variations in colour and geometry. 
-The practice of encoding inputs before passing them through a neural network is not unique to the NeRF domain but also widely adopted in other ML domains like for example Natural Language Processing (NLP). 
-A very simple encoding where we map the inputs to a higher dimensional space, enabling us to capture high frequency variations in scene parameters could look as follows:
+首先，有必要对输入信号进行编码，以捕获颜色和几何形状中的高频变化。在将输入传递通过神经网络之前对输入进行编码的做法并非 NeRF 领域独有，在其他机器学习领域如自然语言处理（NLP）中也被广泛采用。一个非常简单的编码，我们将输入映射到更高维的空间，使我们能够捕获场景参数中的高频变化，可以如下所示：
 
 ```python
 import torch
@@ -90,14 +68,14 @@ import numpy as np
 
 
 def positional_encoding(in_tensor, num_frequencies, min_freq_exp, max_freq_exp):
-    """Function for positional encoding."""
-    # Scale input tensor to [0, 2 * pi]
+    """函数用于位置编码。"""
+    # 将输入张量缩放到[0, 2 * pi]
     scaled_in_tensor = 2 * np.pi * in_tensor
-    # Generate frequency spectrum
+    # 生成频率谱
     freqs = 2 ** torch.linspace(
         min_freq_exp, max_freq_exp, num_frequencies, device=in_tensor.device
     )
-    # Generate encodings
+    # 生成编码
     scaled_inputs = scaled_in_tensor.unsqueeze(-1) * freqs
     encoded_inputs = torch.cat(
         [torch.sin(scaled_inputs), torch.cos(scaled_inputs)], dim=-1
@@ -106,59 +84,51 @@ def positional_encoding(in_tensor, num_frequencies, min_freq_exp, max_freq_exp):
 
 
 def visualize_grid(grid, encoded_images, resolution):
-    """Helper Function to visualize grid."""
-    # Split the grid into separate channels for x and y
+    """辅助函数用于可视化网格。"""
+    # 将网格分成单独的通道用于 x 和 y
     x_channel, y_channel = grid[..., 0], grid[..., 1]
-    # Show the original grid
-    print("Input Values:")
+    # 显示原始网格
+    print("输入值：")
     media.show_images([x_channel, y_channel], cmap="plasma", border=True)
-    # Show the encoded grid
-    print("Encoded Values:")
+    # 显示编码后的网格
+    print("编码值：")
     num_channels_to_visualize = min(
         8, encoded_images.shape[-1]
-    )  # Visualize up to 8 channels
+    )  # 可视化最多 8 个通道
     encoded_images_to_show = encoded_images.view(resolution, resolution, -1).permute(
         2, 0, 1
     )[:num_channels_to_visualize]
     media.show_images(encoded_images_to_show, vmin=-1, vmax=1, cmap="plasma", border=True)
 
 
-# Parameters similar to your NeRFEncoding example
+# 与你的 NeRFEncoding 示例类似的参数
 num_frequencies = 4
 min_freq_exp = 0
 max_freq_exp = 6
 resolution = 128
 
-# Generate a 2D grid of points in the range [0, 1]
+# 生成一个在[0, 1]范围内的 2D 点网格
 x_samples = torch.linspace(0, 1, resolution)
 y_samples = torch.linspace(0, 1, resolution)
 grid = torch.stack(
     torch.meshgrid(x_samples, y_samples), dim=-1
 )  # [resolution, resolution, 2]
 
-# Apply positional encoding
+# 应用位置编码
 encoded_grid = positional_encoding(grid, num_frequencies, min_freq_exp, max_freq_exp)
 
-# Visualize result
+# 可视化结果
 visualize_grid(grid, encoded_grid, resolution)
 ```
 
-The output should look something like the image below:
+输出应该看起来像下面的图像：
 
 ![encoding](https://huggingface.co/datasets/hf-vision/course-assets/resolve/main/nerf_encodings.png)
 
-The second trick worth mentioning is that most methods use smart approaches to sample points in space. 
-Essentially, we want to avoid sampling in regions where the scene is empty. 
-There are various approaches to concentrate samples in regions that contribute most to the final image, but the most prominent one is to use a second network, often called *proposal network* so that no compute is wasted. 
-If you are interested in the inner workings and optimisation of such a *proposal network*, feel free to dig into the publication of [Mipnerf-360](https://jonbarron.info/mipnerf360/), where it was first proposed.
+第二个值得一提的技巧是，大多数方法使用巧妙的方法在空间中采样点。本质上，我们希望避免在场景为空的区域进行采样。有各种方法可以将样本集中在对最终图像贡献最大的区域，但最突出的方法是使用第二个网络，通常称为*提议网络*，这样就不会浪费计算资源。如果你对这样一个*提议网络*的内部工作原理和优化感兴趣，请自由深入研究[Mipnerf-360](https://jonbarron.info/mipnerf360/)的出版物，它是首次提出这种方法的地方。
 
-## Train your own NeRF
-To get the full experience when training your first NeRF, I recommend taking a look at the awesome [Google Colab notebook from the nerfstudio team](https://colab.research.google.com/github/nerfstudio-project/nerfstudio/blob/main/colab/demo.ipynb). 
-There, you can upload images of a scene of your choice and train a NeRF. You could for example fit a model to represent your living room. 🎉🎉
+## 训练你自己的 NeRF
+为了在训练你的第一个 NeRF 时获得完整的体验，我建议看看来自 nerfstudio 团队的很棒的[Google Colab 笔记本](https://colab.research.google.com/github/nerfstudio-project/nerfstudio/blob/main/colab/demo.ipynb)。在那里，你可以上传你选择的场景的图像并训练一个 NeRF。例如，你可以拟合一个模型来表示你的客厅。🎉🎉
 
-## Current advancements in the field
-The field is rapidly evolving and the number of new publications is almost exploding. 
-Concerning training and rendering speed, [VR-NeRF](https://vr-nerf.github.io) and [SMERF](https://smerf-3d.github.io) show very promising results. 
-We believe that we will soon be able to stream a real-world scene in real-time on an edge device, and this is a huge leap towards a realistic *Metaverse*. 
-However, the research in the field of NeRFs is not only focusing on training and inference speed, but encompasses various directions like, Generative NeRFs, Pose Estimation, Deformable NeRFs, Compositionality and many more. 
-If you are interested in a curated list of NeRF publications, checkout [Awesome-NeRF](https://github.com/awesome-NeRF/awesome-NeRF).
+## 该领域的当前进展
+该领域正在迅速发展，新出版物的数量几乎呈爆炸式增长。关于训练和渲染速度，[VR-NeRF](https://vr-nerf.github.io)和[SMERF](https://smerf-3d.github.io)显示出非常有前途的结果。我们相信，我们很快就能够在边缘设备上实时流式传输真实世界的场景，这是朝着现实的“元宇宙”迈出的巨大一步。然而，NeRFs 领域的研究不仅专注于训练和推理速度，还涵盖了各种方向，如生成式 NeRFs、姿态估计、可变形 NeRFs、组合性等等。如果你对 NeRF 出版物的精选列表感兴趣，请查看[Awesome-NeRF](https://github.com/awesome-NeRF/awesome-NeRF)。

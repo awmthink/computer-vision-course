@@ -1,53 +1,53 @@
-# A Brief History of 3D Vision
+# 3D视觉的简史
 
-## 1838: Stereoscopy
+## 1838年：立体摄影
 
-- **Inventor**: Sir Charles Wheatstone.
-- **Technique**: Presenting offset images to each eye through a stereoscope, creating depth perception.
+- **发明者**：查尔斯·惠特斯通爵士。
+- **技术**：通过立体镜向每只眼睛呈现偏移图像，创造深度感知。
 
-## 1853: Anaglyph 3D
+## 1853年：彩色立体图
 
-- **Pioneer**: Louis Ducos du Hauron
-- **Method**: Using glasses with colored filters to separate images in complementary colors, creating a depth illusion.
+- **开创者**：路易斯·杜科斯·杜·霍隆。
+- **方法**：使用带有彩色滤光片的眼镜来分离互补色的图像，产生深度幻觉。
 
-## 1936: Polarized 3D
+## 1936年：偏振立体图
 
-- **Developer**: Edwin H. Land.
-- **Approach**: Utilizing polarized light technology in 3D movies, with glasses that filter light in specific directions.
+- **开发者**：埃德温·H·兰德。
+- **方法**：在3D电影中利用偏振光技术，配合能在特定方向过滤光线的眼镜。
 
-## 1960s: Virtual Reality
+## 1960年代：虚拟现实
 
-- **Nature**: Experimental and not widely accessible.
-- **Features**: Stereoscopic displays, head-tracking technology for immersive environments.
+- **性质**：实验性，尚未广泛普及。
+- **特点**：立体显示器，头部追踪技术用于沉浸式环境。
 
-## 1979: Autostereograms (Magic Eye Images)
+## 1979年：自立体图（魔法眼图像）
 
-- **Creator**: Christopher Tyler
-- **Concept**: 2D patterns that allow viewers to see 3D images without special glasses.
+- **创造者**：克里斯托弗·泰勒。
+- **概念**：二维图案让观众无需特殊眼镜即可看到3D图像。
 
-## 1986: IMAX 3D
+## 1986年：IMAX 3D
 
-- **Innovation**: Incorporating 3D technology in IMAX films using polarized glasses and dual projection systems.
+- **创新**：在IMAX电影中引入3D技术，使用偏振眼镜和双重投影系统。
 
-## 2000s: Digital 3D Cinema
+## 2000年代：数字3D影院
 
-- **Evolution**: Digital projection systems, circular polarization, or active shutter glasses enhancing the 3D film experience.
+- **演变**：数字投影系统，圆形偏振或主动快门眼镜提升3D电影体验。
 
-## 2010s: 3D Television
+## 2010年代：3D电视
 
-- **Trend**: Introduction of 3D TVs with various technologies, like active shutter glasses and glasses-free autostereoscopic displays.
-- **Decline**: Waning popularity due to glasses requirement, limited 3D content, and additional cost.
+- **趋势**：推出各种技术的3D电视，如主动快门眼镜和无眼镜自立体显示器。
+- **衰退**：由于需要眼镜、3D内容有限及额外成本，受欢迎程度下降。
 
-## 2010s: Virtual Reality Resurgence
+## 2010年代：虚拟现实复苏
 
-- **Highlights**: Introduction of affordable, high-quality VR headsets like Oculus Rift and HTC Vive.
+- **亮点**：推出如Oculus Rift和HTC Vive等价格实惠、高质量的VR头戴设备。
 
-## Ongoing Evolution
+## 持续演变
 
-### Augmented Reality (AR) and Mixed Reality (MR)
+### 增强现实（AR）和混合现实（MR）
 
-- **Development**: Blending digital content with the real world.
+- **发展**：将数字内容与现实世界融合。
 
-### Further VR Developments
+### 进一步的VR发展
 
-- **Focus**: Enhancing quality, accessibility, and applicability in various sectors.
+- **重点**：提升质量、可及性及在各个领域的适用性。

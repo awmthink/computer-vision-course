@@ -1,24 +1,23 @@
-# Representations for 3D Data
+# 3D 数据的表示
 
-Depending on the application, one of a number of different representations for 3D data might be used. 
-Here we'll outline some of the more common ones.
+根据应用的不同，可能会使用多种不同的 3D 数据表示方法。这里我们将概述一些更常见的表示方法。
 
-## Point Clouds
+## 点云
 
-Point clouds represent data by lists of points in 3D space, with their coordinates and perhaps with other associated features. These can be distributed just on the surface of an object, or spread throughout its interior. Point clouds are commonly generated through 3D scanning techniques, such as LIDARs. They lack information about connectivity, which can make it difficult to determine the surface of the object and its topology.
+点云通过 3D 空间中的点列表来表示数据，包括它们的坐标以及可能的其他相关特征。这些点可以分布在物体的表面上，或者散布在其内部。点云通常通过 3D 扫描技术生成，如激光雷达 (LIDAR)。它们缺乏连接性信息，这可能使得确定物体的表面及其拓扑结构变得困难。
 
-## Meshes
+## 网格
 
-Meshes are commonly used in computer graphics, representing the surfaces of objects as collections of (usually) triangular faces, connecting vertices in three-dimensional space. Additional information such as normals, colors, or texture coordinates can be associated with either the vertices or the faces. Especially when a texture is used, these provide a very efficient method for storing solid objects, and are commonly used in games and in other computer graphics applications.
+网格在计算机图形学中常用，表示物体的表面为（通常是）三角形面片的集合，连接三维空间中的顶点。可以将法线、颜色或纹理坐标等附加信息与顶点或面片关联。特别是在使用纹理时，这种方法提供了存储实体对象的高效方式，并且常用于游戏和其他计算机图形应用中。
 
-The Python `trimesh` package contains many useful functions for working with mesh data, in particularly loading and saving common data formats.
+Python 的 `trimesh` 包包含许多用于处理网格数据的有用函数，特别是在加载和保存常见数据格式时。
 
-## Volumetric Data
+## 体积数据
 
-Volumetric data is commonly used to encode information about transparent objects, such as clouds and fire. Fundamentally, it takes the form of a function \\( f(x,y,z) \\) mapping positions in space to a density, color, and possibly other attributes. One simple method of representing such data is as a volumetric grid, where the data at each point is found by trilinear interpolation from the eight corners of the voxel containing it.
+体积数据通常用于编码透明物体的信息，如云和火。它基本上呈现为一个函数 $f(x,y,z)$，将空间中的位置映射到密度、颜色及可能的其他属性。表示此类数据的一种简单方法是体积网格，其中每个点的数据通过从包含该点的体素的八个角落进行三线性插值得到。
 
-As will be seen later in the NeRF chapter, volumetric representations can also be effectively used to represent solid objects. More sophisticated representations can also be used, such as a small MLP, or complex hash-grids such as in InstantNGP.
+正如在 NeRF 章节中将看到的，体积表示也可以有效地用于表示固体物体。还可以使用更复杂的表示方式，如小型 MLP，或如 InstantNGP 中的复杂哈希网格。
 
-## Implicit Surfaces
+## 隐式表面
 
-Sometimes the flexibility of a volumetric representation is desirable, but the surface of the object itself is of interest. Implicit surfaces are like volumetric data, but where the function \\( f(x,y,z) \\) maps each point in space to a single number, and where the surface is the zero of this function. For computational efficiency, it can be useful to require that this function is actually a signed distance function (SDF), where the function \\( f(x,y,z) \\) indicates the sortest distance to the surface, with positive values outside the object and negative values inside (this sign is a convention and may vary). Maintaining this constraint is more difficult, but it allows intersections between straight lines and the surface to be calculated more quickly, using an algorithm known as sphere tracing.
+有时，体积表示的灵活性是可取的，但物体本身的表面更为重要。隐式表面类似于体积数据，但函数 $f(x,y,z)$ 将空间中的每个点映射到一个单一的数字，而表面则是该函数的零点。出于计算效率考虑，要求此函数实际上是一个有符号距离函数 (SDF) 是有益的，其中函数 $f(x,y,z)$ 指示到表面的最短距离，物体外部的值为正，内部的值为负（此符号为约定，可能会有所不同）。保持这一约束更为困难，但它允许通过一种称为球体追踪的算法更快速地计算直线与表面之间的交点。

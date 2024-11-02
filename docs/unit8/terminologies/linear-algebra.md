@@ -1,34 +1,34 @@
-# Basics of Linear Algebra for 3D Data
+# 三维数据的线性代数基础
 
-## Coordinate systems
+## 坐标系统
 
-Most three-dimensional data consists of objects such as points which have a defined position in space, often represented by their three Cartesian coordinates \\([X, Y, Z]\\).
+大多数三维数据由具有空间中定义位置的对象组成，这些位置通常用其三维笛卡尔坐标 \\([X, Y, Z]\\) 表示。
 
-![Axis handedness]( https://huggingface.co/datasets/hf-vision/course-assets/resolve/main/axes_handedness.png)
+![坐标轴的手性]( https://huggingface.co/datasets/hf-vision/course-assets/resolve/main/axes_handedness.png)
 
-However, various systems have different conventions for this coordinate system. The most important difference is handedness, which is the relative orientation of the X, Y and Z axes. The easiest way to remember the difference is to point your middle finger inwards, such that your thumb, index, and middle fingers are roughly at right angles to each other. On your left hand, your thumb (X), index finger (Y), and middle finger (Z) form a left-handed coordinate system. Similarly, the fingers of your right hand make a right-handed coordinate system.
+然而，各种系统对这一坐标系统有不同的约定。最重要的区别是手性，即 X、Y 和 Z 轴的相对方向。记住这个区别的最简单方法是将中指指向内侧，使得拇指、食指和中指大致呈直角关系。在左手上，拇指（X）、食指（Y）和中指（Z）形成一个左手坐标系统。类似地，右手的手指形成一个右手坐标系统。
 
-In mathematics and physics, a right-handed system is usually used. However, in computer graphics, different libraries and environments have different conventions. Notably, Blender, Pytorch3d and OpenGL (mostly) use right-handed coordinates, whilst DirectX uses left-handed coordinates.Here we will use the right-handed convention, following Blender and NerfStudio.
+在数学和物理学中，通常使用右手坐标系。然而，在计算机图形学中，不同的库和环境有不同的约定。特别地，Blender、Pytorch3d 和 OpenGL（大多数情况下）使用右手坐标，而 DirectX 使用左手坐标。这里我们将遵循 Blender 和 NerfStudio 的右手约定。
 
-## Transformations
+## 变换
 
-It is useful to be able to rotate, scale, and translate these coordinates in space. For example, if an object is moving, or if we want to change these coordinates from world coordinates relative to some fixed set of axes, to coordinates relative to our camera.
+能够在空间中旋转、缩放和平移这些坐标是很有用的。例如，如果一个物体在移动，或者我们想将这些坐标从相对于某个固定坐标轴的世界坐标转换为相对于我们摄像机的坐标。
 
-These transformations can be represented by matrices. Here we'll use `@` to denote matrix multiplication. To allow us to represent translation, rotation and scaling in a consistent manner, we take the three dimensional coordinates \\([x,y,z]\\), and add an extra coordinate \\(w=1\\). These are known as homogeneous coordinates - more generally, \\(w\\) can take any value, and all points on the four-dimensional line \\([wx, wy, wz, w]\\) correspond to the same point \\([x,y,z]\\) in three-dimensional space. However, here, \\(w\\) will always be 1.
+这些变换可以用矩阵表示。这里我们将使用 `@` 表示矩阵乘法。为了使我们以一致的方式表示平移、旋转和缩放，我们取三维坐标 \\([x,y,z]\\)，并添加一个额外的坐标 \\(w=1\\)。这些称为齐次坐标 - 更一般地，\\(w\\) 可以取任何值，四维线上的所有点 \\([wx, wy, wz, w]\\) 对应于三维空间中的同一点 \\([x,y,z]\\)。然而，在这里，\\(w\\) 将始终为 1。
 
-Libraries such as [Pytorch3d](https://pytorch3d.org/) provide a range of functions for generating and manipulating transformations.
+像 [Pytorch3d](https://pytorch3d.org/) 这样的库提供了一系列用于生成和操作变换的函数。
 
-Yet another convention to note - OpenGL treats positions as column vectors `x` (of shape 4x1), and applies a transformation `M` by pre-multiplying the vector by the matrix (`M @ x`), whereas DirectX and Pytorch3d consider positions as row vectors of shape (1x4), and apply a transformation by post-multiplying the vector by the matrix ( `x @ M` ). To convert between the two conventions we need to take the transpose of the matrix `M.T`. We will show how a cube transforms under different transformation matrices in a few code snippets. For these code snippets, we will use the OpenGL convention.
+还有一个约定需要注意 - OpenGL 将位置视为列向量 `x`（形状为 4x1），并通过将向量与矩阵进行左乘（`M @ x`）来应用变换，而 DirectX 和 Pytorch3d 将位置视为形状为 (1x4) 的行向量，并通过将向量与矩阵进行右乘（`x @ M`）来应用变换。要在这两种约定之间转换，我们需要对矩阵 `M` 进行转置 `M.T`。我们将展示一个立方体在不同变换矩阵下的变换效果，通过一些代码片段来演示。在这些代码片段中，我们将使用 OpenGL 约定。
 
-### Translations
+### 平移
 
-Translations, moving all the points in space by the same distance and direction, can be represented as
+平移是将空间中所有点按相同距离和方向移动的过程，可以表示为
 
 $$T = \begin{pmatrix} 1 & 0 & 0 & t_x \\ 0 & 1 & 0 & t_y \\ 0 & 0 & 1 & t_z \\ 0 & 0 & 0 & 1 \end{pmatrix}$$
 
-where \\(t = [t_x,t_y,t_z]\\) is the direction vector to translate all the points.
+其中 \\(t = [t_x,t_y,t_z]\\) 是用于平移所有点的方向向量。
 
-To try out a translation ourselves, let us first write a little helper function to visualise a cube:
+为了自己尝试一下平移，让我们首先写一个小的辅助函数来可视化一个立方体：
 
 ```python
 import numpy as np
@@ -62,10 +62,10 @@ def plot_cube(ax, cube, label, color="black"):
     ax.set_zlim([-2, 2])
 ```
 
-Now, we can create a cube and pre-multiply it with a translation matrix:
+现在，我们可以创建一个立方体并用平移矩阵进行左乘：
 
 ```python
-# define 8 corners of our cube with coordinates (x,y,z,w) and w is always 1 in our case
+# 定义立方体的 8 个角，坐标为 (x,y,z,w)，在我们的情况下 w 始终为 1
 cube = np.array(
     [
         [-1, -1, -1, 1],
@@ -79,48 +79,47 @@ cube = np.array(
     ]
 )
 
-# translate to follow OpenGL notation
+# 根据 OpenGL 约定进行平移
 cube = cube.T
 
-# set up figure
+# 设置图形
 fig = plt.figure()
 ax = fig.add_subplot(111, projection="3d")
 
-# plot original cube
+# 绘制原始立方体
 plot_cube(ax, cube, label="Original", color="blue")
 
-# translation matrix (shift 1 in positive x and 1 in positive y-axis)
+# 平移矩阵（在正 x 轴和正 y 轴上平移 1 个单位）
 translation_matrix = np.array([[1, 0, 0, 1], [0, 1, 0, 1], [0, 0, 1, 0], [0, 0, 0, 1]])
 
-# translation
+# 平移
 translated_cube = translation_matrix @ cube
 plot_cube(ax, translated_cube, label="Translated", color="red")
 ```
 
-The output should look something like this:
+输出应如下所示：
 
 <div style="display: flex; flex-direction: column; align-items: center;">
   <img src="https://huggingface.co/datasets/hf-vision/course-assets/resolve/main/translation.png" alt="output_translation" />
 </div>
 
-### Scaling
+### 缩放
 
-Scaling is the process of uniformly increasing or decreasing the size of an object. A scaling transformation is represented by a matrix that multiplies each coordinate by a scale factor. The scaling matrix is given by:
+缩放是均匀增加或减少物体大小的过程。缩放变换由一个矩阵表示，该矩阵将每个坐标乘以一个缩放因子。缩放矩阵为：
 
 $$S = \begin{pmatrix} s_x & 0 & 0 & 0 \\ 0 & s_y & 0 & 0 \\ 0 & 0 & s_z & 0 \\ 0 & 0 & 0 & 1 \end{pmatrix}$$
 
-
-Let us try the following example of a scaling our cube by a factor of 2 along the X-axis and 0.5 along the Y-axis.
+让我们尝试将立方体在 X 轴上缩放 2 倍，在 Y 轴上缩放 0.5 的示例。
 
 ```python
-# set up figure
+# 设置图形
 fig = plt.figure()
 ax = fig.add_subplot(111, projection="3d")
 
-# plot original cube
+# 绘制原始立方体
 plot_cube(ax, cube, label="Original", color="blue")
 
-# scaling matrix (scale by 2 along x-axis and by 0.5 along y-axis)
+# 缩放矩阵（在 x 轴上缩放 2 倍，y 轴上缩放 0.5）
 scaling_matrix = np.array([[2, 0, 0, 0], [0, 0.5, 0, 0], [0, 0, 1, 0], [0, 0, 0, 1]])
 
 
@@ -129,31 +128,33 @@ scaled_cube = scaling_matrix @ cube
 plot_cube(ax, scaled_cube, label="Scaled", color="green")
 ```
 
-The output should look something like this:
+输出应如下所示：
 
 <div style="display: flex; flex-direction: column; align-items: center;">
   <img src="https://huggingface.co/datasets/hf-vision/course-assets/resolve/main/scaling.png" alt="output_scaling" />
 </div>
 
-### Rotations
+### 旋转
 
-Rotations around an axis are another commonly used transformation. There are a number of different ways of representing rotations, including Euler angles and quaternions, which can be very useful in some applications. Again, libraries such as Pytorch3d include a wide range of functionalities for performing rotations. However, as a simple example, we will just show how to construct rotations about each of the three axes.
+围绕轴的旋转是另一种常用的变换。有多种不同的方式来表示旋转，包括欧拉角和四元数，这在某些应用中非常有用。同样，像 Pytorch3d 这样的库提供了执行旋转的广泛功能。然而，作为一个简单的示例，我们将展示如何构造围绕三个轴的旋转。
 
-- Rotation around the X-axis:
+- 围绕 X 轴的旋转：
 
 $$ R_x(\alpha) = \begin{pmatrix} 1 & 0 & 0 & 0 \\ 0 & \cos \alpha & -\sin \alpha & 0 \\ 0 & \sin \alpha & \cos \alpha & 0 \\ 0 & 0 & 0 & 1 \end{pmatrix} $$
 
-A little example for a positive 20 degree roation around the X-axis is given below:
+下面是一个围绕 X 轴进行正 20 度旋转的小示例：
 
 ```python
-# set up figure
+# 设置图形
 fig = plt.figure()
-ax = fig.add_subplot(111, projection="3d")
+ax = fig.add_subplot(111, projection="3d
 
-# plot original cube
+")
+
+# 绘制原始立方体
 plot_cube(ax, cube, label="Original", color="blue")
 
-# rotation matrix: +20 deg around x-axis
+# 旋转矩阵：围绕 x 轴正转 20 度
 angle = 20 * np.pi / 180
 rotation_matrix = np.array(
     [
@@ -170,48 +171,47 @@ rotated_cube = rotation_matrix @ cube
 plot_cube(ax, rotated_cube, label="Rotated", color="orange")
 ```
 
-The output should look something like this:
+输出应如下所示：
 
 <div style="display: flex; flex-direction: column; align-items: center;">
   <img src="https://huggingface.co/datasets/hf-vision/course-assets/resolve/main/rotation.png" alt="output_rotation" />
 </div>
 
-- Rotation around the Y-axis:
+- 围绕 Y 轴的旋转：
 
 $$ R_y(\beta) = \begin{pmatrix} \cos \beta & 0 & \sin \beta & 0 \\ 0 & 1 & 0 & 0 \\ -\sin \beta & 0 & \cos \beta & 0 \\ 0 & 0 & 0 & 1 \end{pmatrix} $$
 
-We are sure you can use the example snippet above and figure out how to implement a rotation around the Y-axis.😎😎
+我们相信您可以使用上面的示例代码并找出如何实现围绕 Y 轴的旋转。😎😎
 
-- Rotation around the Z-axis
+- 围绕 Z 轴的旋转：
 
 $$ R_z(\beta) = \begin{pmatrix} \cos \beta & -\sin \beta & 0 & 0 \\ \sin \beta & \cos \beta & 0 & 0 \\ 0 & 0 & 1 & 0 \\ 0 & 0 & 0 & 1 \end{pmatrix} $$
 
-Again, can you use the last code snippet and implement a rotation around the Z-axis❓
+同样，您能否使用最后的代码片段实现围绕 Z 轴的旋转❓
 
-Note that the standard convention is that a positive rotation angle corresponds to an anti-clockwise rotation when the axis of rotation is pointing toward the viewer. Also note that in most libraries the cosine function requires the angle to be in radians. To convert from
-degrees to radians, multiply by \\( pi/180\\).
+请注意，标准约定是正的旋转角度对应于当旋转轴指向观察者时的逆时针旋转。同样注意，在大多数库中，余弦函数要求角度以弧度为单位。要将度转换为弧度，请乘以 \\( pi/180\\)。
 
-### Combining transformations
+### 组合变换
 
-Multiple transformations can be combined by multiplying together their matrices. Note that the order that matrices are multiplied matters - with the matrices being applied right to left. To make a matrix that applies the transforms P, Q, and R, in that order, the composite transformation is given by \\( X = R @ Q @ P\\).
+多个变换可以通过将它们的矩阵相乘来组合。注意，矩阵相乘的顺序很重要 - 矩阵是从右到左应用的。要制作一个按顺序应用变换 P、Q 和 R 的矩阵，复合变换为 \\( X = R @ Q @ P\\)。
 
-If we want to do first the translation, then the rotation, and then the scaling that we did above in one operation, it looks as follows:
+如果我们想在一个操作中先进行平移，然后进行旋转，最后进行我们上面所做的缩放，代码如下：
 
 ```python
-# set up figure
+# 设置图形
 fig = plt.figure()
 ax = fig.add_subplot(111, projection="3d")
 
-# plot original cube
+# 绘制原始立方体
 plot_cube(ax, cube, label="Original", color="blue")
 
-# combination of transforms
+# 变换组合
 combination_transform = rotation_matrix.dot(scaling_matrix.dot(translation_matrix))
 final_result = combination_transform.dot(cube)
 plot_cube(ax, final_result, label="Combined", color="violet")
 ```
 
-The output should look something like the following.
+输出应如下所示：
 
 <div style="display: flex; flex-direction: column; align-items: center;">
   <img src="https://huggingface.co/datasets/hf-vision/course-assets/resolve/main/combined.png" alt="output_combined" />

@@ -1,166 +1,167 @@
-# Introduction
-This section explains how stereo vision works and how it can be used to find the 3-dimensional structure of surrounding objects. Stereo vision involves capturing two or more images of the same scene from varying positions and viewpoints. These images can be obtained using multiple cameras or by repositioning the same camera.
+# 引言
+本节解释了立体视觉的工作原理，以及如何利用它来找到周围物体的三维结构。立体视觉涉及从不同位置和视角捕获同一场景的两张或更多图像。这些图像可以使用多个相机或重新定位同一相机来获得。
 
-## Problem Statement 
-Let's understand the problem statement of finding the 3D structure of objects by understanding the geometry of image formation. As shown in Figure 1, we have a point P in 3D with x, y, z coordinates. Point P gets projected to the camera's image plane via the pinhole. This can also be viewed as projecting a 3D point to a 2D image plane. 
+## 问题陈述
+通过理解图像形成的几何原理，让我们理解找到物体三维结构的问题陈述。如图 1 所示，我们在三维中有一个点 P，具有 x、y、z 坐标。点 P 通过针孔投影到相机的像平面上。这也可以看作是将一个三维点投影到一个二维像平面上。
 
-Now, let's say we are given this 2D image and the location of the pixel coordinates of point P in this image. We want to find the 3D coordinates of point P. Is this possible? Is point P unique, or are there other 3D points that also map to the same pixel coordinates as point P? Answer is that all 3D points that lie on the line joining point P, and the pinhole will map to the same pixel coordinates in the 2D image plane. 
+现在，假设我们得到了这张二维图像以及点 P 在该图像中的像素坐标位置。我们想要找到点 P 的三维坐标。这可能吗？点 P 是唯一的吗？还是有其他三维点也映射到与点 P 相同的像素坐标？答案是，所有位于连接点 P 和针孔的直线上的三维点都将映射到二维像平面上的相同像素坐标。
 
-We aim to solve the problem of determining the 3D structure of objects. In our problem statement, we can represent an object in 3D as a set of 3D points. Finding the 3D coordinates of each of these points helps us determine the 3D structure of the object.
-
-<div style="display: flex; flex-direction: column; align-items: center;">
-  <img src="https://huggingface.co/datasets/hf-vision/course-assets/resolve/main/3d_stereo_vision_images/image_formation_single_camera.png?download=true" alt="Figure 1: Image formation using single camera" />
-  <p>Figure 1: Image formation using single camera</p>
-</div>
-
-## Solution 
-Let's assume we are given the following information:
-
-1. Single image of a scene point P
-2. Pixel coordinates of point P in the image
-3. Position and orientation of the camera used to capture the image. For simplicity, we can also place an XYZ coordinate system at the location of the pinhole, with the z-axis perpendicular to the image place and the x-axis, and y-axis parallel to the image plane like in Figure 1.
-4. Internal parameters of the camera, such as focal length and location of principal point. The principal point is where the optical axis intersects the image plane. Its location in the image plane is usually denoted as (Ox,Oy).
-
-With the information provided above, we can find a 3D line that originates from the pixel coordinates of point P (the projection of point P in the image plane), passes through the pinhole, and extends to infinity. Based on the principles of image formation geometry, we can conclude that point P must exist somewhere along this line.
-
-1. Initially (without an image) point P could have been present anywhere in the 3D space. 
-2. Using a single image, we reduced possible locations of point P to a single line in 3D. 
-3. Now, let's consider whether we can further narrow down the potential locations to pinpoint the precise location of point P on this 3D line. 
-4. Imagine moving the camera to a different position. Let the coordinate system remain fixed at the previous position. The 3D line we found also remains the same and point P still lies somewhere on this line.
-5. From this new location of the camera, capture another image of the same scene point P. Once more, utilizing the pixel coordinates of point P within this new image and considering the updated location of the camera pinhole, find the 3D line on which point P must lie.
-6. Now we have 2 lines in 3D and point P lies somewhere on both of these lines. So, point P must lie on the intersection of these 2 lines. 
-
-Given 2 lines in 3D, there are are three possibilities for their intersection:
-
-1. Intersect at exactly 1 point
-2. Intersect at infinite number of points
-3. Do not intersect
-
-If both images (with original and new camera positions) contain point P, we can conclude that the 3D lines must intersect at least once and that the intersection point is point P. Furthermore, we can envision infinite points where both lines intersect only if the two lines are collinear. This is achievable if the pinhole at the new camera position lies somewhere on the original 3D line. For all other positions and orientations of the new camera location, the two 3D lines must intersect precisely at one point, where point P lies. 
-
-Therefore, using 2 images of the same scene point P, known positions and orientations of the camera locations, and known internal parameters of the camera, we can precisely find where point P lies in the 3D space.
-
-## Simplified Solution 
-Since there are many different positions and orientations for the camera locations which can be selected, we can select a location that makes the math simpler, less complex, and reduces computational processing when running on a computer or an embedded device. One configuration that is popular and generally used is shown in Figure 2. We use 2 cameras in this configuration, which is equivalent to a single camera for capturing 2 images from 2 different locations.
+我们的目标是解决确定物体三维结构的问题。在我们的问题陈述中，我们可以将一个三维物体表示为一组三维点。找到这些点中的每一个的三维坐标有助于我们确定物体的三维结构。
 
 <div style="display: flex; flex-direction: column; align-items: center;">
-  <img src="https://huggingface.co/datasets/hf-vision/course-assets/resolve/main/3d_stereo_vision_images/image_formation_simple_stereo.jpg?download=true" alt="Figure 2: Image formation using 2 cameras" />
-  <p>Figure 2: Image formation using 2 cameras</p>
+  <img src="https://huggingface.co/datasets/hf-vision/course-assets/resolve/main/3d_stereo_vision_images/image_formation_single_camera.png?download=true" alt="图 1：使用单个相机的图像形成" />
+  <p>图 1：使用单个相机的图像形成</p>
 </div>
 
-1. Origin of the coordinate system is placed at the pinhole of the first camera which is usually the left camera.
-2. Z axis of the coordinate system is defined perpendicular to the image plane. 
-3. X and Y axis of the coordinate system are defined parallel to the image plane.  
-4. We also have X and Y directions in a 2D image. X is the horizontal direction and Y is the vertical direction. We will refer to these directions in the image plane as u and v respectively. Therefore, pixel coordinates of a point are defined using (u,v) values.  
-5. X axis of the coordinate system is defined as the u direction / horizontal direction in the image plane.
-6. Similarly Y axis of the coordinate system is defined as the v direction / vertical direction in the image plane. 
-7. Second camera (more precisely the pinhole of the second camera) is placed at a distance b called baseline in the positive x direction to the right of the first camera. Therefore, x,y,z coordinates of pinhole of second camera are (b,0,0).
-5. Image plane of the second camera is oriented parallel to the image plane of the first camera.  
-6. u and v directions in the image plane of second/right camera are aligned with the u and v directions in the image plane of the first/left camera.
-7. Both left and right cameras are assumed to have the same intrinsic parameters like focal length and location of principal point.
+## 解决方案
+假设我们得到以下信息：
 
-With the above configuration in place, we have the below equations which map a point in 3D to the image plane in 2D. 
+1. 场景点 P 的单张图像。
+2. 点 P 在图像中的像素坐标。
+3. 用于捕获图像的相机的位置和方向。为简单起见，我们也可以在针孔的位置放置一个 XYZ 坐标系，其中 z 轴垂直于像平面，x 轴和 y 轴平行于像平面，如图 1 所示。
+4. 相机的内部参数，如焦距和主点的位置。主点是光轴与像平面相交的点。它在像平面中的位置通常表示为(Ox,Oy)。
 
-1. Left camera  
-    1.  \\(u\_left = f\_x * \frac{x}{z} + O\_x\\)   
-    2.  \\(v\_left = f\_y * \frac{y}{z} + O\_y\\)   
-  
-2. Right camera   
-    1.  \\(u\_right = f\_x * \frac{x-b}{z} + O\_x\\)   
-    2.  \\(v\_right = f\_y * \frac{y}{z} + O\_y\\)    
+有了上述信息，我们可以找到一条三维直线，该直线从点 P 的像素坐标（点 P 在像平面上的投影）开始，穿过针孔，并延伸到无穷远。根据图像形成几何原理，我们可以得出结论，点 P 一定存在于这条直线上的某个位置。
 
-Different symbols used in above equations are defined below:    
-*  \\(u\_left\\), \\(v\_left\\) refer to pixel coordinates of point P in the left image.
-*  \\(u\_right\\),  \\(v\_right\\) refer to pixel coordinates of point P in the right image.   
-*  \\(f\_x\\) refers to the focal length (in pixels) in x direction and \\(f\_y\\) refers to the focal length (in pixels) in y direction. Actually, there is only 1 focal length for a camera which is the distance between the pinhole (optical center of the lens) to the image plane. However, pixels may be rectangular and not perfect squares, resulting in different fx and fy values when we represent f in terms of pixels.    
-*  x, y, z are 3D coordinates of the point P (any unit like cm, feet, etc can be used).
-*  \\(O\_x\\)  and  \\(O\_y\\)  refer to pixel coordinates of the principal point.   
-*  b is called the baseline and refers to the distance between the left and right cameras. Same units are used for both b and x,y,z coordinates (any unit like cm, feet, etc can be used).   
-  
-We have 4 equations above and 3 unknowns - x, y and z coordinates of a 3D point P. Intrinsic camera parameters - focal lengths and principal point are assumed to be known. Equations 1.2 and 2.2 indicate that the v coordinate value in the left and right images is the same. 
+1. 最初（没有图像时），点 P 可以存在于三维空间的任何位置。
+2. 使用单张图像，我们将点 P 的可能位置减少到三维中的一条直线。
+3. 现在，让我们考虑是否可以进一步缩小潜在位置，以确定点 P 在这条三维直线上的精确位置。
+4. 想象将相机移动到不同的位置。让坐标系保持在先前的位置。我们找到的三维直线也保持不变，点 P 仍然位于这条直线上的某个位置。
+5. 从相机的这个新位置，捕获同一场景点 P 的另一张图像。再次，利用点 P 在这张新图像中的像素坐标，并考虑相机针孔的更新位置，找到点 P 必须位于的三维直线。
+6. 现在我们有了三维中的两条直线，点 P 位于这两条直线上的某个位置。因此，点 P 必须位于这两条直线的交点处。
 
-3.  \\(v\_left = v\_right\\)    
+给定三维中的两条直线，它们的交点有三种可能性：
 
-Using equations 1.1, 1.2 and 2.1 we can derive the x,y,z coordinates of point P.    
-     
-4.  \\(x = \frac{b * (u\_left - O\_x)}{u\_left - u\_right}\\)    
-5.  \\(y = \frac{b * f\_x * (v\_left - O\_y)}{ f\_y * (u\_left - u\_right)}\\)    
-6.  \\(z = \frac{b * f\_x}{u\_left - u\_right}\\)     
+1. 恰好交于一个点。
+2. 交于无数个点。
+3. 不相交。
 
-Note that the x and y values above concern the left camera since the origin of the coordinate system is aligned with the left camera. The above equations show that we can find 3D coordinates of a point P using its 2 images captured from 2 different camera locations. z value is also referred to as the depth value. Using this technique, we can find the depth values for different pixels within an image and their real-world x and y coordinates. We can also find real-world distances between different points in an image. 
+如果两张图像（具有原始和新相机位置）都包含点 P，我们可以得出结论，这两条三维直线必须至少相交一次，并且交点就是点 P。此外，我们可以想象只有当两条直线共线时，才有无数个点相交。如果新相机位置的针孔位于原始三维直线上的某个位置，这是可以实现的。对于新相机位置的所有其他位置和方向，这两条三维直线必须恰好交于一个点，即点 P 所在的位置。
 
-## Demo 
-### Setup 
-We'll work through an example, capture some images, and perform some calculations to find out if our above assumptions and math work out! For capturing the images we'll use a hardware known as OAK-D Lite (OAK stands for OpenCV AI Kit). This device has 3 cameras - left and right mono (black and white) and a center color cameras. We'll use the left and right mono cameras for our experiment. A regular smartphone camera could also be used, but OAK-D lite has some advantages listed below.
+因此，使用同一场景点 P 的两张图像、已知的相机位置和方向以及已知的相机内部参数，我们可以精确地找到点 P 在三维空间中的位置。
 
-* Intrinsic camera parameters like focal length and location of principal point are known for an OAK-D Lite since the device comes pre-calibrated, and these parameters can be read from the device using its Python API. For a smartphone camera, intrinsic parameters need to be determined and could be found by performing camera calibration or sometimes present in the metadata of the image captured using the smartphone. 
-* One of the main assumptions above is that the position and orientation of the left and right cameras are known. Using a smartphone camera, it may be difficult to determine this information or additional calibration may be required.  On the other hand, for an OAK-D Lite device, the position and orientation of the left and right cameras are fixed, known, pre-calibrated, and very similar to the geometry of the simplified solution mentioned above. Although some post-processing/image rectification detailed below on the raw images is still required.
+## 简化解决方案
+由于可以选择许多不同的相机位置和方向，我们可以选择一个使数学更简单、复杂度更低并且在计算机或嵌入式设备上运行时减少计算处理的位置。图 2 所示的一种配置很受欢迎并且通常被使用。在这种配置中，我们使用两个相机，这相当于一个相机从两个不同位置捕获两张图像。
 
-### Raw Left and Right Images
-The left and right cameras in OAK-D Lite are oriented similarly to the geometry of the simplified solution detailed above. The baseline distance between the left and right cameras is 7.5cm. Left and right images of a scene captured using this device are shown below. The figure also shows these images stacked horizontally with a red line drawn at a constant height (i.e. at a constant v value ). We'll refer to the horizontal x-axis as u and the vertical y-axis as v. 
+<div style="display: flex; flex-direction: column; align-items: center;">
+  <img src="https://huggingface.co/datasets/hf-vision/course-assets/resolve/main/3d_stereo_vision_images/image_formation_simple_stereo.jpg?download=true" alt="图 2：使用两个相机的图像形成" />
+  <p>图 2：使用两个相机的图像形成</p>
+</div>
 
-Raw Left Image
+1. 坐标系的原点位于第一个相机（通常是左相机）的针孔处。
+2. 坐标系的 z 轴定义为垂直于像平面。
+3. 坐标系的 x 轴和 y 轴定义为平行于像平面。
+4. 我们在二维图像中也有 x 和 y 方向。x 是水平方向，y 是垂直方向。我们将图像平面中的这些方向分别称为 u 和 v。因此，一个点的像素坐标使用(u,v)值来定义。
+5. 坐标系的 x 轴定义为图像平面中的 u 方向/水平方向。
+6. 类似地，坐标系的 y 轴定义为图像平面中的 v 方向/垂直方向。
+7. 第二个相机（更准确地说是第二个相机的针孔）放置在距离 b（称为基线）的正 x 方向上，位于第一个相机的右侧。因此，第二个相机针孔的 x,y,z 坐标是(b,0,0)。
+5. 第二个相机的像平面与第一个相机的像平面平行定向。
+6. 第二个/右相机的图像平面中的 u 和 v 方向与第一个/左相机的图像平面中的 u 和 v 方向对齐。
+7. 假设左相机和右相机具有相同的内部参数，如焦距和主点的位置。
+
+有了上述配置，我们有以下方程，将三维中的一个点映射到二维的像平面上。
+
+1. 左相机
+    1. $u\_left = f\_x *\frac{x}{z}+O\_x$
+    2. $v\_left = f\_y *\frac{y}{z}+O\_y$
+
+2. 右相机
+    1. $u\_right = f\_x *\frac{x-b}{z}+O\_x$
+    2. $v\_right = f\_y *\frac{y}{z}+O\_y$
+
+上述方程中使用的不同符号定义如下：
+* $u\_left$、$v\_left$指的是点 P 在左图像中的像素坐标。
+* $u\_right$、$v\_right$指的是点 P 在右图像中的像素坐标。
+* $f\_x$指的是 x 方向上的焦距（以像素为单位），$f\_y$指的是 y 方向上的焦距（以像素为单位）。实际上，对于一个相机只有一个焦距，即针孔（镜头的光学中心）到像平面的距离。然而，像素可能是矩形而不是完美的正方形，当我们用像素表示 f 时，会导致不同的 fx 和 fy 值。
+* x、y、z 是点 P 的三维坐标（可以使用任何单位，如厘米、英尺等）。
+* $O\_x$和$O\_y$指的是主点的像素坐标。
+* b 称为基线，指的是左相机和右相机之间的距离。b 和 x、y、z 坐标使用相同的单位（可以使用任何单位，如厘米、英尺等）。
+
+我们有上面的四个方程和三个未知数——三维点 P 的 x、y 和 z 坐标。假设相机的内部参数——焦距和主点是已知的。方程 1.2 和 2.2 表明左图像和右图像中的 v 坐标值是相同的。
+
+3. $v\_left = v\_right$
+
+使用方程 1.1、1.2 和 2.1，我们可以推导出点 P 的 x、y、z 坐标。
+
+4. $x=\frac{b*(u\_left - O\_x)}{u\_left - u\_right}$
+5. $y=\frac{b*f\_x*(v\_left - O\_y)}{f\_y*(u\_left - u\_right)}$
+6. $z=\frac{b*f\_x}{u\_left - u\_right}$
+
+请注意，上面的 x 和 y 值涉及左相机，因为坐标系的原点与左相机对齐。上述方程表明，我们可以使用点 P 的两张从两个不同相机位置捕获的图像来找到点 P 的三维坐标。z 值也称为深度值。使用这种技术，我们可以找到图像中不同像素的深度值以及它们在现实世界中的 x 和 y 坐标。我们还可以找到图像中不同点之间的现实世界距离。
+
+
+## 演示
+### 设置
+我们将通过一个示例进行操作，捕获一些图像，并进行一些计算，以确定我们上述的假设和数学运算是否正确！对于捕获图像，我们将使用一种名为 OAK-D Lite 的硬件（OAK 代表 OpenCV AI Kit）。这个设备有三个摄像头——左、右单目（黑白）和一个中央彩色摄像头。我们将使用左、右单目摄像头进行我们的实验。普通智能手机摄像头也可以使用，但 OAK-D Lite 有以下一些优点。
+
+* OAK-D Lite 的内在相机参数，如焦距和主点位置是已知的，因为该设备是预先校准过的，并且可以使用其 Python API 从设备中读取这些参数。对于智能手机摄像头，内在参数需要确定，可以通过进行相机校准来找到，或者有时可以在使用智能手机拍摄的图像的元数据中找到。
+* 上述主要假设之一是左、右摄像头的位置和方向是已知的。使用智能手机摄像头，可能很难确定此信息，或者可能需要进行额外的校准。另一方面，对于 OAK-D Lite 设备，左、右摄像头的位置和方向是固定的、已知的、预先校准过的，并且与上述简化解决方案的几何形状非常相似。尽管仍然需要对原始图像进行一些后期处理/图像校正，如下文所述。
+
+### 原始左、右图像
+OAK-D Lite 中的左、右摄像头的方向与上述简化解决方案的几何形状相似。左、右摄像头之间的基线距离为 7.5 厘米。使用该设备捕获的场景的左、右图像如下所示。该图还显示了这些图像水平堆叠，并在恒定高度（即恒定 v 值）处绘制了一条红线。我们将水平 x 轴称为 u，垂直 y 轴称为 v。
+
+原始左图像
 <div style="display: flex; flex-direction: column; align-items: center;">
   <img src="https://huggingface.co/datasets/hf-vision/course-assets/resolve/main/3d_stereo_vision_images/unrectified_left_frame.jpg?download=true" alt="Raw Left Image" />
 </div>
 
-Raw Right Image 
+原始右图像
 <div style="display: flex; flex-direction: column; align-items: center;">
   <img src="https://huggingface.co/datasets/hf-vision/course-assets/resolve/main/3d_stereo_vision_images/unrectified_right_frame.jpg?download=true" alt="Raw Right Image" />
 </div>
 
-Raw Stacked Left and Right Images 
+原始堆叠的左、右图像
 <div style="display: flex; flex-direction: column; align-items: center;">
   <img src="https://huggingface.co/datasets/hf-vision/course-assets/resolve/main/3d_stereo_vision_images/unrectified_stacked_frames.jpg?download=true" alt="Raw Stacked Left and Right Images" />
 </div>
 
-Let's focus on a single point - the top left corner of the laptop. As per equation 3 above,  \\(v\_left = v\_right\\)  for the same point in the left and right images. However, notice that the red line, which is at a constant v value, touches the top-left corner of the laptop in the left image but misses this point by a few pixels in the right image. There are two main reasons for this discrepancy:
+让我们关注一个点——笔记本电脑的左上角。根据上述公式 3，左、右图像中同一位置的$v\_left = v\_right$。然而，请注意，在恒定 v 值处的红线在左图像中触及笔记本电脑的左上角，但在右图像中与此点相差几个像素。出现这种差异有两个主要原因：
 
-* The intrinsic parameters for the left and right cameras are different. The principal point for the left camera is at (319.13, 233.86), whereas it is (298.85, 245.52) for the right camera. The focal length for the left camera is 450.9, whereas it is 452.9 for the right camera. The values of fx are equal to fy for both the left and right cameras. These intrinsic parameters were read from the device using it's python API and could be different for different OAK-D Lite devices.
-* Left and right camera orientations differ slightly from the geometry of the simplified solution detailed above. 
+* 左、右摄像头的内在参数不同。左摄像头的主点为(319.13, 233.86)，而右摄像头的主点为(298.85, 245.52)。左摄像头的焦距为 450.9，而右摄像头的焦距为 452.9。左、右摄像头的 fx 值等于 fy 值。这些内在参数是使用其 Python API 从设备中读取的，并且对于不同的 OAK-D Lite 设备可能不同。
+* 左、右摄像头的方向与上述简化解决方案的几何形状略有不同。
 
-### Rectified Left and Right Images 
-We can perform image rectification/post-processing to correct for differences in intrinsic parameters and orientations of the left and right cameras. This process involves performing 3x3 matrix transformations. In the OAK-D Lite API, a stereo node performs these calculations and outputs the rectified left and right images. Details and source code can be viewed [here](https://github.com/luxonis/depthai-experiments/blob/master/gen2-stereo-on-host/main.py). In this specific implementation, correction for intrinsic parameters is performed using intrinsic camera matrices, and correction for orientation is performed using rotation matrices(part of calibration parameters) for the left and right cameras. The rectified left image is transformed as if the left camera had the same intrinsic parameters as the right one. Therefore, in all our following calculations, we'll use the intrinsic parameters for the right camera i.e. focal length of 452.9 and principal point at (298.85, 245.52). In the rectified and stacked images below, notice that the red line at constant v touches the top-left corner of the laptop in both the left and right images.
+### 校正后的左、右图像
+我们可以进行图像校正/后期处理，以校正左、右摄像头的内在参数和方向的差异。这个过程涉及进行 3x3 矩阵变换。在 OAK-D Lite API 中，一个立体节点执行这些计算并输出校正后的左、右图像。详细信息和源代码可以在[这里](https://github.com/luxonis/depthai-experiments/blob/master/gen2-stereo-on-host/main.py)查看。在这个特定的实现中，使用内在相机矩阵对内在参数进行校正，使用左、右摄像头的旋转矩阵（校准参数的一部分）对方向进行校正。校正后的左图像被变换为好像左摄像头具有与右摄像头相同的内在参数。因此，在我们所有的后续计算中，我们将使用右摄像头的内在参数，即焦距为 452.9，主点为(298.85, 245.52)。在下面的校正和堆叠图像中，请注意在恒定 v 处的红线在左、右图像中都触及笔记本电脑的左上角。
 
-Rectified Left Image
+校正后的左图像
 <div style="display: flex; flex-direction: column; align-items: center;">
   <img src="https://huggingface.co/datasets/hf-vision/course-assets/resolve/main/3d_stereo_vision_images/rectified_left_frame.jpg?download=true" alt="Rectified Left Image" />
 </div>
 
-Rectified Right Image 
+校正后的右图像
 <div style="display: flex; flex-direction: column; align-items: center;">
   <img src="https://huggingface.co/datasets/hf-vision/course-assets/resolve/main/3d_stereo_vision_images/rectified_right_frame.jpg?download=true" alt="Rectified Right Image" />
 </div>
 
-Rectified and Stacked Left and Right Images 
+校正并堆叠的左、右图像
 <div style="display: flex; flex-direction: column; align-items: center;">
   <img src="https://huggingface.co/datasets/hf-vision/course-assets/resolve/main/3d_stereo_vision_images/rectified_stacked_frames.jpg?download=true" alt="Rectified and Stacked Left and Right Images" />
 </div>
 
-Let's also overlap the rectified left and right images to see the difference. We can see that the v values for different points remain mostly constant in the left and right images. However, the u values change, and this difference in the u values helps us find the depth information for different points in the scene, as shown in Equation 6 above. This difference in 'u' values \\(u\_left - u\_right\\) is called disparity, and we can notice that the disparity for points near the camera is greater compared to points further away. Depth z and disparity  \\(u\_left - u\_right\\)  are inversely proportional, as shown in equation 6.
+让我们也重叠校正后的左、右图像以查看差异。我们可以看到，左、右图像中不同点的 v 值大部分保持恒定。然而，u 值发生变化，并且 u 值的这种差异帮助我们找到场景中不同点的深度信息，如上述公式 6 所示。u 值的这种差异$u\_left - u\_right$被称为视差，我们可以注意到，靠近相机的点的视差比较远的点更大。深度 z 和视差$u\_left - u\_right$成反比，如公式 6 所示。
 
-Rectified and Overlapped Left and Right Images 
+校正并重叠的左、右图像
 <div style="display: flex; flex-direction: column; align-items: center;">
   <img src="https://huggingface.co/datasets/hf-vision/course-assets/resolve/main/3d_stereo_vision_images/rectified_overlapping_frames.jpg?download=true" alt="Rectified and Overlapped Left and Right Images" />
 </div>
 
-### Annotated Left and Right Rectified Images
-Let's find the 3D coordinates for some points in the scene. A few points are selected and manually annotated with their (u,v) values, as shown in the figures below. Instead of manual annotations, we can also use template-based matching, feature detection algorithms like SIFT, etc for finding corresponding points in left and right images. 
+### 带注释的校正后的左、右图像
+让我们找到场景中一些点的 3D 坐标。选择一些点并手动用它们的(u,v)值进行注释，如下图所示。代替手动注释，我们也可以使用基于模板的匹配、SIFT 等特征检测算法来找到左、右图像中的对应点。
 
-Annotated Left Image 
+带注释的左图像
 <div style="display: flex; flex-direction: column; align-items: center;">
   <img src="https://huggingface.co/datasets/hf-vision/course-assets/resolve/main/3d_stereo_vision_images/annotated_left_img.jpg?download=true" alt="Annotated Left Image" />
 </div>
 
-Annotated Right Image 
+带注释的右图像
 <div style="display: flex; flex-direction: column; align-items: center;">
   <img src="https://huggingface.co/datasets/hf-vision/course-assets/resolve/main/3d_stereo_vision_images/annotated_right_img.jpg?download=true" alt="Annotated Right Image" />
 </div>
 
-### 3D Coordinate Calculations  
-Twelve points are selected in the scene, and their (u,v) values in the left and right images are tabulated below. Using equations 4, 5, and 6, (x,y,z) coordinates for these points are also calculated and tabulated below. X and Y coordinates concerning the left camera, and the origin is at the left camera's pinhole (or optical center of the lens). Therefore, 3D points left and above the pinhole have negative X and Y values, respectively.
+### 3D 坐标计算
+在场景中选择十二个点，并在下面的表格中列出它们在左、右图像中的(u,v)值。使用公式 4、5 和 6，也计算出这些点的(x,y,z)坐标并在下面的表格中列出。X 和 Y 坐标是相对于左摄像头的，原点在左摄像头的针孔（或镜头的光学中心）处。因此，针孔左侧和上方的 3D 点分别具有负的 X 和 Y 值。
 
-| point    |   \\(u\_left\\)  |   \\(v\_left\\)  |   \\(u\_right\\)  |   \\(v\_right\\)  |   depth/z(cm)  |   \\(x\_wrt\_left\\)|   \\(y\_wrt\_left\\)  |
+| 点    |   $u\_left$  |   $v\_left$  |   $u\_right$  |   $v\_right$  |   深度/z(cm)  |   $x\_wrt\_left$|   $y\_wrt\_left$  |
 |:--------:|:---------:|:---------:|:----------:|:----------:|:--------------:|:-----------------:|:-----------------:|
 | pt1     |      138 |      219 |       102 |       219 |         94.36 |           -33.51 |            -5.53 |
 | pt2     |      264 |      216 |       234 |       217 |        113.23 |            -8.72 |            -7.38 |
@@ -175,11 +176,10 @@ Twelve points are selected in the scene, and their (u,v) values in the left and 
 | pt11    |      464 |      387 |       413 |       388 |         66.61 |            24.29 |            20.81 |
 | pt12    |      579 |      388 |       528 |       390 |         66.61 |            41.2  |            20.95 |
 
+### 尺寸计算和精度
+我们还可以使用公式$distance = \sqrt{(x\_2 - x\_1)^2 + (y\_2 - y\_1)^2 + (z\_2 - z\_1)^2}$使用不同点的(x,y,z)值计算它们之间的 3D 距离。一些点之间的计算距离以及它们的实际测量值在下面的表格中列出。还计算并列出了百分比误差$(\frac{(actual-measured) * 100}{actual})$。请注意，计算值和实际值非常匹配，百分比误差为 1.2%或更小。
 
-### Dimension Calculations and Accuracy 
-We can also compute 3D distances between different points using their (x,y,z) values using the formulae \\(distance = \sqrt{(x\_2 - x\_1)^2 + (y\_2 - y\_1)^2 + (z\_2 - z\_1)^2}\\). Computed distances between some of the points are tabulated below along with their actual measured values. Percentage error \\(( \frac{(actual-measured) * 100}{actual}\\)) is also computed and tabulated. Notice that the calculated and actual values match very well with a percentage error of 1.2% or less. 
-
-| dimension    |   calculated(cm)  |   actual(cm)  |       % error       |
+| 尺寸    |   计算值(cm)  |   实际值(cm)  |       百分比误差       |
 |:------------:|:---------------:|:-------------:|:-------------------:|
 | d1(1-2)     |           31.2 |         31.2 |               0    |
 | d2(1-3)     |           21.1 |         21.3 |               0.94 |
@@ -188,15 +188,15 @@ We can also compute 3D distances between different points using their (x,y,z) va
 | d5(9-10)    |           16.9 |         16.7 |               1.2  |
 | d6(9-11)    |           23.8 |         24   |               0.83 |
 
-Calculated Dimension Results  
+计算尺寸结果
 ![Calculated Dimension Results](https://huggingface.co/datasets/hf-vision/course-assets/resolve/main/3d_stereo_vision_images/calculated_dim_results.png?download=true)
 
-## Conclusion
-1. In summary, we learned how stereo vision works, the equations used to find the real-world coordinates (x, y, z) of a point P given its two images captured from different viewpoints, and compared theoretical values with experimental results. 
-2. We assumed that the intrinsic parameters - focal length and principal point of the cameras - are known, along with their position and orientation information. This is also referred to as calibrated stereo vision.
-3. Interestingly, it is also possible to find the 3D coordinates of a point, P, if the position and orientation of the cameras are unknown. In fact, the position and orientation of the cameras with respect to each other can be found using the images themselves. This is referred to as uncalibrated stereo vision!
+## 结论
+1. 总之，我们了解了立体视觉的工作原理，用于在给定从不同视点捕获的点 P 的两个图像的情况下找到点 P 的真实世界坐标(x, y, z)的公式，并将理论值与实验结果进行了比较。
+2. 我们假设相机的内在参数——焦距和主点——是已知的，以及它们的位置和方向信息。这也被称为校准立体视觉。
+3. 有趣的是，如果相机的位置和方向未知，也可以找到点 P 的 3D 坐标。实际上，相机相对于彼此的位置和方向可以使用图像本身找到。这被称为未校准立体视觉！
 
-## References 
-1. 3D Reconstruction - Multiple Viewpoints [Coursera](https://www.coursera.org/learn/3d-reconstruction-multiple-viewpoints)
-2. Stereo Vision and Depth Estimation using OpenCV AI Kit [LearnOpenCV](https://learnopencv.com/stereo-vision-and-depth-estimation-using-opencv-ai-kit/)
+## 参考文献
+1. 3D 重建——多视点 [Coursera](https://www.coursera.org/learn/3d-reconstruction-multiple-viewpoints)
+2. 使用 OpenCV AI Kit 的立体视觉和深度估计 [LearnOpenCV](https://learnopencv.com/stereo-vision-and-depth-estimation-using-opencv-ai-kit/)
 3. OAK-D Lite [Luxonics](https://docs.luxonis.com/projects/hardware/en/latest/pages/DM9095/)

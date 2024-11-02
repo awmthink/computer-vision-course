@@ -1,23 +1,23 @@
-# Applications of 3D Vision
+# 3D视觉的应用
 
-3D computer vision enables machines to see and understand their environment in three dimensions, unlocking various applications across numerous industries. In this section, you can find some of the exciting applications of 3D computer vision.
+3D计算机视觉使机器能够以三维方式观察和理解其环境，从而在各个行业中解锁多种应用。在本节中，您可以找到一些激动人心的3D计算机视觉应用。
 
-## Robotics and Automation 
-+ **Object Manipulation:** 3D vision systems allow robots to precisely identify and grasp objects of varying shapes and sizes. This enables them to perform tasks like picking and placing, assembly and packaging.
-+ **Quality Control:** 3D vision systems can be used to inspect manufactured parts and products for defects, ensuring quality and consistency.
+## 机器人与自动化 
++ **物体操作：** 3D视觉系统允许机器人精确识别和抓取不同形状和大小的物体。这使得它们能够执行拾取、放置、组装和包装等任务。
++ **质量控制：** 3D视觉系统可用于检查制造的零部件和产品是否存在缺陷，以确保质量和一致性。
 
-## Autonomous Navigation 
-+ **Self Driving Cars:** 3D vision cameras and algorithms help with depth perception - information about distances to surrounding objects. This enables self-driving cars to better perceive their environment and navigate safely on roads.  
-+ **Autonomous Drones and Robots:** Autonomous drones and robots use 3D computer vision for localizing their position with respect to surroundings, mapping their environment and navigating safely by avoiding obstacles.
+## 自动导航 
++ **自动驾驶汽车：** 3D视觉摄像头和算法帮助获取深度感知信息，即与周围物体的距离。这使得自动驾驶汽车能够更好地感知其环境，并在道路上安全导航。  
++ **自主无人机和机器人：** 自主无人机和机器人利用3D计算机视觉进行相对于周围环境的位置定位，绘制环境地图并通过避障安全导航。
 
-## Healthcare
-+ **Medical Imaging and Diagnosis:** 3D computer vision is used in medical imaging technologies like CT scans, MRIs, etc. These images help visualize 3D structure of internal body organs, aiding in diagnosis, treatment planning and surgical procedures.
-+ **Surgical Robotics:** 3D vision systems assist surgeons in performing complex procedures with greater precision and control. 
+## 医疗保健
++ **医学影像与诊断：** 3D计算机视觉用于CT扫描、MRI等医学影像技术。这些图像有助于可视化内部器官的三维结构，辅助诊断、治疗计划和外科手术。
++ **外科机器人：** 3D视觉系统帮助外科医生以更高的精确度和控制力执行复杂的手术。
 
-## AR and VR
-+ **Augmented Reality (AR):** AR applications like virtual try on clothing or visualizing furniture in your living space before making a purchase are all enabled by 3D computer vision.
-+ **Virtual Reality (VR):** VR experiences which immerse users in a three-dimensional, interactive and often realistic setting are also enabled by 3D computer vision. 
+## 增强现实与虚拟现实
++ **增强现实（AR）：** 像虚拟试衣或在购买前可视化家具在您生活空间中的应用，都由3D计算机视觉实现。
++ **虚拟现实（VR）：** 沉浸式的三维互动体验，常常具有现实感的VR体验同样依赖于3D计算机视觉。
 
-## Entertainment and Gaming
-+ **Animation and Motion Capture:** 3D vision systems can track and record human movements, enabling the creation of realistic character animations in movies.
-+ **Gaming:** 3D vision allows game developers to create detailed and realistic 3D environments, landscapes, structures, objects with high quality lighting and shadow effects.
+## 娱乐与游戏
++ **动画与动作捕捉：** 3D视觉系统可以追踪和记录人类运动，从而实现电影中逼真的角色动画创建。
++ **游戏：** 3D视觉使游戏开发者能够创建细致且真实的3D环境、景观、结构和物体，并具有高质量的光照和阴影效果。
