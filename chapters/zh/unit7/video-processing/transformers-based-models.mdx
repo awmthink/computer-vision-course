@@ -1,0 +1,178 @@
+# Transformer 在视频处理中的应用（第一部分）
+
+## 引言
+
+在本章中，我们将探讨 Transformer 模型如何应用于视频处理。特别地，我们将介绍 Vision Transformer，这是 Transformer 模型在视觉领域中的成功应用。接着，我们将解释用于视频处理的 Video Vision Transformer（ViViT）模型与用于图像的 Vision Transformer 模型之间的区别。最后，我们将简要讨论 TimeSFormer 模型。
+
+**在阅读本文之前，以下材料会有所帮助：**
+
+- [计算机视觉课程 / 第三单元 / 用于图像分类的视觉 Transformer](https://huggingface.co/learn/computer-vision-course/unit3/vision-transformers/vision-transformers-for-image-classification)
+- [Transformer 模型文档：ViT](https://huggingface.co/docs/transformers/main/en/model_doc/vit)
+
+## ViT 回顾
+
+首先，让我们快速回顾一下 Vision Transformers：[一张图片价值 16x16 个词：Transformer 在大规模图像识别中的应用](https://arxiv.org/abs/2010.11929)，这是 Transformer 在视觉领域应用的最基础案例。
+
+论文的摘要如下：
+
+*受到 Transformer 在 NLP 中的扩展成功的启发，我们尝试将标准 Transformer 直接应用于图像，尽可能减少修改。为此，我们将图像分割成小块，并将这些小块的线性嵌入序列作为输入提供给 Transformer。图像块被当作 NLP 应用中的 token（单词）处理。我们在图像分类任务中对模型进行了监督训练。*
+
+<div class="flex justify-center">
+<img src="https://huggingface.co/datasets/hf-vision/course-assets/resolve/main/transformer_based_video_model/unit7_1_vit_architecture.png" alt="Vision transformer architecture">
+</div>
+<small>ViT 架构。摘自 <a href= "https://arxiv.org/abs/2010.11929">原始论文</a>。</small>
+
+ViT 论文中提出的关键技术如下：
+
+- 图像被分割成小块，每个图像块作为输入提供给 Transformer 模型，从而用基于 Transformer 的方法替代了 CNN。
+
+- 每个图像块进行线性映射，并加入位置信息嵌入，以便 Transformer 能够识别图像块的顺序。
+
+- 该模型在大规模数据集上预训练，并为下游视觉任务进行了微调，从而取得了高性能。
+
+### 性能与局限性
+
+<div class="flex justify-center">
+<img src="https://huggingface.co/datasets/hf-vision/course-assets/resolve/main/transformer_based_video_model/unit7_2_vit_performance.JPG" alt="Vision transformer performance">
+</div>
+<small>与 SOTA 模型的比较。摘自 <a href="https://arxiv.org/abs/2010.11929">原始论文</a>。</small>
+
+尽管 ViT 超越了其他最先进的模型，但训练 ViT 模型需要大量的计算资源。训练 ViT 模型在 TPU-v3 上花费了 2500 天。假设 TPU-v3 核心的费用大约是每小时 2 美元（更详细的定价信息可见 [此处](https://cloud.google.com/tpu/pricing)），那么训练一次该模型的费用为：$2 \times 24 \times 2500 = 120,000$ 美元。
+
+## 视频视觉 Transformer（ViViT）
+
+如前所述，ViViT 的一个关键问题是如何更快速高效地训练模型，特别是它将 ViT 在图像处理中的应用扩展到了视频分类任务。另外，与图像不同，视频不仅包含空间信息，还包含时间信息，如何处理这些“时间信息”是一个关键的考虑因素和研究方向。
+
+以下是 [论文](https://arxiv.org/abs/2103.15691) 的摘要：
+
+*我们提出了基于纯 Transformer 的视频分类模型，借鉴了此类模型在图像分类中的成功。我们的模型从输入视频中提取时空 token，然后通过一系列 Transformer 层进行编码。为了处理视频中遇到的长序列 token，我们提出了几种高效的模型变体，这些变体将空间和时间维度分开。尽管基于 Transformer 的模型通常只有在拥有大规模训练数据集时才有效，但我们展示了如何通过在训练过程中有效地正则化模型，并利用预训练的图像模型，使其能够在相对较小的数据集上进行训练。我们进行了全面的消融实验，并在多个视频分类基准上取得了最先进的结果，包括 Kinetics 400 和 600、Epic Kitchens、Something-Something v2 和 Moments in Time，超越了基于深度 3D 卷积网络的先前方法。为了促进进一步的研究，我们在 https://github.com/google-research/scenic 上发布了代码。*
+
+<div class="flex justify-center">
+<img src="https://huggingface.co/datasets/hf-vision/course-assets/resolve/main/transformer_based_video_model/unit7_3_vivit_architecture.png" alt="ViViT architecture">
+</div>
+<small>ViViT 架构。摘自 <a href = "https://arxiv.org/abs/2103.15691">原始论文</a>。</small>
+
+### 嵌入视频片段
+
+#### 什么是嵌入？
+在深入具体技术之前，理解什么是嵌入非常重要。在机器学习中，嵌入是将输入数据转化为密集的向量表示，这些表示能够捕捉输入数据的有意义特征，使神经网络可以处理。对于视频，我们需要将原始像素数据转换为这些数学表示，同时保留空间信息（每帧中的内容）和时间信息（内容随时间变化的方式）。
+
+#### 为什么视频嵌入很重要？
+处理视频计算密集型，原因在于其尺寸和复杂性。良好的嵌入技术可以通过以下方式提供帮助：
+
+- 降低维度，同时保留重要特征
+- 捕捉帧与帧之间的时间关系
+- 使神经网络能够高效处理视频数据
+
+#### 为什么关注统一帧采样和管道嵌入？
+这两种技术代表了视频处理中的基本方法，已成为更高级方法的基础：
+
+1. 它们在计算效率与信息保留之间达到了平衡，提供了不同视频处理任务的多种选择。
+2. 它们作为基线方法，可以为新的技术提供对比，从而展示其进步。
+3. 学习这些方法为时空处理奠定了坚实的基础，这对于理解更高级的视频嵌入方法至关重要。
+
+#### 统一帧采样
+
+<div class="flex justify-center">
+<img src="https://huggingface.co/datasets/hf-vision/course-assets/resolve/main/transformer_based_video_model/unit7_4_uniform_sampling_1JPG.JPG" alt="Uniform frame sampling">
+</div>
+<small>统一帧采样。摘自 <a href = "https://arxiv.org/abs/2103.15691">原始论文</a>。</small>
+
+在这种映射方法中，模型在时间域内均匀采样一些帧，例如每隔 2 帧采样一个。
+
+#### 管道嵌入
+
+<div class="flex justify-center">
+<img src="https://huggingface.co/datasets/hf-vision/course-assets/resolve/main/transformer_based_video_model/unit7_5_tubelet_embedding.JPG" alt="Tubelet embedding">
+</div>
+<small>管道嵌入。摘自 <a href = "https://arxiv.org/abs/2103.15691">原始论文</a>。</small>
+
+另一种方法是从输入体积中提取时空“管道”，并将其线性投影。这种方法在 token 化过程中融合了时空信息。
+
+前面介绍的方法，如统一帧采样和管道嵌入，虽然有效，但相对简单。接下来将介绍更先进的方法。
+
+### ViViT 中的 Transformer 模型
+
+原始的 ViViT 论文提出了多个基于 Transformer 的架构，我们将依次探讨这些架构。
+
+#### 模型 1：时空注意力
+
+第一个模型自然地将 ViT 的思想扩展到视频分类任务中。视频中的每一帧被分割成 $n_w$（列数）x $n_h$（行数）的图像块，从而总共得到 $n_t$（帧数）x $n_w$ x $n_h$ 个块。每个块被嵌入为一个“时空 token”——一个代表空间（图像）和时间（视频序列）信息的小单元。模型通过 Transformer 编码器传递从视频中提取的所有时空 token。这意味着每个块或 token 被处理，以理解它的特征以及它与其他块在时间和空间上的关系。通过这个过程，称为“上下文化”，编码器学习如何捕捉每个块之间的位置、颜色和运动模式，从而建立对视频整体上下文的丰富理解。
+
+**复杂度 : O(n_h^2 × n_w^2 × n_t^2)**
+
+然而，在所有时空标记上使用注意力机制会导致较高的计算成本。为了提高这一过程的效率，像均匀帧采样和Tubelet嵌入等方法被用来帮助降低这些成本。
+
+#### 模型 2 : 分解编码器
+
+模型 1 中的方法效率较低，因为它同时对所有的图像块进行上下文建模。为此，模型 2 将空间编码器和时间编码器顺序分开。
+
+<div class="flex justify-center">
+<img src="https://huggingface.co/datasets/hf-vision/course-assets/resolve/main/transformer_based_video_model/unit7_6_vivit_model2.JPG" alt="ViViT 模型 2">
+</div>
+<small>分解编码器（模型 2）。摘自 <a href = "https://arxiv.org/abs/2103.15691">原始论文</a>。</small>
+
+首先，仅通过空间Transformer编码器（=ViT）对空间交互进行建模。然后，每一帧被编码为一个单独的嵌入，并输入到时间Transformer编码器（=一般Transformer）中。
+
+**复杂度 : O(n_h^2 × n_w^2 + n_t^2)**
+
+#### 模型 3 : 分解自注意力
+
+<div class="flex justify-center">
+<img src="https://huggingface.co/datasets/hf-vision/course-assets/resolve/main/transformer_based_video_model/unit7_7_vivit_model3.JPG" alt="ViViT 模型 3">
+</div>
+<small>分解自注意力（模型 3）。摘自 <a href = "https://arxiv.org/abs/2103.15691">原始论文</a>。</small>
+
+在模型 3 中，我们不是计算所有标记对的多头自注意力，而是首先仅在空间维度上计算自注意力（在同一时间索引提取的所有标记之间）。然后，在时间维度上计算自注意力（在同一空间索引提取的所有标记之间）。由于存在歧义，模型中没有使用CLS（分类）标记。
+
+**复杂度 : 与模型 2 相同**
+
+#### 模型 4 : 分解点积注意力
+
+<div class="flex justify-center">
+<img src="https://huggingface.co/datasets/hf-vision/course-assets/resolve/main/transformer_based_video_model/unit7_8_vivit_model4.JPG" alt="ViViT 模型 4">
+</div>
+<small>分解点积注意力（模型 4）。摘自 <a href = "https://arxiv.org/abs/2103.15691">原始论文</a>。</small>
+
+在模型 4 中，部分注意力头设计为与空间索引中的键值对进行操作，另一部分则与同一时间索引中的键值对进行操作。
+
+**复杂度 : 与模型 2 和模型 3 相同**
+
+### 实验与讨论
+
+<div class="flex justify-center">
+<img src="https://huggingface.co/datasets/hf-vision/course-assets/resolve/main/transformer_based_video_model/unit7_9_vivit_performance.JPG" alt="ViViT 模型性能">
+</div>
+<small>模型架构比较（Top 1 准确度）。摘自 <a href = "https://arxiv.org/abs/2103.15691">原始论文</a>。</small>
+
+通过比较模型 1、2、3 和 4，可以明显看出，模型 1 实现了最佳性能，但训练时间最长。相比之下，模型 2 在性能上相对较高，且训练时间较短，因此是整体上最为高效的模型。
+
+ViViT 模型根本上面临数据集稀疏性的问题。与Vision Transformer（ViT）类似，ViViT需要一个非常大的数据集才能达到良好的性能。然而，视频数据集往往难以获得。由于学习任务更为复杂，通常的做法是首先在大型图像数据集上使用ViT进行预训练，以初始化模型。
+
+## TimeSFormer
+
+TimeSFormer是与ViViT并行开展的工作，旨在将Transformer应用于视频分类。以下部分解释了每种类型的注意力机制。
+
+<div class="flex justify-center">
+<img src="https://huggingface.co/datasets/hf-vision/course-assets/resolve/main/transformer_based_video_model/unit7_10_timesformer.JPG" alt="TimeSFormer 模型">
+</div>
+<small>五种时空自注意力方案的可视化。摘自 <a href = "https://arxiv.org/abs/2102.05095">原始论文</a>。</small>
+
+- **稀疏注意力** 与ViT相同；蓝色区域为查询，并在一帧内对其他图像块进行上下文建模。
+- **联合时空注意力** 与ViViT模型1相同；蓝色区域为查询，并在多帧之间对其他图像块进行上下文建模。
+- **分割时空注意力** 类似于ViViT模型3；蓝色区域首先在时间维度上与同位置的绿色区域进行上下文建模，然后在同一时间索引下与其他图像块进行空间建模。
+- **稀疏局部全局注意力**：选择性地结合局部信息和全局信息。
+- **轴向注意力**：分别沿其轴处理空间和时间维度。
+
+### 性能讨论
+
+**分割时空注意力**机制表现出最有效的性能，在K400和SSv2数据集上提供了参数效率与准确度的最佳平衡。
+
+## 结论
+
+ViViT通过引入分解编码器、分解自注意力和分解点积注意力等多种模型，扩展了ViT模型，以更有效地处理视频数据，旨在高效管理时空维度。类似地，TimeSFormer从ViT架构演变而来，利用多种注意力机制来处理时空维度，就像ViViT一样。从这些发展的关键启示是，减少应用Transformer架构进行视频分析时的巨大计算成本。通过利用不同的优化技术，这些模型提高了效率，使得可以在更少的计算资源下进行学习。
+
+## 额外资源
+
+- [视频Transformer：综述](https://arxiv.org/abs/2201.05991)
+

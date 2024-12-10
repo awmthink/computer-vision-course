@@ -1,0 +1,135 @@
+# 基于 CNN 的视频模型
+
+### 一般趋势：
+
+深度学习的成功，特别是基于大规模数据集（如 ImageNet）训练的 CNN，彻底改变了图像识别领域。这一趋势也延续到了视频处理。然而，与静态图像相比，视频数据引入了另一个维度：时间。这一简单的变化带来了新的挑战，而传统的在静态图像上训练的 CNN 并没有针对这些问题进行优化。
+
+# 视频处理中的前沿模型
+
+## 双流网络（2014）
+
+<div class="flex justify-center">
+<img src="https://huggingface.co/datasets/hf-vision/course-assets/resolve/main/previous sota models/SOTA Models Two-Stream architecture for video classification.png" alt="双流网络架构用于视频分类">
+</div>
+
+该论文扩展了深度卷积神经网络（ConvNets）以执行视频数据中的动作识别。
+
+所提出的架构称为双流网络。它在神经网络中使用了两个独立的路径：
+
+- **空间流（Spatial Stream）：** 一个标准的 2D CNN 处理单帧图像以捕捉外观信息。
+- **时间流（Temporal Stream）：** 一个 2D CNN 或其他网络，处理多个帧序列（光流）以捕捉运动信息。
+- **融合（Fusion）：** 来自两个流的输出被结合起来，以利用外观和运动线索来完成如动作识别等任务。
+
+## 3D ResNets（2017）
+
+<div class="flex justify-center">
+<img src="https://huggingface.co/datasets/hf-vision/course-assets/resolve/main/previous sota models/SOTA Models Residual block. Shortcut connections bypass a signal from the top of the block to the tail. Signals are summed at the tail..png" alt="残差块。捷径连接将信号从块的顶部绕过并汇总到尾部。">
+</div>
+
+标准的 3D CNN 扩展了概念，使用 3D 核心（2D 空间信息 + 时间信息）同时捕获空间和时间信息。这种模型的缺点是大量的参数导致训练计算开销更大，因此比 2D 版本更慢。因此，3D 版本的 ConvNets 通常比更深的 2D CNN 架构具有更少的层数。
+
+在这篇论文中，作者将 ResNet 架构应用于 3D CNN。此方法引入了更深的 3D CNN 模型，并实现了更高的准确性。
+
+实验表明，3D ResNets（尤其是更深的模型如 ResNet-34）在较大的数据集上超越了诸如 [C3D](https://arxiv.org/abs/1412.0767) 等模型，尤其是在较大数据集上。预训练模型如 Sports-1M C3D 可以帮助减少小数据集上的过拟合。总体而言，3D ResNets 有效地利用更深的架构捕获视频数据中的复杂时空模式。
+
+| 方法 | 验证集 |  |  | 测试集 |  |  |
+| --- | --- | --- | --- | --- | --- | --- |
+|  | Top-1 | Top-5 | 平均值 | Top-1 | Top-5 | 平均值 |
+| 3D ResNet-34 | 58.0 | 81.3 | **69.7** | - | - | **68.9** |
+| C3D* | 55.6 | 79.1 | 67.4 | 56.1 | 79.5 | 67.8 |
+| C3D w/ BN | 56.1 | 79.5 | 67.8 | - | - | - |
+| RGB-I3D 无 ImageNet | - | - | 68.4 | 88.0 | **78.2** |  |
+
+## (2+1)D ResNets（2017）
+
+<div class="flex justify-center">
+<img src="https://huggingface.co/datasets/hf-vision/course-assets/resolve/main/previous sota models/SOTA Models 3D vs (2+1)D convolution..png" alt="3D 与 (2+1)D 卷积对比">
+</div>
+
+(2+1)D ResNets 受到 3D ResNets 的启发，但在层的结构上有一个关键的不同。该架构引入了 2D 卷积与 1D 卷积的组合：
+
+- 2D 卷积捕捉帧内的空间特征。
+- 1D 卷积捕捉连续帧之间的运动信息。
+
+该模型可以直接从视频数据中学习时空特征，可能在视频分析任务中（如动作识别）表现出更好的性能。
+
+- 优势：
+    - 在两个操作之间添加非线性整流（ReLU）使得网络比使用全 3D 卷积的网络能够表示更多复杂的函数。
+    - 分解方法便于优化，在实际中能够获得较低的训练误差和测试误差。
+
+| 方法 | Clip@1 准确率 | Video@1 准确率 | Video@5 准确率 |
+| --- | --- | --- | --- |
+| DeepVideo | 41.9 | 60.9 | 80.2 |
+| C3D | 46.1 | 61.1 | 85.2 |
+| 2D ResNet-152 | 46.5 | 64.6 | 86.4 |
+| 卷积池化 | - | 71.7 | 90.4 |
+| P3D | 47.9 | 66.4 | 87.4 |
+| R3D-RGB-8frame | 53.8 | - | - |
+| R(2+1)D-RGB-8frame | 56.1 | 72.0 | 91.2 |
+| R(2+1)D-Flow-8frame | 44.5 | 65.5 | 87.2 |
+| R(2+1)D-Two-Stream-8frame | - | 72.2 | 91.4 |
+| R(2+1)D-RGB-32frame | **57.0** | **73.0** | **91.5** |
+| R(2+1)D-Flow-32frame | 46.4 | 68.4 | 88.7 |
+| R(2+1)D-Two-Stream-32frame | - | **73.3** | **91.9** |
+
+# 当前研究
+
+目前，研究人员正在探索更深的 3D CNN 架构。另一个有前景的方法是将 3D CNN 与其他技术（如注意力机制）结合起来。同时，正在推动开发更大的视频数据集，如 [Kinetics](https://github.com/google-deepmind/kinetics-i3d)。Kinetics 数据集是一个大规模的高质量视频数据集，广泛用于人类动作识别研究，包含数十万个视频片段，涵盖了广泛的人类活动。
+
+# 当前研究
+
+### 自监督学习：**MoCo（Momentum Contrast）**
+
+<div class="flex justify-center">
+<img src="https://huggingface.co/datasets/hf-vision/course-assets/resolve/main/unit7 CNN based model/Self-Supervised Learning_MoCo.png" alt="自监督学习 MoCo">
+</div>
+
+**概述**
+
+[MoCo](https://arxiv.org/abs/1911.05722) 是自监督学习领域的一个重要模型，采用对比学习方法从未标注的视频片段中提取特征。通过使用基于动量的队列，它能够有效地从大规模视频数据集中学习，特别适用于动作识别和事件检测任务。
+
+**关键特性**
+
+- **动量编码器**：使用动量更新的编码器，保持表示空间的一致性，提高训练的稳定性。
+- **动态字典**：使用基于队列的字典提供大量一致的负样本，增强对比学习的效果。
+- **对比损失函数**：通过比较正负对来利用对比损失学习不变特征。
+
+### 高效视频模型：**X3D（扩展 3D 网络）**
+
+<div class="flex justify-center">
+<img src="https://huggingface.co/datasets/hf-vision/course-assets/resolve/main/unit7 CNN based model/Efficient Video Models X3D (Expanded 3D Networks).png" alt="高效视频模型 X3D（扩展 3D 网络）">
+</div>
+
+**概述**
+
+[X3D](https://arxiv.org/abs/2004.04730) 是一个轻量级的 3D 卷积神经网络（ConvNet）模型，专为视频识别任务设计。它基于 3D CNN 的概念，但通过减少参数和计算成本来优化性能，同时保持较高的准确性。这使得 X3D 特别适用于实时视频分析以及在移动设备或边缘设备上的部署。
+
+**关键特性**
+
+- **高效性**：以显著更少的参数和较低的计算
+
+成本实现高准确性。
+- **逐步扩展**：采用系统化的方法扩展网络维度（例如，深度、宽度）以获得最佳性能。
+- **易部署**：设计时考虑了在计算资源有限的设备上的便捷部署。
+
+### 实时视频处理：**ST-GCN（时空图卷积网络）**
+
+<div class="flex justify-center">
+<img src="https://huggingface.co/datasets/hf-vision/course-assets/resolve/main/unit7 CNN based model/Efficient Video Models X3D (Expanded 3D Networks).png" alt="时空图卷积网络 ST-GCN">
+</div>
+
+**概述**
+
+[ST-GCN](https://arxiv.org/abs/1801.07455) 是一个专为实时动作识别设计的模型，特别适用于分析视频序列中的人类动作。它使用图结构对时空数据进行建模，能够有效捕捉人体关节的位置和运动模式。该模型广泛应用于监控和体育分析等实时动作检测领域。
+
+这些前沿模型在推动视频处理的进展方面发挥着重要作用，尤其在视频分类、动作识别和实时处理等领域表现优异。
+
+**关键特性**
+
+- **基于图的建模**：将人体骨架数据表示为图，能够自然地建模关节连接关系。
+- **时空卷积**：集成时空图卷积以捕捉动态运动模式。
+- **实时性能**：优化计算速度，适用于实时应用。
+
+# 结论
+
+视频分析模型的发展历程令人印象深刻。这些模型受到其他前沿模型的深刻影响。例如，双流网络受到 ConvNets 的启发，(2+1)D ResNets 则受到 3D ResNets 的启发。随着研究的进展，预计未来将会涌现出更先进的架构和技术。

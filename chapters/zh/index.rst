@@ -105,7 +105,10 @@
 
    Introduction <unit7/video-processing/introduction-to-video>
    Video Processing Basics <unit7/video-processing/video-processing-basics>
-   Overview of the previous SOTA models <unit7/video-processing/overview-of-previous-sota-models>
+   CNN Based Video Model <unit7/video-processing/cnn-based-video-model>
+   RNN Based Video Model <unit7/video-processing/rnn-based-video-models>
+   Transformers based models <unit7/video-processing/transformers-based-models>
+   Multimodal Based Video Models <unit7/video-processing/multimodal-based-video-models>
 
 .. toctree::
    :caption: Unit 8 - 3D Vision, Scene Rendering and Reconstruction
