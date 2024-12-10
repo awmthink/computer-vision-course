@@ -1,12 +1,12 @@
 # 基于 CNN 的视频模型
 
-### 一般趋势：
+## 一般趋势：
 
 深度学习的成功，特别是基于大规模数据集（如 ImageNet）训练的 CNN，彻底改变了图像识别领域。这一趋势也延续到了视频处理。然而，与静态图像相比，视频数据引入了另一个维度：时间。这一简单的变化带来了新的挑战，而传统的在静态图像上训练的 CNN 并没有针对这些问题进行优化。
 
-# 视频处理中的前沿模型
+## 视频处理中的前沿模型
 
-## 双流网络（2014）
+### 双流网络（2014）
 
 <div class="flex justify-center">
 <img src="https://huggingface.co/datasets/hf-vision/course-assets/resolve/main/previous sota models/SOTA Models Two-Stream architecture for video classification.png" alt="双流网络架构用于视频分类">
@@ -20,7 +20,7 @@
 - **时间流（Temporal Stream）：** 一个 2D CNN 或其他网络，处理多个帧序列（光流）以捕捉运动信息。
 - **融合（Fusion）：** 来自两个流的输出被结合起来，以利用外观和运动线索来完成如动作识别等任务。
 
-## 3D ResNets（2017）
+### 3D ResNets（2017）
 
 <div class="flex justify-center">
 <img src="https://huggingface.co/datasets/hf-vision/course-assets/resolve/main/previous sota models/SOTA Models Residual block. Shortcut connections bypass a signal from the top of the block to the tail. Signals are summed at the tail..png" alt="残差块。捷径连接将信号从块的顶部绕过并汇总到尾部。">
@@ -72,11 +72,10 @@
 | R(2+1)D-Flow-32frame | 46.4 | 68.4 | 88.7 |
 | R(2+1)D-Two-Stream-32frame | - | **73.3** | **91.9** |
 
-# 当前研究
+## 当前研究
 
 目前，研究人员正在探索更深的 3D CNN 架构。另一个有前景的方法是将 3D CNN 与其他技术（如注意力机制）结合起来。同时，正在推动开发更大的视频数据集，如 [Kinetics](https://github.com/google-deepmind/kinetics-i3d)。Kinetics 数据集是一个大规模的高质量视频数据集，广泛用于人类动作识别研究，包含数十万个视频片段，涵盖了广泛的人类活动。
 
-# 当前研究
 
 ### 自监督学习：**MoCo（Momentum Contrast）**
 
@@ -130,6 +129,6 @@
 - **时空卷积**：集成时空图卷积以捕捉动态运动模式。
 - **实时性能**：优化计算速度，适用于实时应用。
 
-# 结论
+## 结论
 
 视频分析模型的发展历程令人印象深刻。这些模型受到其他前沿模型的深刻影响。例如，双流网络受到 ConvNets 的启发，(2+1)D ResNets 则受到 3D ResNets 的启发。随着研究的进展，预计未来将会涌现出更先进的架构和技术。
